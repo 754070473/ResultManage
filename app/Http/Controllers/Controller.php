@@ -67,7 +67,7 @@ abstract class Controller extends BaseController
      * @param $order        排序字段
      * @return mixed        返回    三维数组
      */
-    /*
+    
     public function ajaxPage($table,$num,$p,$where=1,$order=1){
         //查询语句
         $re = DB::table($table)->where("$where")->get();
@@ -91,11 +91,8 @@ abstract class Controller extends BaseController
             //计算偏移量
             $n=($p-1)*$num;
             //查询所要数据
-            $re = mysql_query("select * from $table where $where order by $order limit $n,$num");
-            while($arr = mysql_fetch_assoc($re)){
-                $new_arr[] = $arr;
-            }
-            $data['arr']=$new_arr;
+            $arr = DB::table($table)->where("$where")->order("$order")->limit($n,$num)->get();
+            $data['arr'] = $arr;
             //上一页
             $last=($p-1)<1?1:$p-1;
             //下一页
@@ -106,8 +103,8 @@ abstract class Controller extends BaseController
                     <input class="button" type="button" onclick="ck_page(1)"  value="搜索"/>
                 </div>';
             //分页样式
-            $str='<link rel="stylesheet" type="text/css" href="css/page/page.css"/>
-            <script src="js/page/page.js"></script>
+            $str='<link rel="stylesheet" type="text/css" href="page/page.css"/>
+            <script src="page/page.js"></script>
             ';
             $str.="<div class='pagin'><div class='message'>共<i class='blue'>$count</i>条记录，当前显示第<i class='blue'>$p</i>页</div><ul class='paginList'><li class='paginItem'><a href='javascript:;' onclick='ck_page(1)'><span class='pagepre'><<</span></a></li>";
             for($i=1;$i<=$page;$i++){
@@ -134,5 +131,4 @@ abstract class Controller extends BaseController
             return $data;
         }
     }
-    */
 }

@@ -179,7 +179,12 @@
                 </li>
             </ul>
         </li>
-
+        <li>
+            <a href="javascript:void(0)">
+                <i class="icon-off"></i>
+                <span class="menu-text"> 管理员日志 </span>
+            </a>
+        </li>
         <li>
             <a href="javascript:void(0)">
                 <i class="icon-off"></i>
@@ -205,6 +210,7 @@
                     sub.attr("class", "submenu open");
                 }else{
                     sub.slideUp('slow');
+                    sub.attr("class", "submenu");
                 }
             });
         });
