@@ -180,8 +180,8 @@
             </ul>
         </li>
         <li>
-            <a href="javascript:void(0)">
-                <i class="icon-off"></i>
+            <a href="userlog">
+                <i class="icon-user"></i>
                 <span class="menu-text"> 管理员日志 </span>
             </a>
         </li>

@@ -51,10 +51,10 @@ abstract class Controller extends BaseController
 
     //添加日志
     public function adminLog($content){
-        $adm_id = $_SESSION['adm_id'];
+        $adm_id = $_SESSION['uid'];
         $time = date('Y-m-d H:i:s',time());
-        DB::table('res_admin_log')->insert(
-            ['adm_id' => $adm_id , 'content' => $content , 'log_addtime' => $time]);
+        DB::table('res_user_log')->insert(
+            ['uid' => $adm_id , 'content' => $content , 'log_addtime' => $time]);
     }
 
 
@@ -70,7 +70,7 @@ abstract class Controller extends BaseController
     
     public function ajaxPage($table,$num,$p,$where=1,$order=1){
         //查询语句
-        $re = DB::table($table)->where("$where")->get();
+            $re = DB::select("select * from $table where $where");
         //计算查询数据条数
         $count = count($re);
         if($count == 0){
@@ -91,7 +91,7 @@ abstract class Controller extends BaseController
             //计算偏移量
             $n=($p-1)*$num;
             //查询所要数据
-            $arr = DB::table($table)->where("$where")->order("$order")->limit($n,$num)->get();
+            $arr = DB::select("select * from $table where $where order by $order limit $n,$num");
             $data['arr'] = $arr;
             //上一页
             $last=($p-1)<1?1:$p-1;

@@ -19,3 +19,6 @@ Route::get('/index', 'IndexController@index');
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
+
+//管理员日志
+Route::get('/userlog', 'IndexController@userLog');
