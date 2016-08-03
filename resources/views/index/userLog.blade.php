@@ -20,7 +20,6 @@
 
 		<!-- fonts -->
 
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
 
 		<!-- ace styles -->
 
@@ -59,7 +58,7 @@
 				</a>
 
 
-				<div class="main-content" id="list">
+				<div class="main-content">
 					<div class="breadcrumbs" id="breadcrumbs">
 						<script type="text/javascript">
 							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
@@ -72,9 +71,15 @@
 							</li>
 							<li class="active">管理员日志</li>
 						</ul><!-- .breadcrumb -->
+							<div style="float:right;">
+								<input class="laydate-icon" id="search" onclick="laydate()" placeholder="点击选择日期">
+								<button class="btn btn-xs" onclick="ckPage( 'logPage' , 1 )">
+									搜索
+								</button>
+							</div>
 					</div>
-
-					<div class="page-content">
+                    <button class="btn btn btn-block" style="width:150px;float:right;margin-right: 700px;margin-top: 3px" onclick="ckDeleteAll()">批量删除</button>
+					<div class="page-content"  id="list">
 						<div class="page-header">
 							<h1>
 								管理员日志
@@ -93,7 +98,7 @@
 													<tr>
 														<th class="center">
 															<label>
-																<input type="checkbox" class="ace" />
+																<input type="checkbox" class="ace ace1" />
 																<span class="lbl"></span>
 															</label>
 														</th>
@@ -105,11 +110,12 @@
 												</thead>
 
 												<tbody>
+                                                @if(!empty($arr))
                                                 @foreach( $arr as $key => $val )
-													<tr>
+													<tr id="tr{{$val->log_id}}">
 														<td class="center">
 															<label>
-																<input type="checkbox" class="ace" />
+																<input type="checkbox" class="ace ace2" value="{{$val->log_id}}"/>
 																<span class="lbl"></span>
 															</label>
 														</td>
@@ -127,6 +133,7 @@
 														</td>
 													</tr>
                                                     @endforeach
+                                                    @endif
 												</tbody>
 											</table>
 										</div><!-- /.table-responsive -->
@@ -176,21 +183,18 @@
 
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
-
 		<!-- inline scripts related to this page -->
-
+		<script src="laydate/laydate.js"></script>
 		<script type="text/javascript">
-            jQuery(function($){
-                $.get("{{url('top')}}",function(m){
-                    $('.main-container').first().before(m);
-                })
-            });
-            jQuery(function($){
+			jQuery(function($) {
                 $.get("{{url('left')}}",function(m){
                     $('.main-content').first().before(m);
-                })
-            });
-			jQuery(function($) {
+                });
+
+                $.get("{{url('top')}}",function(m){
+                    $('.main-container').first().before(m);
+                });
+
 				var oTable1 = $('#sample-table-2').dataTable( {
 				"aoColumns": [
 			      { "bSortable": false },
@@ -223,7 +227,89 @@
 					if( parseInt(off2.left) < parseInt(off1.left) + parseInt(w1 / 2) ) return 'right';
 					return 'left';
 				}
-			})
+				
+				//ajax删除
+				$(document).on('click','.btn-danger',function(){
+                    var search = jQuery('#search').val();
+                    if(!search){
+                        search = '';
+                    }
+                    var log_id = $(this).attr('logid');
+					var p = $('.current a').html();
+                    if( search == '' ) {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'logDelete',
+                            data: 'log_id=' + log_id + '&p=' + p,
+                            success: function (msg) {
+                                if (msg != 0) {
+                                    $('#list').html(msg);
+                                } else {
+                                    alert('删除失败');
+                                }
+                            }
+                        });
+                    }else{
+                        $.ajax({
+                            type: 'GET',
+                            url: 'logDelete',
+                            data: 'log_id=' + log_id + '&p=' + p +'&search='+search,
+                            success: function (msg) {
+                                if (msg != 0) {
+                                    $('#list').html(msg);
+                                } else {
+                                    alert('删除失败');
+                                }
+                            }
+                        });
+                    }
+                });
+			});
+			function ckDeleteAll()
+			{
+				var ace2 = $('.ace2');
+				var len = ace2.length;
+				if( len >0 ){
+					var search = jQuery('#search').val();
+                    if(!search){
+                        search = '';
+                    }
+					var log_id = '';
+					for( var i = 0 ; i < len ; i++ ){
+						if( ace2.eq(i).prop( 'checked' ) == true ){
+							log_id += ','+ace2.eq(i).val();
+						}
+					}
+					log_id = log_id.substr(1);
+					if( search == '' ) {
+                        $.ajax({
+                            type: 'GET',
+                            url: 'logDelete',
+                            data: 'log_id=' + log_id,
+                            success: function (msg) {
+                                if (msg != 0) {
+                                    $('#list').html(msg);
+                                } else {
+                                    alert('删除失败');
+                                }
+                            }
+                        });
+                    }else{
+                        $.ajax({
+                            type: 'GET',
+                            url: 'logDelete',
+                            data: 'log_id=' + log_id + '&search='+search,
+                            success: function (msg) {
+                                if (msg != 0) {
+                                    $('#list').html(msg);
+                                } else {
+                                    alert('删除失败');
+                                }
+                            }
+                        });
+                    }
+				}
+			}
 		</script>
 </body>
 </html>

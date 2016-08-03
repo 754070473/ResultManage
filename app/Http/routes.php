@@ -24,3 +24,5 @@ Route::get('/left', 'PublicController@left');
 Route::get('/userlog', 'IndexController@userLog');
 //日志分页
 Route::get('/logPage', 'IndexController@logPage');
+//日志删除
+Route::get('/logDelete', 'IndexController@logDelete');
