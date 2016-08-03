@@ -59,7 +59,7 @@
 				</a>
 
 
-				<div class="main-content">
+				<div class="main-content" id="list">
 					<div class="breadcrumbs" id="breadcrumbs">
 						<script type="text/javascript">
 							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
@@ -105,6 +105,7 @@
 												</thead>
 
 												<tbody>
+                                                @foreach( $arr as $key => $val )
 													<tr>
 														<td class="center">
 															<label>
@@ -113,18 +114,19 @@
 															</label>
 														</td>
 														<td>
-
+                                                            {{$val->accounts}}
 														</td>
-														<td></td>
-														<td class="hidden-480"></td>
+														<td>{{$val->content}}</td>
+														<td class="hidden-480">{{$val->log_addtime}}</td>
 														<td>
 															<div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
-																<button class="btn btn-xs btn-danger">
+																<button class="btn btn-xs btn-danger" logid="{{$val->log_id}}">
 																	<i class="icon-trash bigger-120"></i>
 																</button>
 															</div>
 														</td>
 													</tr>
+                                                    @endforeach
 												</tbody>
 											</table>
 										</div><!-- /.table-responsive -->
@@ -132,6 +134,7 @@
 								</div><!-- /row -->
 							</div><!-- /.col -->
 						</div><!-- /.row -->
+                        <?php echo $page?>
 					</div><!-- /.page-content -->
 				</div><!-- /.main-content -->
 			</div><!-- /.main-container-inner -->
@@ -161,9 +164,6 @@
 </script>
 <![endif]-->
 
-		<script type="text/javascript">
-			if("ontouchend" in document) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
-		</script>
 		<script src="assets/js/bootstrap.min.js"></script>
 		<script src="assets/js/typeahead-bs2.min.js"></script>
 

@@ -22,3 +22,5 @@ Route::get('/left', 'PublicController@left');
 
 //管理员日志
 Route::get('/userlog', 'IndexController@userLog');
+//日志分页
+Route::get('/logPage', 'IndexController@logPage');
