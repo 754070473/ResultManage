@@ -38,3 +38,11 @@ Route::get('/updates','GradeController@updates');
 Route::any('/import','GradeController@import');
 //成绩管理---删除
 Route::get('/updates','GradeController@updates');
+
+/**80-100 刘清白**/
+//用户添加表单
+Route::get('/useradd', 'UserController@userAdd');
+//ajax添加用户
+Route::post('/useraddpro', 'UserController@userAddPro');
+//用户列表
+Route::get('/userList', 'UserController@userList');
