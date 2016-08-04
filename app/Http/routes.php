@@ -35,6 +35,6 @@ Route::get('/show','GradeController@show');
 //成绩管理---成绩审核
 Route::get('/updates','GradeController@updates');
 //成绩管理---导入
-Route::get('/import','GradeController@import');
+Route::any('/import','GradeController@import');
 //成绩管理---删除
 Route::get('/updates','GradeController@updates');
