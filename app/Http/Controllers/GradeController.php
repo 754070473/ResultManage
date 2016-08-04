@@ -63,6 +63,9 @@ class GradeController extends Controller
         $search=$request->input('search');
         $username=$request->input('username');
         $exam=$request->input('exam');
+        if($exam==1){
+
+        }
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名

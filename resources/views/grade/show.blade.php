@@ -232,10 +232,10 @@
     //搜索
     function searchs(){
         //定义值  上面的id值
-        var search1=document.getElementById('search').value;
-        var username=document.getElementById('username').value;
-        var exam=document.getElementById('exam').value;
-        var exam_reg=/^(^[1-9]\d$)|(^\d$)|(^100$)$/;
+        var search1 = document.getElementById('search').value;
+        var username = document.getElementById('username').value;
+        var exam = document.getElementById('exam').value;
+        var exam_reg = /^(^[1-9]\d$)|(^\d$)|(^100$)$/;
         if(exam_reg.test(exam)){
             document.getElementById('exam').innerHTML="<font color='black'>√</font>";
             return true;
@@ -243,6 +243,11 @@
             document.getElementById('exam').innerHTML="<font color='red'>必须查询大于等于0且小于等于100</font>";
             return false;
         }
+        var str = '';
+        if( username != ''){
+            str += 'username='+username;
+        }
+
         //创建ajax对象
         var ajax=new XMLHttpRequest();
                 //ajax事件
