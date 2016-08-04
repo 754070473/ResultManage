@@ -14,19 +14,22 @@ abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-  /*  public function __construct()
+    public function __construct()
     {
         //非法登录
-        if(empty(Session::get('uid'))){
-            echo "<script>alert('请先登录');location.href='loginIndex'</script>";
-            exit;
+        $action = $this -> getCurrentAction();
+        if( $action['controller'] != 'Login') {
+            if ( empty( Session::get( 'uid' ) ) ) {
+                echo "<script>alert('请先登录');location.href='loginIndex'</script>";
+                exit;
+            }
         }
 
-        //权限控制
+        /*//权限控制
         if( Session::get('uid') != 1 ){
             $this->userPower();
-        }
-    }*/
+        }*/
+    }
 
     /**
      * 无限极分类数组处理

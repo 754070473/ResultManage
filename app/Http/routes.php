@@ -12,8 +12,24 @@
 */
 
 //首页
-Route::get('/', 'IndexController@index');
 Route::get('/index', 'IndexController@index');
+Route::get('/', 'IndexController@index');
+
+
+//登录页
+Route::any('/loginIndex', 'LoginController@index');
+//登录
+Route::any('/login', 'LoginController@login');
+//验证码
+Route::any('/captcha_code', 'LoginController@captcha_code');
+//退出
+Route::any('/exitProcess', 'LoginController@exitProcess');
+//修改密码页面
+Route::any('/pass', 'LoginController@pass');
+//查询旧密码
+Route::any('/oldpwd', 'LoginController@oldpwd');
+//修改密码
+Route::any('/upda', 'LoginController@update_pwd');
 
 //公共页面  头部
 Route::get('/top', 'PublicController@top');
