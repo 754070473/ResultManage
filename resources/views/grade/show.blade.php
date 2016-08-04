@@ -236,13 +236,13 @@
         var username=document.getElementById('username').value;
         var exam=document.getElementById('exam').value;
         var exam_reg=/^(^[1-9]\d$)|(^\d$)|(^100$)$/;
-//        if(exam_reg.test(exam)){
-//            document.getElementById('exam').innerHTML="<font color='black'>√</font>";
-//            return true;
-//        }else{
-//            document.getElementById('exam').innerHTML="<font color='red'>必须查询大于等于0且小于等于100</font>";
-//            return false;
-//        }
+        if(exam_reg.test(exam)){
+            document.getElementById('exam').innerHTML="<font color='black'>√</font>";
+            return true;
+        }else{
+            document.getElementById('exam').innerHTML="<font color='red'>必须查询大于等于0且小于等于100</font>";
+            return false;
+        }
         //创建ajax对象
         var ajax=new XMLHttpRequest();
                 //ajax事件
