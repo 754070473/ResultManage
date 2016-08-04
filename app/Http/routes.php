@@ -19,3 +19,70 @@ Route::get('/index', 'IndexController@index');
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**80-100 刘清白**/
+//用户添加表单
+Route::get('/useradd', 'UserController@userAdd');
+//ajax添加用户
+Route::post('/useraddpro', 'UserController@userAddPro');
+//用户列表
+Route::get('/userList', 'UserController@userList');

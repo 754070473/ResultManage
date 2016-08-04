@@ -75,14 +75,14 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="tables.html">
+                    <a href="useradd">
                         <i class="icon-double-angle-right"></i>
                         管理员添加
                     </a>
                 </li>
 
                 <li>
-                    <a href="jqgrid.html">
+                    <a href="userList">
                         <i class="icon-double-angle-right"></i>
                         管理员列表
                     </a>
@@ -100,7 +100,7 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="">
                         <i class="icon-double-angle-right"></i>
                         角色添加
                     </a>
