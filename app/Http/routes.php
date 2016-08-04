@@ -20,24 +20,12 @@ Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//管理员日志
+Route::get('/userlog', 'IndexController@userLog');
+//日志分页
+Route::get('/logPage', 'IndexController@logPage');
+//日志删除
+Route::get('/logDelete', 'IndexController@logDelete');
 //成绩管理---显示录入成绩页面
 Route::get('/grade','GradeController@grade');
 //成绩管理---添加录入成绩数据
