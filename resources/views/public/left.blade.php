@@ -75,14 +75,14 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="tables.html">
+                    <a href="useradd">
                         <i class="icon-double-angle-right"></i>
                         管理员添加
                     </a>
                 </li>
 
                 <li>
-                    <a href="jqgrid.html">
+                    <a href="userList">
                         <i class="icon-double-angle-right"></i>
                         管理员列表
                     </a>
@@ -100,7 +100,11 @@
 
             <ul class="submenu">
                 <li>
+<<<<<<< HEAD
                     <a href="roleadd">
+=======
+                    <a href="">
+>>>>>>> e86eedc0313fa76185ff9c4ecd2a985b5b4f817e
                         <i class="icon-double-angle-right"></i>
                         角色添加
                     </a>
@@ -124,19 +128,19 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="grade">
                         <i class="icon-double-angle-right"></i>
                         成绩录入
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="show">
                         <i class="icon-double-angle-right"></i>
                         查看成绩
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="updates">
                         <i class="icon-double-angle-right"></i>
                         成绩审核
                     </a>
@@ -179,7 +183,12 @@
                 </li>
             </ul>
         </li>
-
+        <li>
+            <a href="userlog">
+                <i class="icon-user"></i>
+                <span class="menu-text"> 管理员日志 </span>
+            </a>
+        </li>
         <li>
             <a href="javascript:void(0)">
                 <i class="icon-off"></i>
@@ -205,6 +214,7 @@
                     sub.attr("class", "submenu open");
                 }else{
                     sub.slideUp('slow');
+                    sub.attr("class", "submenu");
                 }
             });
         });
