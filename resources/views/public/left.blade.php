@@ -124,19 +124,19 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="grade">
                         <i class="icon-double-angle-right"></i>
                         成绩录入
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="show">
                         <i class="icon-double-angle-right"></i>
                         查看成绩
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="updates">
                         <i class="icon-double-angle-right"></i>
                         成绩审核
                     </a>
@@ -179,7 +179,12 @@
                 </li>
             </ul>
         </li>
-
+        <li>
+            <a href="userlog">
+                <i class="icon-user"></i>
+                <span class="menu-text"> 管理员日志 </span>
+            </a>
+        </li>
         <li>
             <a href="javascript:void(0)">
                 <i class="icon-off"></i>
@@ -205,6 +210,7 @@
                     sub.attr("class", "submenu open");
                 }else{
                     sub.slideUp('slow');
+                    sub.attr("class", "submenu");
                 }
             });
         });
