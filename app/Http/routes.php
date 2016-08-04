@@ -26,6 +26,18 @@ Route::get('/userlog', 'IndexController@userLog');
 Route::get('/logPage', 'IndexController@logPage');
 //日志删除
 Route::get('/logDelete', 'IndexController@logDelete');
+
+
+
+
+
+
+
+
+
+
+
+
 //成绩管理---显示录入成绩页面
 Route::get('/grade','GradeController@grade');
 //成绩管理---添加录入成绩数据
@@ -37,4 +49,8 @@ Route::get('/updates','GradeController@updates');
 //成绩管理---导入
 Route::get('/import','GradeController@import');
 //成绩管理---删除
-Route::get('/updates','GradeController@updates');
+Route::get('/gradeDelete','GradeController@gradeDelete');
+//成绩管理---分页
+Route::get('/gradePage','GradeController@gradePage');
+//成绩管理---搜索
+Route::get('/search','GradeController@search');
