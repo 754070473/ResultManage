@@ -19,3 +19,34 @@ Route::get('/index', 'IndexController@index');
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//成绩管理---显示录入成绩页面
+Route::get('/grade','GradeController@grade');
+//成绩管理---添加录入成绩数据
+Route::get('/grade_add','GradeController@grade_add');
+//成绩管理----查看成绩
+Route::get('/show','GradeController@show');
+//成绩管理---成绩审核
+Route::get('/updates','GradeController@updates');
+//成绩管理---导入
+Route::get('/import','GradeController@import');
+//成绩管理---删除
+Route::get('/updates','GradeController@updates');

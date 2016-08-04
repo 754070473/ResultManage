@@ -124,19 +124,19 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="grade">
                         <i class="icon-double-angle-right"></i>
                         成绩录入
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="show">
                         <i class="icon-double-angle-right"></i>
                         查看成绩
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="updates">
                         <i class="icon-double-angle-right"></i>
                         成绩审核
                     </a>
