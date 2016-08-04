@@ -70,6 +70,7 @@
 											<div class="space-6"></div>
 
 											<form>
+												<input type="hidden" name="_token" id="_token" value="{{ csrf_token() }}">
 												<fieldset>
 													<label class="block clearfix">
 														<span class="block input-icon input-icon-right">
@@ -235,6 +236,8 @@
 <script type="text/javascript">
 	$("#butt").click(function(){
 		// alert(1);
+		var _token = $("#_token").val();
+		// alert(_token);
 		var accounts = $("#accounts").val();
 		var password = $("#password").val();
 		var yzm = $("#yzm").val();
@@ -247,7 +250,7 @@
 		$.ajax({
 		   type: "POST",
 		   url: "{{url('login')}}",
-		   data: "accounts="+accounts+"&password="+password+"&yzm="+yzm,
+		   data: "accounts="+accounts+"&password="+password+"&yzm="+yzm+"&_token="+_token,
 		   success: function(msg){
 		     // alert(msg);
 		     if (msg==0) 

@@ -5,6 +5,8 @@ use DB;
 use Session;
 use Illuminate\Http\Request;
 use Code;
+use Illuminate\Http\RedirectResponse;
+
 
 require_once(__DIR__."/../../../vendor/captcha_code.php");
 
@@ -21,16 +23,14 @@ class LoginController extends Controller
 		return view('login.login');
 	}
 
-	/**
-     * 验证码
-     */
+	//验证码
     function captcha_code()
     {
         //构造方法
         $code=new \ValidationCode(80, 20, 4);
         $code->showImage();   //输出到页面中供 注册或登录使用
-        Session::put('code',$code->getCheckCode());
-        //$_SESSION["code"]=$code->getCheckCode();  //将验证码保存到服务器中
+        Session::put('code',$code->getCheckCode());   //将验证码保存到服务器中
+        //$_SESSION["code"]=$code->getCheckCode();  
 
     }
 
@@ -68,7 +68,7 @@ class LoginController extends Controller
 				            ->get();
 				            foreach ($users as $key => $v) 
 				            {
-				            	$power[$key]['power_name'] = $v->power_name;
+				            	$power[$key]['pid'] = $v->pid;
 				            	$power[$key]['controller'] = $v->controller;
 				            	$power[$key]['action'] = $v->action;
 				            }
@@ -96,6 +96,110 @@ class LoginController extends Controller
           	// echo '验证码错误';
           		echo 3;
           }
+		 
+	}
+
+	/*
+	*	退出
+	*/
+
+	public function exitProcess(Request $request)
+	{
+		$request->session()->flush();  //清除所有的session信息
+		// $sessions = $request->session()->all();
+		// print_r( $sessions);
+		return redirect('loginIndex');
+	}
+
+	/*
+	*	修改密码
+	*/
+	//修改页面
+	public function pass(Request $request)
+	{
+		//取出当前用户的id
+		$uid = Session::get('uid');
+		//根据用户id查询出当前的账号；
+		$data = DB::table('res_user')->where('uid',$uid )->first();
+		// print_r($data);die;
+		return view('login.form-elements',array('data'=>$data));
+	}
+
+	//查询旧密码是否正确
+	public function oldpwd(Request $request)
+	{
+		//接受旧密码
+		$oldpwd = $request->input('oldpwd');
+		//取出当前用户的id
+		$uid = Session::get('uid');
+		//根据用户id查询出当前的账号；
+		$data = DB::table('res_user')->where('uid',$uid )->first();
+		if ($oldpwd!=$data->password) 
+		{
+			//旧密码错误
+			echo 0;
+		}
+		else
+		{
+			//旧密码正确
+			echo 1;
+		}
+	}
+
+	//修改
+	public function update_pwd(Request $request)
+	{
+		 //取出当前用户的id
+		$uid = Session::get('uid');
+		//接受数据
+		$arr=$request->all();
+		// print_r($arr);die;
+		 //获取旧密码
+		 $oldpwd = $arr['oldpwd'];
+		 if (empty($oldpwd)) 
+		 {
+		 	echo "<script>alert('旧密码不能为空')</script>";die;
+		 }
+		//根据用户id查询出当前的账号；
+		$data = DB::table('res_user')->where('uid',$uid )->first();
+		if ($oldpwd!=$data->password) 
+		{
+			//旧密码错误
+			echo "<script>alert('旧密码不正确')</script>";die;
+		}
+		
+		
+		 //获取新密码
+		 $newpwd = $arr['newpwd'];
+		 $preg = "/^[0-9 | A-Z | a-z]{6,16}$/";
+		 if (empty($newpwd) || !preg_match($preg, $newpwd)) 
+		 {
+		 	echo "<script>alert('新密码不能为空或格式不正确')</script>";die;
+		 }
+		
+		 //获取再次输入的新密码
+		 $newpass = $arr['newpass'];
+		 //判断两次密码是否一致
+		 if ($newpwd!=$newpass) 
+		 {
+		 	echo "<script>alert('两次密码不一致')</script>";die;
+		 }
+		//修改数据
+		$res = DB::table('res_user')
+	            ->where('uid', $uid)
+	            ->update(['password' => $newpwd]);
+
+	    if ($res) 
+	    {
+	    	echo "<script>alert('修改成功,请重新登录');location.href='loginIndex'</script>";
+	    	// return redirect('loginIndex');
+	    }
+	    else
+	    {
+	    	echo "<script>alert('修改失败')</script>";die;
+	    }
+
+		
 		 
 	}
 

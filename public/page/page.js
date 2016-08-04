@@ -1,23 +1,28 @@
 /**
  * Created by chenhao on 2016/6/15.
  */
-function ck_page(p){
-    var search = $('#search').val();
+function ckPage(url,p){
+    var search = jQuery('#search').val();
+    if(!search){
+        search = '';
+    }
     if(search == "") {
-        $.ajax({
-            type: 'POST',
+        jQuery.ajax({
+            type: 'GET',
             data: 'p=' + p,
+            url : url,
             success: function (msg) {
-                $('#list').html(msg)
+                jQuery('#list').html(msg)
             }
         })
     }else{
-        $.ajax({
-            type: 'POST',
+        jQuery.ajax({
+            type: 'GET',
             data: 'p=' + p+'&search='+search,
+            url : url,
             success: function (msg) {
-                $('#list').html(msg);
-                $('#search').val(search);
+                jQuery('#list').html(msg);
+                jQuery('#search').val(search);
             }
         })
     }
