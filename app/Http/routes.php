@@ -12,9 +12,10 @@
 */
 
 //首页
-Route::get('/', 'IndexController@index');
+Route::get('/', 'LoginController@index');
 Route::get('/index', 'IndexController@index');
-
+Route::any('/login', 'LoginController@login');
+Route::get('/captcha_code', 'LoginController@captcha_code');
 //公共页面  头部
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
