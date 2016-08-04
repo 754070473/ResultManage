@@ -100,13 +100,13 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="roleadd">
                         <i class="icon-double-angle-right"></i>
                         角色添加
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="rolelist">
                         <i class="icon-double-angle-right"></i>
                         角色列表
                     </a>
