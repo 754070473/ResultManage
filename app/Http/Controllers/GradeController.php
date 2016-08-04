@@ -1,7 +1,6 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\excel\PHPExcel\PHPExcel_Cell;
 use Illuminate\Http\Request;
 use DB,Input,Redirect,Session,url;
 use App\Http\Requests;
@@ -105,7 +104,7 @@ class GradeController extends Controller
         if($res){
             echo "<script>alert('导入成功！');location.href='show'</script>";
         }else{
-            echo "<script>alert('上传失败！');location.href='gradd'</script>";
+            echo "<script>alert('导入失败！');location.href='from'</script>";
         }
     }
 
