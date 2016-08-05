@@ -141,22 +141,13 @@ class GradeController extends Controller
         $gid=$request->input('gid');
         $arr['exam']=$request->input('get.v');
         $arr1=DB::table('grade')->insert(
-            array('theory'=>$arr)
+            array('exam'=>$arr)
         );
-    }
-
-
-    //成绩理论修改
-    public function updates(Request $request){
-        $gid=$request->input('gid');
-
-        $arr['theory']=$request->input('get.v');
-//        print_r($gid);die;
-        $arr1=DB::table('grade')->insert(
-            array('theory'=>$arr)
-        );
-//        var_dump($arr1);die;
-
+        if($arr1){
+            echo 1;
+        }else{
+            echo 0;
+        }
 
         //当前页码
         $p = $request -> p ? $request -> p : 1;
@@ -171,7 +162,37 @@ class GradeController extends Controller
         $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
         //print_r($arr);die;
         //根据用户查询角色 并显示出来
-        return view('grade.updates',array('arr'=>$arr['arr'],'page'=>$arr['page']));
+        return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
+    }
+
+
+    //成绩理论修改
+    public function updates(Request $request){
+        $gid=$request->input('gid');
+        $arr['theory']=$request->input('get.v');
+        $arr1=DB::table('grade')->insert(
+            array('theory'=>$arr)
+        );
+        if($arr1){
+            echo 1;
+        }else{
+            echo 0;
+        }
+
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 1;
+        //查询条件
+        $where = 1;
+        //排序
+        $order = 'res_grade.add_date desc';
+        $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
+        //print_r($arr);die;
+        //根据用户查询角色 并显示出来
+        return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
     }
 
 
