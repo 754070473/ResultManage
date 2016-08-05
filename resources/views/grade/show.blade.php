@@ -115,7 +115,7 @@
                                             <th class="hidden-480">机试成绩</th>
 
                                             <th>添加日期</th>
-                                            <th>身份</th>
+                                            {{--<th>身份</th>--}}
                                             <th>类型</th>
                                             <th>操作</th>
                                         </tr>
@@ -143,19 +143,17 @@
                                                     </td>
 
                                                     <td>{{$v->g_add_date}}</td>
-                                                    <td>
-                                                        @if($v->status==1)
-                                                            学生
-                                                        @elseif($v->status==2)
-                                                            组长
-                                                        @elseif($v->status==3)
-                                                            学委
-                                                        @elseif($v->status==4)
-                                                            讲师
-                                                        @elseif($v->status==5)
-                                                            教务
-                                                        @endif
-                                                    </td>
+                                                    {{--<td>--}}
+                                                        {{--@if($v->status==1)--}}
+                                                            {{--学生--}}
+                                                        {{--@elseif($v->status==2)--}}
+                                                            {{--组长--}}
+                                                        {{--@elseif($v->status==3)--}}
+                                                            {{--讲师--}}
+                                                        {{--@elseif($v->status==4)--}}
+                                                            {{--教务--}}
+                                                        {{--@endif--}}
+                                                    {{--</td>--}}
                                                     <td>
                                                         @if($v->type==1)
                                                             日考
@@ -300,8 +298,8 @@
                     document.getElementById('i'+id).style.display='none';
                     location.href="show"
                 }else{
-                    alert('亲，还没修改呢');
-                    if (confirm("您确定退出修改吗??")) {
+                    alert('亲，您以点击修改');
+                    if (confirm("您确定退出吗??")) {
                         location.href="show"
                     }
                 }
@@ -326,8 +324,8 @@
                         document.getElementById('i'+id).style.display='none';
                         location.href="show"
                     }else{
-                        alert('亲，还没修改呢');
-                        if (confirm("您确定退出修改吗??")) {
+                        alert('亲，您以点击修改');
+                        if (confirm("您确定退出吗??")) {
                             location.href="show"
                         }
                     }

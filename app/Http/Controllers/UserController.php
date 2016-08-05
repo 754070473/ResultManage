@@ -59,7 +59,7 @@ class UserController extends Controller
      */
     private function role( )
     {
-           return  DB::table('role')->get();
+           return  DB::table('res_role')->get();
     }
 
     /**
@@ -72,17 +72,17 @@ class UserController extends Controller
     {
         if( 'all' == $type )
         {
-           return   DB::table('user')
-                    ->join('user_role', 'user.uid', '=', 'user_role.uid')
-                    ->join('role', 'role.rid', '=', 'user_role.rid')
+           return   DB::table('res_user')
+                    ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
+                    ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
                     ->get();
         }
         else if(  'one' == $type )
         {
-            $firse =  DB::table('user')
-                        ->join('user_role', 'user.uid', '=', 'user_role.uid')
-                        ->join('role', 'role.rid', '=', 'user_role.rid')
-                        ->where("user.uid","=","$where")
+            $firse =  DB::table('res_user')
+                        ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
+                        ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+                        ->where("res_user.uid","=","$where")
                         ->limit(1)
                         ->get();
             return $firse[0];
@@ -135,7 +135,7 @@ class UserController extends Controller
         empty($input['usertype'])?$input['usertype']="":$usertype=$input['usertype'];
 
         /*表单过滤*/
-
+//  var_dump($username) ;
         if( empty( $username ) || empty( $usertype ) )
         {
             $this->__SWITCH(1);die;
@@ -165,7 +165,7 @@ class UserController extends Controller
             );
 
             //添加用户  并获取上一条ID
-            $insertID = $this->insertUser( $date , "user" );
+            $insertID = $this->insertUser( $date , "res_user" );
 
             $role = [
                 'uid' => "$insertID",
@@ -173,7 +173,7 @@ class UserController extends Controller
             ];
 
             //插入角色
-            $bool = $this->insertRole( $role , "user_role" );
+            $bool = $this->insertRole( $role , "res_user_role" );
 
             if (1 == $bool)
             {
@@ -218,16 +218,17 @@ class UserController extends Controller
      */
     public function userListInfo( Request $request )
     {
+        empty( $request['type'] ) ? $type = 1 : $type = $request['type'];
         empty( $request['page'] ) ? $page = 1 : $page = $request['page'];
 
         // 每页显示条数
         $page_num = 10;
 
         //  计算总页码
-        $num = DB::table('user')
-            ->join('user_role', 'user.uid', '=', 'user_role.uid')
-            ->join('role', 'role.rid', '=', 'user_role.rid')
-            ->where('status',"!=","2")
+        $num = DB::table('res_user')
+            ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
+            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+            ->where('status',"=","$type")
             ->count();
         $pages = ceil($num/$page_num);
         $disable = 'normal';
@@ -240,7 +241,7 @@ class UserController extends Controller
         {
             $disable = 'dndisable';
             $page = $pages;
-        }else if(($page <= 1)&&($page > $pages)){
+        }else if($pages<2){
             $disable = 'alldisable';
         }
         //  计算偏移量
@@ -248,10 +249,10 @@ class UserController extends Controller
 
         empty( $request['numLine'] ) ? $numLine = 10 : $numLine = $request['numLine'];
 
-        $firse['data'] =  DB::table('user')
-            ->join('user_role', 'user.uid', '=', 'user_role.uid')
-            ->join('role', 'role.rid', '=', 'user_role.rid')
-            ->where('status',"!=","2")
+        $firse['data'] =  DB::table('res_user')
+            ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
+            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+            ->where('status',"=","$type")
             ->skip($limit)
             ->take($page_num)
             ->get();
@@ -291,24 +292,25 @@ class UserController extends Controller
         {
             echo 0;die;
         }
-       echo DB::table('user')
+       echo DB::table('res_user')
             ->where('uid', $id)
             ->update([$ziduan => "$value"]);
     }
 
 
     /**
-     * 放入回收站
+     * 放入回收站  还原
      * @param Request $request
      */
     public function logDelete( Request $request )
     {
+        empty( $request['type'] ) ? $id = "" : $id = $request['id'];
         empty( $request['id'] ) ? $id = "" : $id = $request['id'];
         $array=explode(',',$id);
         if(empty($array)){
             echo 0;
         }else{
-            echo DB::table('user')
+            echo DB::table('res_user')
                 ->whereIn("uid",$array)
                 ->update(['status' => "2"]);
         }
@@ -327,21 +329,53 @@ class UserController extends Controller
         if(empty($array)){
             echo 0;
         }else{
-            echo DB::table('user_role')
+            echo DB::table('res_user_role')
                 ->whereIn("uid",$array)
                 ->update(['rid' => "$date"]);
         }
 
     }
 
+    /**
+     * 回收站列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function userRemove(){
 
-        return view('user.userList');
+        $role = $this->role();
+        return view('user.userRemove',['role'=>$role]);
     }
 
 
 
+    /**
+     * 放入回收站
+     * @param Request $request
+     */
+    public function logDeleteTrue( Request $request )
+    {
+        empty( $request['id'] ) ? $id = "" : $id = $request['id'];
+        $array=explode(',',$id);
+        if(empty($array)){
+            echo 0;
+        }else{
 
+            $boolRole =   DB::table('res_user_role')
+                ->whereIn("uid",$array)
+                ->delete();
+            $boolUser =    DB::table('res_user')
+                ->whereIn("uid",$array,'and',' status','=','2')
+                ->delete();
+            if( (true == $boolRole)&&( true == $boolUser )){
+                echo 1;
+            }
+            else
+            {
+                echo 0;
+            }
+        }
+
+    }
 
 
 
