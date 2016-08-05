@@ -172,22 +172,6 @@ class GradeController extends Controller
         } else {
             echo 0;die;
         }
-
-
-//        //当前页码
-//        $p = $request -> p ? $request -> p : 1;
-//        //查询表名
-//        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
-//        //每页显示数据条数
-//        $num = $request -> num ? $request -> num : 1;
-//        //查询条件
-//        $where = 1;
-//        //排序
-//        $order = 'res_grade.add_date desc';
-//        $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-//        //print_r($arr);die;
-//        //根据用户查询角色 并显示出来
-//        return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
     }
 
 
@@ -205,23 +189,7 @@ class GradeController extends Controller
         } else {
             return redirect('show');
         }
-        //当前页码
-        $p = $request->p ? $request->p : 1;
-        //查询表名
-        $table = 'res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
-        //每页显示数据条数
-        $num = $request->num ? $request->num : 1;
-        //查询条件
-        $where = 1;
-        //排序
-        $order = 'res_grade.add_date desc';
-        $arr = $this->ajaxPage($table, $num, $p, 'gradePage', $where, $order);
-        //print_r($arr);die;
-        //根据用户查询角色 并显示出来
-        return view('grade.show', array('arr' => $arr['arr'], 'page' => $arr['page']));
     }
-
-
 
 
 
@@ -261,15 +229,22 @@ class GradeController extends Controller
             $str = mb_convert_encoding($str, 'utf8', 'auto');//根据自己编码修改
             $strs = explode("|*|", $str);
             //拼写sql语句
-            $sql[]= ['name'=>"{$strs[0]}",'theory'=>"{$strs[1]}",'exam'=>"{$strs[2]}",'status'=>"{$strs[3]}",'type'=>"{$strs[4]}"];
+            $sql[] = [
+                'name'=>"{$strs[0]}",
+                'theory'=>"{$strs[1]}",
+                'exam'=>"{$strs[2]}",
+                'status'=>"{$strs[3]}",
+                'type'=>"{$strs[4]
+                }"
+            ];
         }
 //		echo $sql;die;
         foreach( $sql as $key => $val ){
-            $sql[$key]['add_date'] = date( 'Y-m-d' , time() );
+            $sql[$key]['g_add_date'] = date( 'Y-m-d' , time() );
             $sql[$key]['add_time'] = date( 'H:i:s' , time() );
             $sql[$key]['uid'] = Session::get('uid');
         }
-        $res=DB::table('grade')->insert($sql);
+        $res=DB::table('res_grade')->insert($sql);
         if($res){
             echo "<script>alert('导入成功！');location.href='show'</script>";
         }else{
