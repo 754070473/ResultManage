@@ -35,15 +35,39 @@ class GradeController extends Controller
 
     //查看成绩
     public function show(Request $request){
-       Session::get('name');
+       $uid = Session::get('uid');
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        $accounts = $role->accounts;
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
-        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
+        $table='res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
         //每页显示数据条数
         $num = $request -> num ? $request -> num : 10;
         //查询条件
-        $where = 1;
+        if( $role_name == '组员' ){
+            $where = 'res_grade.status=3 and name = "'.$role -> username.'"';
+        }elseif( $role_name == '讲师' ) {
+            $where = 'res_grade.status=3 and class_name = "' . $accounts . '"';
+        }elseif( $role_name == '组长' ){
+            $pre = 'QWERTYUIOPASDFGHJKLZXCVBNM';
+            for( $i = 0 ; $i < 26 ; $i++ ){
+                if(strpos( $accounts , $pre{$i} )){
+                    $str = $pre{$i};
+                }
+            }
+            $group = substr($accounts , strrpos( $accounts , $str )+1);
+            $student = DB::table('res_students') -> join( 'res_user' , 'res_students.uid' , '=' , 'res_user.uid' ) -> where('gr_id' , $group) -> get();
+            foreach($student as $key => $val){
+                $name[] = $val -> username;
+            }
+            $username = implode( "','" , $name );
+            $username = "'".$username."'";
+            $where = 'res_grade.status=3 and name in ('.$username.')';
+        }else{
+            $where = 'res_grade.status=3';
+        }
         //排序
         $order = 'res_grade.g_add_date desc';
         $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
@@ -53,48 +77,139 @@ class GradeController extends Controller
     }
 
     public function search(Request $request){
-        Session::get('name');
-        $search=$request->input('search');
-        $username=$request->input('username');
-        $exam=$request->input('exam');
-        if($exam==1){
-
-        }
+        $search = $request -> search ? $request -> search : '';
+        $sel_username = $request -> username ? $request -> username : '';
+        $exam1 = $request -> exam1 ? $request -> exam1 : '';
+        $exam2 = $request -> exam2 ? $request -> exam2 : '';
+        $type = $request -> type ? $request -> type : '';
+        $uid = Session::get('uid');
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        $accounts = $role->accounts;
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
-        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
+        $table='res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
         //每页显示数据条数
         $num = $request -> num ? $request -> num : 10;
         //查询条件
-        $where = "name like '%$search%'";
+        if( $role_name == '组员' ){
+            $where = 'res_grade.status=3 and name = "'.$role -> username.'"';
+        }elseif( $role_name == '讲师' ) {
+            $where = 'res_grade.status=3 and class_name = "' . $accounts . '"';
+        }elseif( $role_name == '组长' ){
+            $pre = 'QWERTYUIOPASDFGHJKLZXCVBNM';
+            for( $i = 0 ; $i < 26 ; $i++ ){
+                if(strpos( $accounts , $pre{$i} )){
+                    $str = $pre{$i};
+                }
+            }
+            $group = substr($accounts , strrpos( $accounts , $str )+1);
+            $student = DB::table('res_students') -> join( 'res_user' , 'res_students.uid' , '=' , 'res_user.uid' ) -> where('gr_id' , $group) -> get();
+            foreach($student as $key => $val){
+                $name[] = $val -> username;
+            }
+            $username = implode( "','" , $name );
+            $username = "'".$username."'";
+            $where = 'res_grade.status=3 and name in ('.$username.')';
+        }else{
+            $where = 'res_grade.status=3';
+        }
+
+        if($search != ''){
+            $where .= ' and res_grade.g_add_date="'.$search.'"';
+        }
+        if($sel_username != ''){
+            $where .= ' and res_grade.name="'.$sel_username.'"';
+        }
+        if( $type != '' ) {
+            if ( $type == 1 ) {
+                if ( $exam1 != '' && $exam2 != '' ) {
+                    if ( $exam1 < $exam2 ) {
+                        $where .= ' and res_grade.theory between ' . $exam1 . ' and ' . $exam2;
+                    }else if( $exam2 < $exam1 ){
+                        $where .= ' and res_grade.theory between ' . $exam2 . ' and ' . $exam1;
+                    }else{
+                        $where .= ' and res_grade.theory='.$exam1;
+                    }
+                }else if( $exam1 != '' ){
+                    $where .= ' and res_grade.theory='.$exam1;
+                }else{
+                    $where .= ' and res_grade.theory='.$exam2;
+                }
+            } else {
+                if ( $exam1 != '' && $exam2 != '' ) {
+                    if ( $exam1 < $exam2 ) {
+                        $where .= ' and res_grade.exam between ' . $exam1 . ' and ' . $exam2;
+                    }else if( $exam2 < $exam1 ){
+                        $where .= ' and res_grade.exam between ' . $exam2 . ' and ' . $exam1;
+                    }else{
+                        $where .= ' and res_grade.exam='.$exam1;
+                    }
+                }else if( $exam1 != '' ){
+                    $where .= ' and res_grade.exam='.$exam1;
+                }else{
+                    $where .= ' and res_grade.exam='.$exam2;
+                }
+            }
+        }
         //排序
-        $order = 'res_grade.add_date desc';
-        $arr = $this -> ajaxPage( $table ,$num , $p , 'gradePage' , $where ,$order );
-//print_r($arr);die;
-        return view('grade.searchs',array('arr'=>$arr['arr'],'page'=>$arr['page'],'name'=>$search,'username'=>$username,'exam'=>$exam));
+        $order = 'res_grade.g_add_date desc';
+        $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
+        //print_r($arr);die;
+        //根据用户查询角色 并显示出来
+        return view('grade.searchs',
+            array( 
+            'arr' => $arr['arr'],
+            'page'=> $arr['page'] , 
+            'search' => $search ,
+            'username' => $sel_username ,
+            'exam1' => $exam1 ,
+            'exam2' => $exam2 , 
+            'type' => $type 
+            )
+        );
     }
 
 
 
     //分页
     public function gradePage(Request $request){
-        //搜索日期
-        $date = $request -> search ? $request -> search : '';
+        $uid = Session::get('uid');
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        $accounts = $role->accounts;
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
-        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
+        $table='res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
         //每页显示数据条数
         $num = $request -> num ? $request -> num : 10;
         //查询条件
-        if($date == '') {
-            $where = 1;
+        if( $role_name == '组员' ){
+            $where = 'res_grade.status=3 and name = "'.$role -> username.'"';
+        }elseif( $role_name == '讲师' ) {
+            $where = 'res_grade.status=3 and class_name = "' . $accounts . '"';
+        }elseif( $role_name == '组长' ){
+            $pre = 'QWERTYUIOPASDFGHJKLZXCVBNM';
+            for( $i = 0 ; $i < 26 ; $i++ ){
+                if(strpos( $accounts , $pre{$i} )){
+                    $str = $pre{$i};
+                }
+            }
+            $group = substr($accounts , strrpos( $accounts , $str )+1);
+            $student = DB::table('res_students') -> join( 'res_user' , 'res_students.uid' , '=' , 'res_user.uid' ) -> where('gr_id' , $group) -> get();
+            foreach($student as $key => $val){
+                $name[] = $val -> username;
+            }
+            $username = implode( "','" , $name );
+            $username = "'".$username."'";
+            $where = 'res_grade.status=3 and name in ('.$username.')';
         }else{
-            $where = "DATE(`add_date`) = '$date'";
+            $where = 'res_grade.status=3';
         }
         //排序
-        $order = 'res_grade.add_date desc';
+        $order = 'res_grade.g_add_date desc';
         $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
 //        print_r($arr);die;
         return view( 'grade.gradePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
@@ -244,6 +359,11 @@ class GradeController extends Controller
         }
     }
 
+    /**
+     * 审核成绩
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function examine(Request $request)
     {
         $uid = Session::get('uid');

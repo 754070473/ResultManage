@@ -85,11 +85,13 @@
                 </div><!-- /.page-header -->
                 姓名&nbsp;&nbsp;<input type="text" id="username">
                  &nbsp;&nbsp;&nbsp;&nbsp;
-                <select>
+                <select id="select">
                     <option value="1">理论成绩</option>
                     <option value="0">机试成绩</option>
                 </select>
-                &nbsp;&nbsp;<input type="text" id="exam" style="width: 50px;">- - -<input type="text" id="exam" style="width: 50px;">
+                &nbsp;&nbsp;<input type="text" id="exam1" style="width: 50px;"><span id="num1"></span>
+                - - -
+                <input type="text" id="exam2" style="width: 50px;"><span id="num2"></span>
                 &nbsp;&nbsp;&nbsp;&nbsp; 日期&nbsp;&nbsp;<input class="laydate-icon" id="search" onclick="laydate()" placeholder="点击选择日期">
                  <input type="button" value="搜索" onclick='searchs()' class="btn btn-xs btn-info">
                 <div class="row">
@@ -108,15 +110,14 @@
                                                     <span class="lbl"></span>
                                                 </label>
                                             </th>
-                                            <th>姓名</th>
-                                            <th>
-                                                理论成绩
-                                            </th>
-                                            <th class="hidden-480">机试成绩</th>
-
-                                            <th>添加日期</th>
-                                            <th>身份</th>
-                                            <th>类型</th>
+                                            <th>学生姓名</th>
+                                            <th>学院</th>
+                                            <th>班级</th>
+                                            <th>理论成绩</th>
+                                            <th>机试成绩</th>
+                                            <th>提交时间</th>
+                                            <th>提交人</th>
+                                            <th>考试类型</th>
                                             <th>操作</th>
                                         </tr>
                                         </thead>
@@ -131,36 +132,24 @@
                                                             <span class="lbl"></span>
                                                         </label>
                                                     </td>
+                                                    <td>
+                                                        {{$v->name}}
+                                                    </td>
+                                                    <td>{{$v->college_name}}</td>
+                                                    <td>{{$v->class_name}}</td>
+                                                    <td>{{$v->theory}}</td>
+                                                    <td>{{$v->exam}}</td>
+                                                    <td>{{$v->g_add_date}}</td>
                                                     <td>{{$v->username}}</td>
-                                                    <td id="{{$v->gid}}" onclick="change({{$v->gid}})"><input type="text" value="{{$v->theory}}" id="i{{$v->gid}}" style="display: none" onblur="update({{$v->gid}})">
-                                                        <span id="s{{$v->gid}}">{{$v->theory}}</span>
-                                                    </td>
-                                                    <td id="{{$v->gid}}" onclick="change1({{$v->gid}})"><input type="text" value="{{$v->gid}}" id="y{{$v->gid}}" style="display: none" onblur="update1({$v->gid})"><span id="k{{$v->gid}}">{{$v->exam}}</span></td>
-
-                                                    <td>{{$v->add_date}}</td>
                                                     <td>
-                                                        @if($v->status==1)
-                                                            学生
-                                                        @elseif($v->status==2)
-                                                            组长
-                                                        @elseif($v->status==3)
-                                                            学委
-                                                        @elseif($v->status==4)
-                                                            讲师
-                                                        @elseif($v->status==5)
-                                                            教务
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if($v->type==1)
+                                                        @if($v -> type == 1)
                                                             日考
-                                                        @elseif($v->type==2)
+                                                        @elseif($v -> type == 2)
                                                             周考
-                                                        @elseif($v->type==3)
+                                                        @else
                                                             月考
                                                         @endif
                                                     </td>
-
                                                     <td>
                                                         <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
 
@@ -230,34 +219,55 @@
     //搜索
     function searchs(){
         //定义值  上面的id值
-        var search1 = document.getElementById('search').value;
+        var search = document.getElementById('search').value;
         var username = document.getElementById('username').value;
-        var exam = document.getElementById('exam').value;
-        var exam_reg = /^(^[1-9]\d$)|(^\d$)|(^100$)$/;
-        if(exam_reg.test(exam)){
-            document.getElementById('exam').innerHTML="<font color='black'>√</font>";
+        var exam1 = document.getElementById('exam1').value;
+        var exam2 = document.getElementById('exam2').value;
+        var type = document.getElementById('select').value;
+        /*var exam_reg = /^(^[1-9]\d$)|(^\d$)|(^100$)$/;
+        if(exam_reg.test(exam1)){
+            document.getElementById('num1').innerHTML="<font color='black'>√</font>";
             return true;
         }else{
-            document.getElementById('exam').innerHTML="<font color='red'>必须查询大于等于0且小于等于100</font>";
+            document.getElementById('num1').innerHTML="<font color='red'>必须输入大于等于0且小于等于100的整数</font>";
             return false;
         }
+        if(exam_reg.test(exam2)){
+            document.getElementById('num2').innerHTML="<font color='black'>√</font>";
+            return true;
+        }else{
+            document.getElementById('num2').innerHTML="<font color='red'>必须输入大于等于0且小于等于100的整数</font>";
+            return false;
+        }*/
         var str = '';
         if( username != ''){
-            str += 'username='+username;
+            str += '&'+'username='+username;
         }
-
+        if( exam1 != '' ){
+            str += '&'+'exam1='+exam1;
+        }
+        if( exam2 != '' ){
+            str += '&'+'exam2='+exam2;
+        }
+        if( search != '' ){
+            str += '&'+'search='+search;
+        }
+        if( exam1 != '' || exam2 != '' ){
+            str += '&'+'type='+type;
+        }
+        str = str.substr(1);
         //创建ajax对象
         var ajax=new XMLHttpRequest();
-                //ajax事件
-                ajax.onreadystatechange=function(){
-                    if(ajax.readyState==4){
-                        document.getElementById('list').innerHTML=ajax.responseText;
-                    }
-                }
-                //与服务器连接  1、search要传入的值  2、上面定义的值
-                ajax.open('get','search?&search='+search1+"username="+username+"exam="+exam);
-                //处理请求
-                ajax.send(null);
+        //ajax事件
+        ajax.onreadystatechange=function(){
+            if(ajax.readyState==4){
+                document.getElementById('list').innerHTML=ajax.responseText;
+            }
+        }
+        //与服务器连接  1、search要传入的值  2、上面定义的值
+        ajax.open('get','{{url("search")}}?'+str);
+        //处理请求
+        ajax.send(null);
     }
 
     //删除

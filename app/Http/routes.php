@@ -76,6 +76,7 @@ Route::get('/gradeDelete','GradeController@gradeDelete');
 //成绩管理---分页
 Route::get('/gradePage','GradeController@gradePage');
 //成绩管理---搜索
+Route::get('/search','GradeController@search');
 
 /**80-100 刘清白用户管理**/
 //用户管理-添加表单
