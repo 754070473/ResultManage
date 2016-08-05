@@ -18,17 +18,16 @@ abstract class Controller extends BaseController
     {
         //非法登录
         $action = $this -> getCurrentAction();
-        if( $action['controller'] != 'Login') {
+        if( $action['controller'] != 'Login' && $action['controller'] != 'Public') {
             if ( empty( Session::get( 'uid' ) ) ) {
                 echo "<script>alert('请先登录');location.href='loginIndex'</script>";
                 exit;
             }
+            //权限控制
+            if( Session::get('uid') != 1 ){
+                $this->userPower();
+            }
         }
-
-        /*//权限控制
-        if( Session::get('uid') != 1 ){
-            $this->userPower();
-        }*/
     }
 
     /**

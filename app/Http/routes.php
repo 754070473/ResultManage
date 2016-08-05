@@ -44,23 +44,11 @@ Route::get('/logPage', 'IndexController@logPage');
 //日志删除
 Route::get('/logDelete', 'IndexController@logDelete');
 
-
-
-
-
-
-
-
-
-
-
-
 //成绩管理---显示录入成绩页面
 Route::get('/grade','GradeController@grade');
 //成绩管理---添加录入成绩数据
 Route::any('/grade_add','GradeController@grade_add');
 //成绩管理----查看成绩
-<<<<<<< HEAD
 Route::any('/show','GradeController@show');
 //成绩管理---成绩理论、机试修改
 Route::any('/updates','GradeController@updates');
@@ -69,7 +57,6 @@ Route::any('/updatess','GradeController@updatess');
 Route::any('/import','GradeController@import');
 //成绩管理---删除
 Route::any('/gradeDelete','GradeController@gradeDelete');
-=======
 Route::get('/show','GradeController@show');
 Route::get('/examine','GradeController@examine');
 //成绩管理---成绩理论、机试修改
@@ -84,7 +71,6 @@ Route::any('/import','GradeController@import');
 //成绩管理---删除
 
 Route::get('/gradeDelete','GradeController@gradeDelete');
->>>>>>> a851e94e9ac8c14e526bc27383fdf22a0ad56d0a
 //成绩管理---分页
 Route::any('/gradePage','GradeController@gradePage');
 //成绩管理---搜索
@@ -94,16 +80,10 @@ Route::get('/search','GradeController@search');
 //用户管理-添加表单
 Route::any('/useradd', 'UserController@userAdd');
 //用户管理-ajax添加用户
-<<<<<<< HEAD
 Route::any('/useraddpro', 'UserController@userAddPro');
 //用户管理-用户列表表单
 Route::any('/userList', 'UserController@userList');
-=======
-Route::post('/useraddpro', 'UserController@userAddPro');
 
-//用户管理-用户列表表单
-Route::get('/userList', 'UserControllr@userList');
->>>>>>> a851e94e9ac8c14e526bc27383fdf22a0ad56d0a
 //用户管理-表格内容  ajax post
 Route::any('/userListInfo', 'UserController@userListInfo');
 //用户管理-ajax修改
@@ -114,24 +94,10 @@ Route::any('/logDelete', 'UserController@logDelete');
 Route::any('/roleUpdate', 'UserController@roleUpdate');
 //用户管理-回收站
 Route::any('/userRemove', 'UserController@userRemove');
-<<<<<<< HEAD
 //用户管理-回收站-永久删除
 Route::any('/logDeleteTrue', 'UserController@logDeleteTrue');
 //用户管理-回收站-批量还原
 Route::any('/userRestore', 'UserController@logDelete');
-
-=======
-
-
-
-
-
-
-
-
-
-
-
 
 Route::get('/roleadd','RoleController@roleAdd');            //角色名的验证
 Route::post('/roleins','RoleController@roleIns');           //角色的添加
@@ -153,15 +119,6 @@ Route::get('claAdd','GroupController@groupClaAdd');
 //班级表单
 Route::get('groupClaShow','GroupController@groupClaShow');
 
-
-
-
-
-
-
-
-
-
 //管理员日志
 Route::get('/userlog', 'IndexController@userLog');
 //日志分页
@@ -180,4 +137,3 @@ Route::get('uppower','PowerController@upPower');
 Route::get('savepower','PowerController@savePower');
 // 删除权限
 Route::get('depower','PowerController@dePower');
->>>>>>> a851e94e9ac8c14e526bc27383fdf22a0ad56d0a

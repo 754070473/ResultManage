@@ -352,23 +352,43 @@ class GradeController extends Controller
             $strs = explode("|*|", $str);
             //拼写sql语句
             $sql[] = [
-                'name'=>"{$strs[0]}",
-                'theory'=>"{$strs[1]}",
-                'exam'=>"{$strs[2]}",
-                'status'=>"{$strs[3]}",
-                'type'=>"{$strs[4]
-                }"
+                'class_id' => "{$strs[0]}",
+                'name'=>"{$strs[1]}",
+                'theory'=>"{$strs[2]}",
+                'exam'=>"{$strs[3]}",
+                'type'=>"{$strs[4]}"
             ];
         }
 //		echo $sql;die;
+        $uid = Session::get('uid');
+        $class = DB::table('res_class') -> where('class_name' , $sql[0]['class_id']) -> first();
+        $class_id = $class -> class_id;
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        if( $role_name == '教务' ){
+            $status = 2;
+        }elseif( $role_name == '讲师' ){
+            $status = 1;
+        }else{
+            $status = 0;
+        }
         foreach( $sql as $key => $val ){
+            if( $val['type'] == '日考' ){
+                $sql[$key]['type'] = 1;
+            }elseif( $val['type'] == '周考' ){
+                $sql[$key]['type'] = 2;
+            }else {
+                $sql[$key]['type'] = 3;
+            }
+            $sql[$key]['status'] = $status;
+            $sql[$key]['class_id'] = $class_id;
             $sql[$key]['g_add_date'] = date( 'Y-m-d' , time() );
             $sql[$key]['add_time'] = date( 'H:i:s' , time() );
-            $sql[$key]['uid'] = Session::get('uid');
+            $sql[$key]['uid'] = $uid;
         }
         $res=DB::table('res_grade')->insert($sql);
         if($res){
-            echo "<script>alert('导入成功！');location.href='show'</script>";
+            echo "<script>alert('导入成功！');location.href='grade'</script>";
         }else{
             echo "<script>alert('导入失败！');location.href='from'</script>";
         }
@@ -391,12 +411,10 @@ class GradeController extends Controller
         //每页显示数据条数
         $num = $request -> num ? $request -> num : 10;
         //查询条件
-        if( $role_name == '教务' ){
+        if( $role_name == '讲师' ){
             $where = 'res_grade.status=2';
-        }elseif( $role_name == '讲师' ){
-            $where = 'res_grade.status=1';
         }else{
-            $where = 'res_grade.status=0';
+            $where = 'res_grade.status=1';
         }
         //排序
         $order = 'gid desc';

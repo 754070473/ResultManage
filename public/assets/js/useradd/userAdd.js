@@ -16,7 +16,7 @@ jQuery(function ($) {
         jquery验证
         */
         $.post(
-            "/useraddpro",
+            "useraddpro",
             {
                 username:name,
                 usertype:usertype

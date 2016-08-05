@@ -567,7 +567,7 @@
 
 	function fun()
 	{
-		// alert(oldpwd());
+		 alert(oldpwd());
 		if (oldPwd()&&newPwd()&&newPass()) 
 		{
 			// alert(oldpwd())

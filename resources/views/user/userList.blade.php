@@ -363,7 +363,7 @@
                     log_id = log_id.substr(1);
                     $.ajax({
                         type: 'get',
-                        url: '/roleUpdate',
+                        url: 'roleUpdate',
                         data: 'id=' + log_id+"&date="+role_update,
                         success: function (msg) {
                             if (msg != 0) {

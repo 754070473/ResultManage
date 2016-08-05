@@ -61,8 +61,8 @@ class LoginController extends Controller
 					 	{
 					 		$uid = $user->uid;
 					 		Session::put('uid',$uid);  //把用户ID存入session
-					 		/*$users = DB::table('res_user_role')
-				            ->join('res_role_power', 'res_role_power.rid', '=', 'res_user_role.rid')
+					 		$users = DB::table('res_user')
+				            ->join('res_role_power', 'res_role_power.rid', '=', 'res_user.rid')
 				            ->join('res_power', 'res_power.pid', '=', 'res_role_power.pid')
 				            ->where('uid',$uid )
 				            ->get();
@@ -74,7 +74,7 @@ class LoginController extends Controller
 				            }
 					 		// print_r($power);
 					 		//把用户所对应的角色的权限存入session中；
-					 		Session::put('power',$power);*/
+					 		Session::put('power',$power);
 					 		echo 0;
 
 					 	}

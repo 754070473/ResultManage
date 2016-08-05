@@ -228,7 +228,7 @@ class UserController extends Controller
         $num = DB::table('res_user')
             ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
             ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
-            ->where('status',"=","$type")
+            ->where('res_user.status',"=","$type")
             ->count();
         $pages = ceil($num/$page_num);
         $disable = 'normal';
@@ -252,7 +252,7 @@ class UserController extends Controller
         $firse['data'] =  DB::table('res_user')
             ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
             ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
-            ->where('status',"=","$type")
+            ->where('res_user.status',"=","$type")
             ->skip($limit)
             ->take($page_num)
             ->get();
@@ -304,7 +304,7 @@ class UserController extends Controller
      */
     public function logDelete( Request $request )
     {
-        empty( $request['type'] ) ? $id = "" : $id = $request['id'];
+        empty( $request['type'] ) ? $type = 2 : $type = $request['type'];
         empty( $request['id'] ) ? $id = "" : $id = $request['id'];
         $array=explode(',',$id);
         if(empty($array)){
@@ -312,10 +312,11 @@ class UserController extends Controller
         }else{
             echo DB::table('res_user')
                 ->whereIn("uid",$array)
-                ->update(['status' => "2"]);
+                ->update(['status' => "$type"]);
         }
 
     }
+
 
     /**
      * ajax  修改角色
@@ -364,7 +365,7 @@ class UserController extends Controller
                 ->whereIn("uid",$array)
                 ->delete();
             $boolUser =    DB::table('res_user')
-                ->whereIn("uid",$array,'and',' status','=','2')
+                ->whereIn("uid",$array,'and',' res_user.status','=','2')
                 ->delete();
             if( (true == $boolRole)&&( true == $boolUser )){
                 echo 1;

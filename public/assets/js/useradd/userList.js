@@ -23,7 +23,7 @@ jQuery(function () {
             if(new_val!=old_val){
                 $.ajax({
                     type: "POST",
-                    url: "/userListUpdate",
+                    url: "userListUpdate",
                     data: "id="+id+"&value="+new_val+"&ziduan="+ziduan,
                     success: function(msg){
                         if(msg==1){
@@ -43,7 +43,7 @@ jQuery(function () {
 function show_page(page){
     $.ajax({
         type: "get",
-        url: "/userListInfo",
+        url: "userListInfo",
         data: "page="+parseInt(page),
         success: function(msg){
             var obj = eval("("+msg+")")
@@ -122,7 +122,7 @@ function ckDeleteAll()
         log_id = log_id.substr(1);
             $.ajax({
                 type: 'post',
-                url: '/logDelete',
+                url: 'logDelete',
                 data: 'id=' + log_id,
                 success: function (msg) {
                     if (msg != 0) {

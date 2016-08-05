@@ -1,4 +1,4 @@
-jQuery(function () {
+jQuery(function ($) {
     show_page(1);
      token = $('#_token').val();
     $(document).on('click','#clk_page',function () {
@@ -12,7 +12,7 @@ jQuery(function () {
 function show_page(page){
     $.ajax({
         type: "get",
-        url: "/userListInfo",
+        url: "userListInfo",
         data: "page="+parseInt(page)+"&type=2",
         success: function(msg){
             var obj = eval("("+msg+")")
@@ -87,7 +87,7 @@ function ckDeleteAll()
         log_id = log_id.substr(1);
             $.ajax({
                 type: 'get',
-                url: '/logDelete',
+                url: 'logDelete',
                 data: 'id=' + log_id,
                 success: function (msg) {
                     if (msg != 0) {
@@ -123,7 +123,7 @@ function userRestore()
         log_id = log_id.substr(1);
         $.ajax({
             type: 'get',
-            url: '/userRestore',
+            url: 'userRestore',
             data: 'id=' + log_id+"&type=1",
             success: function (msg) {
                 if (msg != 0) {
