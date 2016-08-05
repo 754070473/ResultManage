@@ -96,6 +96,17 @@ Route::any('/logDelete', 'UserController@logDelete');
 Route::any('/roleUpdate', 'UserController@roleUpdate');
 //用户管理-回收站
 Route::any('/userRemove', 'UserController@userRemove');
+Route::get('/roleadd','RoleController@roleAdd');            //角色名的验证
+Route::post('/roleins','RoleController@roleIns');           //角色的添加
+Route::get('/rolelist','RoleController@roleList');          //角色的列表
+Route::get('/rolelists','RoleController@rolePage');         //角色列表的分页
+Route::get('/rolestatus','RoleController@roleStatus');      //角色的状态修改
+Route::get('/roleupdate','RoleController@roleUpd');         //角色名称的修改
+Route::post('/roleupdates','RoleController@roleUpdate');    //角色名修改页面
+Route::get('/roledelete','RoleController@roleDelete');      //删除角色时的验证
+Route::get('/roledel','RoleController@roleDel');            //删除角色
+Route::get('/rolegive','RoleController@roleGive');          //角色赋权页面
+Route::get('/rolegives','RoleController@roleGives');        //修改角色的权限
 //学院首页
 Route::get('collShow', 'GroupController@groupShow');
 //创建学院
@@ -104,4 +115,5 @@ Route::get('collAdd','GroupController@groupCollAdd');
 Route::get('claAdd','GroupController@groupClaAdd');
 //班级表单
 Route::get('groupClaShow','GroupController@groupClaShow');
+
 
