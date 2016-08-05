@@ -97,6 +97,18 @@ Route::any('/logDelete', 'UserController@logDelete');
 Route::any('/roleUpdate', 'UserController@roleUpdate');
 //用户管理-回收站
 Route::any('/userRemove', 'UserController@userRemove');
+
+
+
+
+
+
+
+
+
+
+
+
 Route::get('/roleadd','RoleController@roleAdd');            //角色名的验证
 Route::post('/roleins','RoleController@roleIns');           //角色的添加
 Route::get('/rolelist','RoleController@roleList');          //角色的列表
@@ -118,3 +130,29 @@ Route::get('claAdd','GroupController@groupClaAdd');
 Route::get('groupClaShow','GroupController@groupClaShow');
 
 
+
+
+
+
+
+
+
+
+//管理员日志
+Route::get('/userlog', 'IndexController@userLog');
+//日志分页
+Route::get('/logPage', 'IndexController@logPage');
+// 添加权限
+Route::any('poweradd', 'PowerController@powerAdd');
+// 权限展示
+Route::get('showpower', 'PowerController@showPower');
+// 根据id获取控制器名称
+Route::get('getcont', 'PowerController@getcont');
+// 唯一性验证
+Route::get('checkone', 'PowerController@checkOne');
+Route::get('ajaxone', 'PowerController@ajaxOne');
+// 修改权限
+Route::get('uppower','PowerController@upPower');
+Route::get('savepower','PowerController@savePower');
+// 删除权限
+Route::get('depower','PowerController@dePower');
