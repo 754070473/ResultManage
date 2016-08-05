@@ -162,13 +162,13 @@
 												<fieldset>
 													<label class="block clearfix">
 														<span class="block input-icon input-icon-right">
-															<input type="email" class="form-control" placeholder="Email" />
+															<input type="email" class="form-control" placeholder="Email" id='email'/>
 															<i class="icon-envelope"></i>
 														</span>
 													</label>
 
 													<div class="clearfix">
-														<button type="button" class="width-35 pull-right btn btn-sm btn-danger">
+														<button type="button" class="width-35 pull-right btn btn-sm btn-danger" id='button'>
 															<i class="icon-lightbulb"></i>
 															Send Me!
 														</button>

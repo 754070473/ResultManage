@@ -6,7 +6,7 @@ use Session;
 use Illuminate\Http\Request;
 use Code;
 use Illuminate\Http\RedirectResponse;
-
+use mail;
 
 require_once(__DIR__."/../../../vendor/captcha_code.php");
 
@@ -40,8 +40,8 @@ class LoginController extends Controller
 	{
 		//接受数据
 		 $arr=$request->all();
-		 //账号
-		 $accounts = $arr['accounts'];
+		 //账号,去除账号两边的空白符
+		 $accounts = trim($arr['accounts']);
 		 //密码
 		 $password = $arr['password'];
 		 //验证码
@@ -197,10 +197,6 @@ class LoginController extends Controller
 	    else
 	    {
 	    	echo "<script>alert('修改失败')</script>";die;
-	    }
-
-		
-		 
+	    }		 
 	}
-
 }
