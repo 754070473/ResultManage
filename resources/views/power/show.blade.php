@@ -51,9 +51,9 @@
 							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 						</script> 
       <ul class="breadcrumb"> 
-       <li> <i class="icon-home home-icon"></i> <a href="#">Home</a> </li> 
-       <li> <a href="#">Tables</a> </li> 
-       <li class="active">Simple &amp; Dynamic</li> 
+       <li> <i class="icon-home home-icon"></i> <a href="#">首页</a> </li> 
+       <li> <a href="#">权限管理</a> </li> 
+       <li class="active">权限列表</li> 
       </ul>
       <!-- .breadcrumb --> 
       <div class="nav-search" id="nav-search"> 
@@ -65,7 +65,7 @@
      </div> 
      <div class="page-content"> 
       <div class="page-header"> 
-       <h1> Tables <small> <i class="icon-double-angle-right"></i> Static &amp; Dynamic Tables </small> </h1> 
+       <h1> 权限管理 <small> <i class="icon-double-angle-right"></i> 权限列表</small> </h1> 
       </div>
       <!-- /.page-header --> 
       <div class="row"> 
@@ -131,6 +131,7 @@
                 <button class="btn btn-xs btn-info save" pid="{{$value['pid']}}">
                 <i class="icon-exchange"></i>
                 </button>
+
                </div> 
             </td> 
              </tr>
@@ -139,7 +140,9 @@
              @endforeach 
             </tbody> 
            </table> 
-           <input type="button" id="delall" value="批量删除">
+                <button class="btn btn-grey btn-lg" id="delall" style="width: 80px;">
+                <i class="icon-trash "></i>
+                </button>
           </div>
           <!-- /.table-responsive --> 
          </div>

@@ -49,9 +49,9 @@
 							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 						</script> 
       <ul class="breadcrumb"> 
-       <li> <i class="icon-home home-icon"></i> <a href="#">Home</a> </li> 
-       <li> <a href="#">Forms</a> </li> 
-       <li class="active">Form Elements</li> 
+       <li> <i class="icon-home home-icon"></i> <a href="#">首页</a> </li> 
+       <li> <a href="#">权限管理</a> </li> 
+       <li class="active">添加权限</li> 
       </ul>
       <!-- .breadcrumb --> 
       <div class="nav-search" id="nav-search"> 
