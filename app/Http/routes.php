@@ -57,27 +57,27 @@ Route::get('/logDelete', 'IndexController@logDelete');
 //成绩管理---显示录入成绩页面
 Route::get('/grade','GradeController@grade');
 //成绩管理---添加录入成绩数据
-Route::get('/grade_add','GradeController@grade_add');
+Route::any('/grade_add','GradeController@grade_add');
 //成绩管理----查看成绩
-Route::get('/show','GradeController@show');
+Route::any('/show','GradeController@show');
 //成绩管理---成绩理论、机试修改
-Route::get('/updates','GradeController@updates');
-Route::get('/updatess','GradeController@updatess');
+Route::any('/updates','GradeController@updates');
+Route::any('/updatess','GradeController@updatess');
 //成绩管理---导入
 Route::any('/import','GradeController@import');
 //成绩管理---删除
-Route::get('/gradeDelete','GradeController@gradeDelete');
+Route::any('/gradeDelete','GradeController@gradeDelete');
 //成绩管理---分页
-Route::get('/gradePage','GradeController@gradePage');
+Route::any('/gradePage','GradeController@gradePage');
 //成绩管理---搜索
 
 /**80-100 刘清白用户管理**/
 //用户管理-添加表单
-Route::get('/useradd', 'UserController@userAdd');
+Route::any('/useradd', 'UserController@userAdd');
 //用户管理-ajax添加用户
-Route::post('/useraddpro', 'UserController@userAddPro');
+Route::any('/useraddpro', 'UserController@userAddPro');
 //用户管理-用户列表表单
-Route::get('/userList', 'UserController@userList');
+Route::any('/userList', 'UserController@userList');
 //用户管理-表格内容  ajax post
 Route::any('/userListInfo', 'UserController@userListInfo');
 //用户管理-ajax修改
@@ -88,3 +88,8 @@ Route::any('/logDelete', 'UserController@logDelete');
 Route::any('/roleUpdate', 'UserController@roleUpdate');
 //用户管理-回收站
 Route::any('/userRemove', 'UserController@userRemove');
+//用户管理-回收站-永久删除
+Route::any('/logDeleteTrue', 'UserController@logDeleteTrue');
+//用户管理-回收站-批量还原
+Route::any('/userRestore', 'UserController@logDelete');
+

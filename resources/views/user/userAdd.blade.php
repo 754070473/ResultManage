@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <title>用户添加</title>
@@ -79,8 +80,8 @@
                     <li class="active">用户添加</li>
                 </ul><!-- .breadcrumb -->
 
-                <div class="nav-search" id="nav-search">
-                    <form class="form-search">
+                <div class="nav-search" id="nav-search" >
+                    <form class="form-search" method="post" action="#">
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="icon-search nav-search-icon"></i>
@@ -573,5 +574,15 @@
     });
 
 </script>
+<input type="hidden" id="token" value="{{ csrf_token() }}" />
+<script>
+    var  _token = $("#token").val();
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': _token
+        }
+    });
+</script>
 </body>
 </html>
+
