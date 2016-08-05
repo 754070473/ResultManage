@@ -205,9 +205,167 @@ class UserController extends Controller
      * 用户列表
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function userList(){
+    public function userList()
+    {
+        $role = $this->role();
+
+        return view('user.userList',['role'=>$role]);
+    }
+
+    /**
+     * 用户信息分页
+     * @param Request $request
+     */
+    public function userListInfo( Request $request )
+    {
+        empty( $request['page'] ) ? $page = 1 : $page = $request['page'];
+
+        // 每页显示条数
+        $page_num = 10;
+
+        //  计算总页码
+        $num = DB::table('user')
+            ->join('user_role', 'user.uid', '=', 'user_role.uid')
+            ->join('role', 'role.rid', '=', 'user_role.rid')
+            ->where('status',"!=","2")
+            ->count();
+        $pages = ceil($num/$page_num);
+        $disable = 'normal';
+        if( $page <= 1)
+        {
+            $page=1;
+            $disable = 'updisable';
+        }
+        else if( $page >= $pages )
+        {
+            $disable = 'dndisable';
+            $page = $pages;
+        }else if(($page <= 1)&&($page > $pages)){
+            $disable = 'alldisable';
+        }
+        //  计算偏移量
+        $limit = ( $page-1 )*$page_num;
+
+        empty( $request['numLine'] ) ? $numLine = 10 : $numLine = $request['numLine'];
+
+        $firse['data'] =  DB::table('user')
+            ->join('user_role', 'user.uid', '=', 'user_role.uid')
+            ->join('role', 'role.rid', '=', 'user_role.rid')
+            ->where('status',"!=","2")
+            ->skip($limit)
+            ->take($page_num)
+            ->get();
+
+        $firse['pageAll'] = $pages;
+
+        $firse['dpage'] = $page;
+
+        $firse['disable'] = $disable ;
+
+        echo json_encode($firse);
+    }
+
+
+    /**
+     * ajax 修改用户名  账户
+     * @param Request $request
+     */
+    public function userListUpdate( Request $request )
+    {
+        empty( $request['ziduan'] ) ? $ziduan = 1 : $ziduan = $request['ziduan'];
+        empty( $request['id'] ) ? $id = 1 : $id = $request['id'];
+        empty( $request['value'] ) ? $value= 1 : $value= $request['value'];
+
+        if( "name" == $ziduan)
+        {
+            $ziduan='username';
+        }
+        else if( "account" == $ziduan )
+        {
+            $ziduan= 'accounts';
+        }else{
+            echo 0;die;
+        }
+
+        if(!is_int(intval($id)))
+        {
+            echo 0;die;
+        }
+       echo DB::table('user')
+            ->where('uid', $id)
+            ->update([$ziduan => "$value"]);
+    }
+
+
+    /**
+     * 放入回收站
+     * @param Request $request
+     */
+    public function logDelete( Request $request )
+    {
+        empty( $request['id'] ) ? $id = "" : $id = $request['id'];
+        $array=explode(',',$id);
+        if(empty($array)){
+            echo 0;
+        }else{
+            echo DB::table('user')
+                ->whereIn("uid",$array)
+                ->update(['status' => "2"]);
+        }
+
+    }
+
+    /**
+     * ajax  修改角色
+     * @param Request $request
+     */
+    public function roleUpdate( Request $request )
+    {
+        empty( $request['id'] ) ? $id = "" : $id = $request['id'];
+        empty( $request['date'] ) ? $date = "" : $date = $request['date'];
+        $array=explode(',',$id);
+        if(empty($array)){
+            echo 0;
+        }else{
+            echo DB::table('user_role')
+                ->whereIn("uid",$array)
+                ->update(['rid' => "$date"]);
+        }
+
+    }
+
+    public function userRemove(){
+
         return view('user.userList');
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
