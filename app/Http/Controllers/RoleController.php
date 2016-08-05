@@ -13,7 +13,7 @@ class RoleController extends Controller
     {
             if($request->input()){
                 $val['role_name'] = $request->role;
-                $list = DB::table('role')->where($val)->get();
+                $list = DB::table('res_role')->where($val)->get();
                 $result = array(
                     'error' => 0,   // 0:成功 1:失败
                     'msg'   => '可以使用',
@@ -38,7 +38,7 @@ class RoleController extends Controller
     {
         $id = $request->id;
         $arr['status'] = $request->status;
-        $info = Db::table('role')
+        $info = Db::table('res_role')
                 ->where('rid', $id)
                 ->update($arr);
             if ($info) {
@@ -86,7 +86,7 @@ class RoleController extends Controller
            }else{
                $arr['status'] = 0;
            }
-           $info = Db::table('role')->insert($arr);
+           $info = Db::table('res_role')->insert($arr);
            if($info){
                return redirect('rolelist');
            }
@@ -100,7 +100,7 @@ class RoleController extends Controller
     public function roleUpd(Request $request){
         if($request->input()){
             $id = $request->id;
-            $list = Db::table('role')
+            $list = Db::table('res_role')
                         ->where('rid',$id)
                         ->get();
             return view('role.roleUpdate',['list'=>$list]);
@@ -118,7 +118,7 @@ class RoleController extends Controller
             }else{
                 $arr['status'] = 0;
             }
-            $info = Db::table('role')
+            $info = Db::table('res_role')
                 ->where('rid',$id)
                 ->update($arr);
             if($info){
@@ -131,7 +131,7 @@ class RoleController extends Controller
      */
     public function roleDelete(Request $request){
         $id = $request->id;
-        $info = Db::table('user_role')
+        $info = Db::table('res_user_role')
             ->where('rid',$id)
             ->get();
         $default = array(
@@ -150,10 +150,10 @@ class RoleController extends Controller
      */
     public  function roleDel(Request $request){
         $id = $request->id;
-        Db::table('role')
+        Db::table('res_role')
             ->where('rid',$id)
             ->delete();
-        Db::table('role_power')
+        Db::table('res_role_power')
             ->where('rid',$id)
             ->delete();
         echo 1;
@@ -164,9 +164,9 @@ class RoleController extends Controller
     public function roleGive(Request $request){
         $id = $request->id;
         //echo $id;die;
-        $list = Db::table('role_power')
+        $list = Db::table('res_role_power')
             ->where('rid',$id)
-            ->join('power','role_power.pid','=','power.pid')
+            ->join('res_power','res_role_power.pid','=','res_power.pid')
             ->get();
         $arr=array();
         foreach($list as $k=>$v){
@@ -185,10 +185,10 @@ class RoleController extends Controller
         $rel = $request->rel;
         $rid = $request->rid;
         $user = explode(',',$rel);
-        Db::table('role_power')
+        Db::table('res_role_power')
             ->where('rid',$rid)
             ->delete();
-        $re=Db::table('power')
+        $re=Db::table('res_power')
             ->wherein('pid',$user)
             ->lists('fid');
         foreach($re as $k=>$v){
@@ -205,7 +205,7 @@ class RoleController extends Controller
             $i++;
         }
 //        print_r($info);die;
-        Db::table('role_power')
+        Db::table('res_role_power')
             ->insert($info);
         return redirect('rolegive?id='.$rid);
     }

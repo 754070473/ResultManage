@@ -372,7 +372,7 @@
 <!-- inline scripts related to this page -->
 
 <script type="text/javascript">
-    var sum = '';
+    var sum = 1;
     function fun(){
         if(sum){
             return false;

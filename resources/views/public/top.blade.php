@@ -26,7 +26,7 @@
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
-                            <a href="#">
+                            <a href="{{url('pass')}}">
                                 <i class="icon-cog"></i>
                                 修改密码
                             </a>
@@ -39,7 +39,7 @@
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="#">
+                            <a href="{{url('exitProcess')}}">
                                 <i class="icon-off"></i>
                                 退出
                             </a>

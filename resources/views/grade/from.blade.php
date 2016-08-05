@@ -101,10 +101,15 @@
 								<small>
 									<i class="icon-double-angle-right"></i>
 									成绩录入
-                                    <i class="icon-double-angle-right"></i>
-                                   <a href="import">导入<img src="images/dr.png"></a>
 								</small>
 							</h1>
+                            <form action="import" enctype="multipart/form-data" method="post" style="margin-top: -30px;">
+                                <input type="hidden" name="_token" id="_token" value="{{ csrf_token()}}">
+                                <button type="submit" class="btn btn-xs btn-danger" style="float:right">
+                                    导入
+                                </button>
+                                <input type="file" name="myfile" style="float:right">
+                            </form>
 						</div><!-- /.page-header -->
 
 						<div class="row">
@@ -134,10 +139,9 @@
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-5">身份</label>
                                         <div class="col-sm-9">
                                             <select class="col-xs-10 col-sm-5" id="form-field-5" onblur="check_status()" name="status">
-                                                <option value="1">学生</option>
-                                                <option value="2">组长</option>
-                                                <option value="3">学委</option>
-                                                <option value="4">讲师</option>
+                                                <option value="0">学生</option>
+                                                <option value="1">组长</option>
+                                                <option value="2">讲师</option>
                                             </select>
                                             <span id="s_status"></span>
 										</div>
