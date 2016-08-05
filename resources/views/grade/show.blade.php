@@ -115,7 +115,6 @@
                                             <th class="hidden-480">机试成绩</th>
 
                                             <th>添加日期</th>
-                                            <th>录入人</th>
                                             <th>身份</th>
                                             <th>类型</th>
                                             <th>操作</th>
@@ -127,16 +126,18 @@
                                             @foreach($arr as $v)
                                                 <tr id="tr{{$v->gid}}">
                                                     <td class="center">
-                                                        <label>
-                                                            <input type="checkbox" class="ace" />
+                                                    <label>
+                                                            <input type="checkbox" class="ace"  name="gid" value="{{$v->gid}}"/>
                                                             <span class="lbl"></span>
                                                         </label>
                                                     </td>
                                                     <td>{{$v->username}}</td>
-                                                    <td>{{$v->theory}}</td>
-                                                    <td>{{$v->exam}}</td>
+                                                    <td id="{{$v->gid}}" onclick="change({{$v->gid}})"><input type="text" value="{{$v->theory}}" id="i{{$v->gid}}" style="display: none" onblur="update({{$v->gid}})">
+                                                        <span id="s{{$v->gid}}">{{$v->theory}}</span>
+                                                    </td>
+                                                    <td id="{{$v->gid}}" onclick="change1({{$v->gid}})"><input type="text" value="{{$v->gid}}" id="y{{$v->gid}}" style="display: none" onblur="update1({$v->gid})"><span id="k{{$v->gid}}">{{$v->exam}}</span></td>
+
                                                     <td>{{$v->add_date}}</td>
-                                                    <td>{{$v->name}}</td>
                                                     <td>
                                                         @if($v->status==1)
                                                             学生
@@ -162,9 +163,6 @@
 
                                                     <td>
                                                         <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
-                                                            <button class="btn btn-xs btn-info" onclick="ajax_funs({{$v->gid}})" href="javascript:void(0)">
-                                                                <i class="icon-edit bigger-120"></i>
-                                                            </button>
 
                                                             <button class="btn btn-xs btn-danger" onclick="ajax_fun({{$v->gid}})" href="javascript:void(0)">
                                                                 <i class="icon-trash bigger-120"></i>
@@ -279,7 +277,66 @@
         }
     }
 
+    function change(id){
+        document.getElementById('i'+id).style.display='block';
+        document.getElementById('s'+id).innerHTML='';
 
+    }
+
+
+    //修改理论成绩
+    function update(id){
+        var v=document.getElementById('i'+id).value;
+//        alert(v);
+        $.ajax({
+            type:'get',
+            url:'updates',
+            data:"id="+id+"&v="+v,
+            success:function(i){
+                if(i==1){
+                    document.getElementById('i'+id).style.display='none';
+                    location.href="show"
+                }else{
+                    alert('亲，还没修改呢');
+                    if (confirm("您确定退出修改吗??")) {
+                        location.href="show"
+                    }
+                }
+            }
+        })
+    }
+
+
+    function change1(id){
+        document.getElementById('y'+id).style.display='block';
+        document.getElementById('k'+id).innerHTML='';
+    }
+    //修改姓名
+    function update1(id){
+        var v=document.getElementById('y'+id).value;
+        var name=/^[\u4e00-\u9fa5]{2,3}$/
+        if(!name.test(v)){
+            alert('姓名不合法');
+        }else{
+            //alert(v);
+            $.ajax({
+                type:'get',
+                url:'updates',
+                data:"id="+id+"&v="+v,
+                success:function(i){
+                    if(i==1){
+                        document.getElementById('i'+id).style.display='none';
+                        location.href="show"
+                    }else{
+                        alert('亲，还没修改呢');
+                        if (confirm("您确定退出修改吗??")) {
+                            location.href="show"
+                        }
+                    }
+                }
+            })
+        }
+    }
 
     jQuery(function($) {
         $.get("{{url('left')}}",function(m){

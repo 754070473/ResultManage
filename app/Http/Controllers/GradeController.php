@@ -138,9 +138,24 @@ class GradeController extends Controller
  }
 
 
+    public function updatess(Request $request){
+        $gid=$request->input('gid');
+        $arr['exam']=$request->input('get.v');
+    }
 
-    //成绩审核
+
+    //成绩修改
     public function updates(Request $request){
+        $gid=$request->input('gid');
+        
+        $arr['theory']=$request->input('get.v');
+//        print_r($gid);die;
+        $arr1=DB::table('grade')->insert(
+            array('theory'=>$arr)
+        );
+        var_dump($arr1);die;
+
+
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
