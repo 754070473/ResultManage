@@ -137,17 +137,17 @@ class GradeController extends Controller
 
  }
 
-
+    //成绩机试修改
     public function updatess(Request $request){
         $gid=$request->input('gid');
         $arr['exam']=$request->input('get.v');
     }
 
 
-    //成绩修改
+    //成绩理论修改
     public function updates(Request $request){
         $gid=$request->input('gid');
-        
+
         $arr['theory']=$request->input('get.v');
 //        print_r($gid);die;
         $arr1=DB::table('grade')->insert(

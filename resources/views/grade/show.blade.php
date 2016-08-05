@@ -277,14 +277,12 @@
         }
     }
 
+    //修改理论成绩
     function change(id){
         document.getElementById('i'+id).style.display='block';
         document.getElementById('s'+id).innerHTML='';
 
     }
-
-
-    //修改理论成绩
     function update(id){
         var v=document.getElementById('i'+id).value;
 //        alert(v);
@@ -306,19 +304,14 @@
         })
     }
 
-
+    //修改机试成绩
     function change1(id){
         document.getElementById('y'+id).style.display='block';
         document.getElementById('k'+id).innerHTML='';
     }
-    //修改姓名
     function update1(id){
         var v=document.getElementById('y'+id).value;
-        var name=/^[\u4e00-\u9fa5]{2,3}$/
-        if(!name.test(v)){
-            alert('姓名不合法');
-        }else{
-            //alert(v);
+        //alert(v);
             $.ajax({
                 type:'get',
                 url:'updates',
@@ -335,7 +328,7 @@
                     }
                 }
             })
-        }
+
     }
 
     jQuery(function($) {

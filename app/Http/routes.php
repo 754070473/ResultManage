@@ -44,7 +44,7 @@ Route::get('/grade','GradeController@grade');
 Route::get('/grade_add','GradeController@grade_add');
 //成绩管理----查看成绩
 Route::get('/show','GradeController@show');
-//成绩管理---成绩修改
+//成绩管理---成绩理论、机试修改
 Route::get('/updates','GradeController@updates');
 Route::get('/updatess','GradeController@updatess');
 //成绩管理---导入
