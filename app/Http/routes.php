@@ -31,6 +31,7 @@ Route::any('/oldpwd', 'LoginController@oldpwd');
 //修改密码
 Route::any('/upda', 'LoginController@update_pwd');
 
+
 //公共页面  头部
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
