@@ -174,20 +174,20 @@ class GradeController extends Controller
         }
 
 
-        //当前页码
-        $p = $request -> p ? $request -> p : 1;
-        //查询表名
-        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
-        //每页显示数据条数
-        $num = $request -> num ? $request -> num : 1;
-        //查询条件
-        $where = 1;
-        //排序
-        $order = 'res_grade.add_date desc';
-        $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-        //print_r($arr);die;
-        //根据用户查询角色 并显示出来
-        return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
+//        //当前页码
+//        $p = $request -> p ? $request -> p : 1;
+//        //查询表名
+//        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
+//        //每页显示数据条数
+//        $num = $request -> num ? $request -> num : 1;
+//        //查询条件
+//        $where = 1;
+//        //排序
+//        $order = 'res_grade.add_date desc';
+//        $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
+//        //print_r($arr);die;
+//        //根据用户查询角色 并显示出来
+//        return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
     }
 
 
