@@ -39,10 +39,23 @@ Route::get('/import','GradeController@import');
 //成绩管理---删除
 Route::get('/updates','GradeController@updates');
 
-/**80-100 刘清白**/
-//用户添加表单
+/**80-100 刘清白用户管理**/
+//用户管理-添加表单
 Route::get('/useradd', 'UserController@userAdd');
-//ajax添加用户
+//用户管理-ajax添加用户
 Route::post('/useraddpro', 'UserController@userAddPro');
-//用户列表
+//用户管理-用户列表表单
 Route::get('/userList', 'UserController@userList');
+//用户管理-表格内容  ajax post
+Route::any('/userListInfo', 'UserController@userListInfo');
+//用户管理-ajax修改
+Route::any('/userListUpdate', 'UserController@userListUpdate');
+//用户管理-ajax修改放入回收站
+Route::any('/logDelete', 'UserController@logDelete');
+//用户管理-ajax修改修改角色
+Route::any('/roleUpdate', 'UserController@roleUpdate');
+//用户管理-回收站
+Route::any('/userRemove', 'UserController@userRemove');
+
+
+
