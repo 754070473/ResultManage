@@ -183,8 +183,8 @@
                                         </div>
 									<div class="clearfix form-actions">
 										<div class="col-md-offset-3 col-md-9">
-                                            <input type="submit" value="提交">
-                                            <input type="reset" value="重置">
+                                            <input type="submit" value="提交" class="btn btn-success">
+                                            <input type="reset" value="重置" class="btn btn-success">
 										</div>
 									</div>
 

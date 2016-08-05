@@ -29,8 +29,6 @@ class GradeController extends Controller
     {
         $uid = Session::get('uid');
         //$table = DB :: table('res_grade inner join res_user on res_grade.uid=res_user.uid');
-
-
 //        $table = DB::table('res_user_role')
 //            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
 //            ->where('uid',$uid)
