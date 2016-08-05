@@ -75,14 +75,14 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="useradd">
+                    <a href="{{url('useradd')}}">
                         <i class="icon-double-angle-right"></i>
                         管理员添加
                     </a>
                 </li>
 
                 <li>
-                    <a href="userList">
+                    <a href="{{url('userList')}}">
                         <i class="icon-double-angle-right"></i>
                         管理员列表
                     </a>

@@ -19,7 +19,7 @@
                     <a data-toggle="dropdown" href="javascript:void(0);" class="dropdown-toggle">
 								<span class="user-info">
 									<small>欢迎光临,</small>
-									Jason
+									{{$data->username}}
 								</span>
 
                         <i class="icon-caret-down"></i>
