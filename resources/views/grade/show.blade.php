@@ -298,8 +298,8 @@
                     document.getElementById('i'+id).style.display='none';
                     location.href="show"
                 }else{
-                    alert('亲，还没修改呢');
-                    if (confirm("您确定退出修改吗??")) {
+                    alert('亲，您以点击修改');
+                    if (confirm("您确定退出吗??")) {
                         location.href="show"
                     }
                 }
@@ -324,8 +324,8 @@
                         document.getElementById('i'+id).style.display='none';
                         location.href="show"
                     }else{
-                        alert('亲，还没修改呢');
-                        if (confirm("您确定退出修改吗??")) {
+                        alert('亲，您以点击修改');
+                        if (confirm("您确定退出吗??")) {
                             location.href="show"
                         }
                     }
