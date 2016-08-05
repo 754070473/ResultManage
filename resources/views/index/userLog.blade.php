@@ -239,7 +239,7 @@
                     if( search == '' ) {
                         $.ajax({
                             type: 'GET',
-                            url: 'logDelete',
+                            url: '{{url("logDelete")}}',
                             data: 'log_id=' + log_id + '&p=' + p,
                             success: function (msg) {
                                 if (msg != 0) {
@@ -252,7 +252,7 @@
                     }else{
                         $.ajax({
                             type: 'GET',
-                            url: 'logDelete',
+                            url: '{{url("logDelete")}}',
                             data: 'log_id=' + log_id + '&p=' + p +'&search='+search,
                             success: function (msg) {
                                 if (msg != 0) {
@@ -297,7 +297,7 @@
                     }else{
                         $.ajax({
                             type: 'GET',
-                            url: 'logDelete',
+                            url: '{{url("logDelete")}}',
                             data: 'log_id=' + log_id + '&search='+search,
                             success: function (msg) {
                                 if (msg != 0) {

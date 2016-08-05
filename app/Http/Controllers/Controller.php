@@ -9,9 +9,27 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
+header("content-type:text/html;charset=utf-8");
 abstract class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
+    public function __construct()
+    {
+        //非法登录
+        $action = $this -> getCurrentAction();
+        if( $action['controller'] != 'Login') {
+            if ( empty( Session::get( 'uid' ) ) ) {
+                echo "<script>alert('请先登录');location.href='loginIndex'</script>";
+                exit;
+            }
+        }
+
+        /*//权限控制
+        if( Session::get('uid') != 1 ){
+            $this->userPower();
+        }*/
+    }
 
     /**
      * 无限极分类数组处理
@@ -31,7 +49,7 @@ abstract class Controller extends BaseController
         //查询子分类
         foreach($arr as $key=>$val)
         {
-            $arr[$key]['son']=$this->classify($table,$pid_name,$pid=$val[$k]);
+            $arr[$key]['son']=$this->classify( $table , $pid_name , $pid = $val[$k] );
         }
         return $arr;
     }
@@ -130,6 +148,39 @@ abstract class Controller extends BaseController
             $data['count']=$count;
             $data['p']=$p;
             return $data;
+        }
+    }
+
+    /**
+     * 权限控制
+     */
+    private function userPower()
+    {
+        $action = $this -> getCurrentAction();
+        //当前控制器名
+        $controller = $action['controller'];
+        //当前操作名
+        $function = $action['function'];
+
+        //公共权限
+        if($controller == "Index" && $function == "index"){
+            return;
+        }
+        $pri_list = Session::get('power');
+//        print_r($pri_list);die;
+//        echo "<br>";
+//        echo $controller;
+//        echo "<br>";
+//        echo $function;
+        $sign=0;
+        foreach( $pri_list as $key => $val ){
+            if($controller == $val['controller'] && $function == $val['action']){
+                $sign = 1;
+            }
+        }
+        if($sign == 0){
+            echo "<script>alert('无权操作！');window.history.go(-1)</script>";
+            exit;
         }
     }
 }
