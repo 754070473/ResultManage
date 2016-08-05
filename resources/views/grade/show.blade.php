@@ -131,13 +131,18 @@
                                                             <span class="lbl"></span>
                                                         </label>
                                                     </td>
-                                                    <td>{{$v->username}}</td>
-                                                    <td id="{{$v->gid}}" onclick="change({{$v->gid}})"><input type="text" value="{{$v->theory}}" id="i{{$v->gid}}" style="display: none" onblur="update({{$v->gid}})">
+                                                    <td>{{$v->name}}</td>
+                                                    <td id="{{$v->gid}}" onclick="change({{$v->gid}})">
+                                                        <input type="text" value="{{$v->theory}}" id="i{{$v->gid}}" style="display: none" onblur="update({{$v->gid}})">
                                                         <span id="s{{$v->gid}}">{{$v->theory}}</span>
                                                     </td>
-                                                    <td id="{{$v->gid}}" onclick="change1({{$v->gid}})"><input type="text" value="{{$v->gid}}" id="y{{$v->gid}}" style="display: none" onblur="update1({$v->gid})"><span id="k{{$v->gid}}">{{$v->exam}}</span></td>
 
-                                                    <td>{{$v->add_date}}</td>
+                                                    <td id="{{$v->gid}}" onclick="change1({{$v->gid}})">
+                                                        <input type="text" value="{{$v->exam}}" id="y{{$v->gid}}" style="display: none" onblur="update1({{$v->gid}})">
+                                                        <span id="k{{$v->gid}}">{{$v->exam}}</span>
+                                                    </td>
+
+                                                    <td>{{$v->g_add_date}}</td>
                                                     <td>
                                                         @if($v->status==1)
                                                             学生
