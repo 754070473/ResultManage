@@ -41,6 +41,12 @@
 		<script src="assets/js/html5shiv.js"></script>
 		<script src="assets/js/respond.min.js"></script>
 		<![endif]-->
+        <style>
+            .up{
+                width: 200px;
+                height: 35px;
+            }
+        </style>
 	</head>
 
 	<body>
@@ -65,9 +71,9 @@
 						<ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
-								<a href="#">Home</a>
+								<a href="#">主页</a>
 							</li>
-							<li class="active">Widgets</li>
+							<li class="active">管理员管理</li>
 						</ul><!-- .breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
@@ -83,11 +89,8 @@
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								Widgets
-								<small>
-									<i class="icon-double-angle-right"></i>
-									Draggabble Widget Boxes &amp; Containers
-								</small>
+								用户列表
+
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -96,36 +99,14 @@
 								<!-- PAGE CONTENT BEGINS -->
 
 								<div class="row">
-
-									<div class="col-xs-12 col-sm-6 widget-container-span" style="width:100%">
+									<div class="col-xs-12 col-sm-6 " style="width:100%">
 										<div class="widget-box">
 											<div class="widget-header header-color-blue">
 												<h5 class="bigger lighter">
 													<i class="icon-table"></i>
-													Tables & Colors
+													用户信息
 												</h5>
-
-												<div class="widget-toolbar widget-toolbar-light no-border">
-													<select id="simple-colorpicker-1" class="hide">
-														<option selected="" data-class="blue" value="#307ECC">#307ECC</option>
-														<option data-class="blue2" value="#5090C1">#5090C1</option>
-														<option data-class="blue3" value="#6379AA">#6379AA</option>
-														<option data-class="green" value="#82AF6F">#82AF6F</option>
-														<option data-class="green2" value="#2E8965">#2E8965</option>
-														<option data-class="green3" value="#5FBC47">#5FBC47</option>
-														<option data-class="red" value="#E2755F">#E2755F</option>
-														<option data-class="red2" value="#E04141">#E04141</option>
-														<option data-class="red3" value="#D15B47">#D15B47</option>
-														<option data-class="orange" value="#FFC657">#FFC657</option>
-														<option data-class="purple" value="#7E6EB0">#7E6EB0</option>
-														<option data-class="pink" value="#CE6F9E">#CE6F9E</option>
-														<option data-class="dark" value="#404040">#404040</option>
-														<option data-class="grey" value="#848484">#848484</option>
-														<option data-class="default" value="#EEE">#EEE</option>
-													</select>
-												</div>
 											</div>
-
 											<div class="widget-body">
 												<div class="widget-main no-padding">
 													<table class="table table-striped table-bordered table-hover" >
@@ -140,34 +121,71 @@
 																<th>
 																	<i>@</i>
                                                                     角色
+                                                                    <i><select name="" id="">
+                                                                            <option value="">查看全部</option>
+                                                                           @foreach($role as $k=>$v)
+                                                                            <option value="">只看{{$v->role_name}}</option>
+                                                                           @endforeach
+                                                                        </select></i>
 																</th>
-                                                                <th class="hidden-480">Status</th>
-                                                                <th class="hidden-480">Status</th>
-                                                                <th class="hidden-480">Status</th>
+                                                                <th class="hidden-480">账号</th>
+                                                                <th class="hidden-480">添加时间</th>
+                                                                {{--<th class="hidden-480">状态</th>--}}
 															</tr>
 														</thead>
-                                                    {{--循环开始--}}
-														<tbody>
-															<tr>
-																<td class="">Alex</td>
 
-																<td>
-																	<a href="#">alex@email.com</a>
-																</td>
 
-																<td class="hidden-480">
-																	<span class="label label-warning">Pending</span>
-																</td>
-															</tr>
-														</tbody>
-                                                        {{--循环结束--}}
 													</table>
-												</div>
-											</div>
+                                                    <tbody>
+                                                    {{--表格循环开始--}}
+                                                    <div id="userTable"></div>
+                                                    {{--表格循环结束--}}
+                                                    </tbody>
+                                                </div>
+
+
+                                            </div>
 										</div>
 									</div><!-- /span -->
 								</div><!-- /row -->
 
+                                <input type="hidden" id="page_up_dn" value="1"/>
+                                <div style="text-align: center;">
+                                    <ul class="pager">
+                                        <li class="previous">
+                                            <a href="javascript:void (0)"  onclick="ckDeleteAll()">删&nbsp;除</a>
+                                        </li>
+                                        <li class="previous">
+                                            <a > <select name="" id="role_update">
+                                                    @foreach($role as $k=>$v)
+                                                        <option value="{{$v->rid}}">角色改变为{{$v->role_name}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </a>
+                                        </li>
+                                        <li class="previous">
+
+                                            <a href="javascript:void (0)"  onclick="updateRole()">修改</a>
+                                        </li>
+                                    </ul>
+                                    <center>
+                                        <div style="text-align: center;width:500px;">
+                                            <ul class="pager">
+                                                <li class="previous">
+                                                    <a href="javascript:void (0)" id="upbutton"   onclick="show_page(document.getElementById('page_up_dn').value-1)">← 上一页</a>
+                                                </li>
+                                                <li class="previous">
+                                                    <a ><div id="page"><input type="text"  style="width: 50px;"/></div></a>
+                                                </li>
+                                                <li class="previous">
+                                                    <a href="javascript:void (0)" id="dnbutton"  uid="2" onclick="show_page(document.getElementById('page_up_dn').value+1)">下一页 →</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </center>
+
+
+                                </div>
 								<div class="space-24"></div>
 
 
@@ -281,6 +299,7 @@
 
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
+        <script src="assets/js/userAdd/userList.js"></script>
 
 		<!-- inline scripts related to this page -->
 
@@ -296,14 +315,14 @@
                 })
             });
 			jQuery(function($) {
-			
+
 				$('#simple-colorpicker-1').ace_colorpicker({pull_right:true}).on('change', function(){
 					var color_class = $(this).find('option:selected').data('class');
 					var new_class = 'widget-header';
 					if(color_class != 'default')  new_class += ' header-color-'+color_class;
 					$(this).closest('.widget-header').attr('class', new_class);
 				});
-			
+
 
 				$('.slim-scroll').each(function () {
 					var $this = $(this);
@@ -322,8 +341,41 @@
 					forcePlaceholderSize:true,
 					tolerance:'pointer'
 			    });
-			
+
 			});
+            function updateRole()
+            {
+
+                var role_update = $('#role_update').val();
+                var ace2 = $('.ace2');
+                var len = ace2.length;
+                if( len >0 ){
+                    var search = jQuery('#search').val();
+                    if(!search){
+                        search = '';
+                    }
+                    var log_id = '';
+                    for( var i = 0 ; i < len ; i++ ){
+                        if( ace2.eq(i).prop( 'checked' ) == true ){
+                            log_id += ','+ace2.eq(i).val();
+                        }
+                    }
+                    log_id = log_id.substr(1);
+                    $.ajax({
+                        type: 'post',
+                        url: '/roleUpdate',
+                        data: 'id=' + log_id+"&date="+role_update,
+                        success: function (msg) {
+                            if (msg != 0) {
+                                var t_page = $('#t_page').val();
+                                show_page(t_page)
+                            } else {
+
+                            }
+                        }
+                    });
+                }
+            }
 		</script>
 </body>
 </html>

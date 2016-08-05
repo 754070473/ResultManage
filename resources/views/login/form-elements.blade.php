@@ -74,7 +74,7 @@
 							try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 						</script>
 
-						<ul class="breadcrumb">
+						<!-- <ul class="breadcrumb">
 							<li>
 								<i class="icon-home home-icon"></i>
 								<a href="#">Home</a>
@@ -84,7 +84,7 @@
 								<a href="#">Forms</a>
 							</li>
 							<li class="active">Form Elements</li>
-						</ul><!-- .breadcrumb -->
+						</ul> --><!-- .breadcrumb -->
 
 						<div class="nav-search" id="nav-search">
 							<form class="form-search">
@@ -99,10 +99,10 @@
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								Form Elements
+								个人中心
 								<small>
 									<i class="icon-double-angle-right"></i>
-									Common form elements and layouts
+									修改密码
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -524,7 +524,7 @@
 		   		}
 		   		else
 		   		{
-		   			$("#soldPwd").html('√');
+		   			$("#soldPwd").html("<img src='images/ok.png' alt='' />");
 		   			return true;
 		   		}
 		   }
@@ -538,7 +538,7 @@
 		var preg = /^[0-9 | A-Z | a-z]{6,16}$/;
 		if (preg.test(newpwd)) 
 		{
-			$("#snewPwd").html('√');
+			$("#snewPwd").html("<img src='images/ok.png' alt='' />");
 			return true;
 		}
 		else
@@ -555,7 +555,7 @@
 		var newpass = $('#newpass').val();
 		if (newpwd==newpass) 
 		{
-			$("#snewPass").html('√');
+			$("#snewPass").html("<img src='images/ok.png' alt='' />");
 			return true;
 		}
 		else
