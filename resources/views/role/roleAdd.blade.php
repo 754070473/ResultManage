@@ -107,6 +107,7 @@
                         <!-- PAGE CONTENT BEGINS -->
 
                         <form class="form-horizontal" role="form" action="roleins" method="post" onsubmit=" return fun()">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                             <div class="form-group">
                                 <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 角色名称 </label>
 

@@ -55,10 +55,14 @@ Route::get('/userList', 'UserController@userList');
 
 
 //角色页面
-Route::get('/roleadd','RoleController@roleAdd');
-Route::post('/roleins','RoleController@roleIns');
-Route::get('/rolelist','RoleController@roleList');
-Route::post('/roleupdate','RoleController@roleUpd');
-Route::post('/roleupdates','RoleController@roleUpdate');
-Route::post('/roledelete','RoleController@roleDelete');
-Route::post('/roledel','RoleController@roleDel');
+Route::get('/roleadd','RoleController@roleAdd');            //角色名的验证
+Route::post('/roleins','RoleController@roleIns');           //角色的添加
+Route::get('/rolelist','RoleController@roleList');          //角色的列表
+Route::get('/rolelists','RoleController@rolePage');         //角色列表的分页
+Route::get('/rolestatus','RoleController@roleStatus');      //角色的状态修改
+Route::get('/roleupdate','RoleController@roleUpd');         //角色名称的修改
+Route::post('/roleupdates','RoleController@roleUpdate');    //角色名修改页面
+Route::get('/roledelete','RoleController@roleDelete');      //删除角色时的验证
+Route::get('/roledel','RoleController@roleDel');            //删除角色
+Route::get('/rolegive','RoleController@roleGive');          //角色赋权页面
+Route::get('/rolegives','RoleController@roleGives');        //修改角色的权限

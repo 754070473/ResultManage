@@ -2,9 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Bootstrap表格插件 - Bootstrap后台管理系统模版Ace下载</title>
-    <meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
-    <meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- basic styles -->
@@ -86,7 +84,7 @@
                 </div><!-- #nav-search -->
             </div>
 
-            <div class="page-content">
+            <div class="page-content" id="list">
                 <div class="page-header">
                     <h1>
                         角色管理
@@ -120,7 +118,7 @@
                                         </thead>
 
                                         <tbody>
-
+                                @if(!empty($list))
                                         @foreach($list as $v)
                                         <tr id="info_{{$v->rid}}">
                                             <td class="center">
@@ -146,7 +144,7 @@
                                             <td>
                                                 <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
                                                     <center>
-                                                    <button class="btn btn-xs btn-success" title="赋权">
+                                                    <button class="btn btn-xs btn-success" title="赋权" onclick="give({{$v->rid}})">
                                                         <i class="icon-ok bigger-120"></i>
                                                     </button>
 
@@ -162,8 +160,11 @@
                                             </td>
                                         </tr>
                                         @endforeach
+                                    @else
+                                        @endif
                                         </tbody>
                                     </table>
+                                    <?php echo $page?>
                                 </div><!-- /.table-responsive -->
                             </div><!-- /span -->
                         </div><!-- /row -->
@@ -322,7 +323,7 @@
     function fun(id,status){
         $.ajax({
             type: "GET",
-            url: "rolelist",
+            url: "rolestatus",
             data: "id="+id+"&status="+status,
             success: function(msg){
                 if(status==1){
@@ -341,7 +342,7 @@
     /*  修改角色名操作  */
     function update(id){
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "roleupdate",
             data: "id="+id,
             success: function(msg){
@@ -352,7 +353,7 @@
     /*  删除角色验证  */
     function del(id){
         $.ajax({
-            type: "POST",
+            type: "GET",
             url: "roledelete",
             data: "id="+id,
             success: function(msg){
@@ -367,7 +368,7 @@
     function dele(id){
         if(confirm("确定要删除此用户吗?")){
             $.ajax({
-                type: "POST",
+                type: "GET",
                 url: "roledel",
                 data: "id="+id,
                 success: function(msg){
@@ -377,6 +378,17 @@
                 }
             });
         }
+    }
+    /*  赋权选项 */
+    function give(id){
+        $.ajax({
+            type: "GET",
+            url: "rolegive",
+            data: "id="+id,
+            success: function(msg){
+                jQuery("#info").html(msg)
+            }
+        });
     }
     jQuery(function($){
         $.get("{{url('top')}}",function(m){

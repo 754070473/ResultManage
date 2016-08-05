@@ -2,9 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Bootstrap表单组件 - Bootstrap后台管理系统模版Ace下载</title>
-    <meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
-    <meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />
+    {{--<meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
+    <meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />--}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <!-- basic styles -->
@@ -24,6 +23,9 @@
     <link rel="stylesheet" href="assets/css/bootstrap-timepicker.css" />
     <link rel="stylesheet" href="assets/css/daterangepicker.css" />
     <link rel="stylesheet" href="assets/css/colorpicker.css" />
+    <link type="text/css" rel="stylesheet" 	href="css/powerFloat.css" />
+    <link type="text/css" rel="stylesheet" 	href="css/xmenu.css" />
+
 
     <!-- fonts -->
 
@@ -51,10 +53,13 @@
     <script src="assets/js/html5shiv.js"></script>
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
+
+
+
 </head>
 
 <body>
-
+<div id="list">
 
 <div class="main-container" id="main-container">
     <script type="text/javascript">
@@ -65,9 +70,6 @@
         <a class="menu-toggler" id="menu-toggler" href="#">
             <span class="menu-text"></span>
         </a>
-
-
-
         <div class="main-content">
             <div class="breadcrumbs" id="breadcrumbs">
                 <script type="text/javascript">
@@ -90,14 +92,13 @@
                     </form>
                 </div><!-- #nav-search -->
             </div>
-
             <div class="page-content">
                 <div class="page-header">
                     <h1>
                         角色管理
                         <small>
                             <i class="icon-double-angle-right"></i>
-                            角色名修改
+                            角色赋权
                         </small>
                     </h1>
                 </div><!-- /.page-header -->
@@ -106,42 +107,56 @@
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
 
-                        <form class="form-horizontal" role="form" action="roleupdates" method="post" onsubmit=" return fun()">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 角色名称 </label>
+                        <div id="main">
+                            <div id="lead" class="card">
+                                <h3>角色赋权</h3>
+                                <p>
+                                <div class="topnav">
+                                    <a id="selectdept" href="javascript:void(0);" class="as">
+                                        <span>选择权限</span>
+                                    </a>
 
-                                <div class="col-sm-9">
-                                    <input type="text" value="{{$list[0]->role_name}}" name="role_name" id="form-field-1" placeholder="Rolename" class="col-xs-10 col-sm-5" /><font color="red"><span id="error"></span></font>
-                                    <input type="hidden" name="rid" value="{{$list[0]->rid}}"/>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
+                                </p>
+                                <input type="hidden" value="<?php echo $number?>" id="selectdeptidden" />
+                                <input type="hidden" id="userid" value="<?php echo $rid ?>"/><br/>
+                                <h4>已有权限</h4>
 
-                                <div class="col-sm-9">
-                                    @if($list[0]->status)
-                                    <input type="checkbox" name="status" value="1" checked="checked"/>启用
-                                        @else
-                                        <input type="checkbox" name="status" value="1"/>启用
-                                        @endif
-                                </div>
+                                @foreach($give as $v)
+                                    {{$v->power_name}}
+                                    @endforeach
                             </div>
-                            <div class="clearfix form-actions">
-                                <div class="col-md-offset-3 col-md-9">
-                                    <button class="btn btn-info" type="submit">
-                                        <i class="icon-ok bigger-110"></i>
-                                        修改
-                                    </button>
-
-                                    &nbsp; &nbsp; &nbsp;
-                                    <button class="btn" type="button" onclick="backup()">
-                                        <i class="icon-undo bigger-110"></i>
-                                        返回
-                                    </button>
-                                </div>
+                        </div>
+                        <div id="m2" class="xmenu" style="display: none;">
+                            <div class="select-info">
+                                <label class="top-label">权限列表：</label>
+                                <ul>
+                                </ul>
+                                <a  name="menu-confirm" href="javascript:void(0);" class="a-btn">
+                                    <span class="a-btn-text" id="give">确定</span>
+                                </a>
                             </div>
-                        </form>
+                           <?php
+                                foreach($list as $k => $v){
+                            ?>
+                            <dl>
+                                <dt class="open"><?php echo $v['power_name']?></dt>
+                                <dd>
+                                    <ul>
+                                        <?php
+                                            foreach($v['son'] as $key => $val){
+                                        ?>
+                                        <li rel="<?php echo $val['pid']?>" class="<?php echo $val['fid']?>"><?php echo $val['power_name']?></li>
+                                        <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </dd>
+                            </dl>
+                           <?php
+                            }
+                            ?>
+                        </div>
                         <div id="modal-form" class="modal" tabindex="-1">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -377,39 +392,6 @@
 <!-- inline scripts related to this page -->
 
 <script type="text/javascript">
-    var sum = '';
-    function backup(){
-        location.href="rolelist";
-    }
-    function fun(){
-        if(sum){
-            return false;
-        }else{
-            return true;
-        }
-    }
-    jQuery("#form-field-1").blur(function(){
-        var val = jQuery(this).val();
-        jQuery.ajax({
-            type: "GET",
-            url: "roleadd",
-            data: "role="+val,
-            success: function(msg){
-                if(msg.error==1){
-                    jQuery("#error").html(msg.msg)
-                    sum = 1;
-                }else{
-                    jQuery("#error").html(msg.msg)
-                    sum = 0;
-                }
-            }
-        });
-    })
-
-
-
-
-
     jQuery(function($){
         $.get("{{url('top')}}",function(m){
             $('.main-container').first().before(m);
@@ -434,6 +416,27 @@
                 inp.value="This text field is disabled!";
             }
         });
+       $("#give").click(function(){
+           var rid = $("#userid").val();
+           var arr = $(".select-info").children("ul").children();
+           var rel = '';
+           var len = arr.length
+           for(var i = 0 ; i < len ; i++){
+               rel += ',' + arr.eq(i).attr('rel');
+           }
+           rel = rel.substr( 1 );
+           $.ajax({
+               type: "GET",
+               url: "rolegives",
+               data: "rel="+rel+"&rid="+rid,
+               success: function(msg){
+                       $("#list").html(msg)
+               }
+           });
+       })
+
+
+
 
 
         $(".chosen-select").chosen();
@@ -663,11 +666,6 @@
             tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
             //$('#form-field-tags').autosize({append: "\n"});
         }
-
-
-
-
-        /////////
         $('#modal-form input[type=file]').ace_file_input({
             style:'well',
             btn_choose:'Drop files here or click to choose',
@@ -687,16 +685,12 @@
                 $(this).find('.chosen-search input').css('width' , '200px');
             });
         })
-        /**
-         //or you can activate the chosen plugin after modal is shown
-         //this way select element becomes visible with dimensions and chosen works as expected
-         $('#modal-form').on('shown', function () {
-					$(this).find('.modal-chosen').chosen();
-				})
-         */
-
     });
 </script>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-powerFloat-min.js"></script>
+<script type="text/javascript" src="js/jquery-xmenu.js"></script>
 <!-- <div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div> -->
-</body>
+</div></body>
+
 </html>

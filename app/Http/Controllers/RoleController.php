@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 header('content-type:text/html;charset=utf8');
 use DB;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Controller;
 use Illuminate\Http\RedirectResponse;
 class RoleController extends Controller
 {
@@ -13,7 +12,7 @@ class RoleController extends Controller
     public function roleAdd(Request $request)
     {
             if($request->input()){
-                $val['role_name'] = $request->input('role');
+                $val['role_name'] = $request->role;
                 $list = DB::table('role')->where($val)->get();
                 $result = array(
                     'error' => 0,   // 0:成功 1:失败
@@ -33,24 +32,47 @@ class RoleController extends Controller
             }
     }
     /*
+     * 角色状态修改
+     */
+    public function roleStatus(Request $request)
+    {
+        $id = $request->id;
+        $arr['status'] = $request->status;
+        $info = Db::table('role')
+                ->where('rid', $id)
+                ->update($arr);
+            if ($info) {
+                echo 1;
+                }
+    }
+    /*
      * 角色展示页面
      */
-    public function roleList(Request $request)
-    {
-        if($request->input()){
-            $id = $request->input('id');
-            $arr['status'] = $request->input('status');
-            $info = Db::table('role')
-                    ->where('rid',$id)
-                    ->update($arr);
-            if($info){
-                echo 1;
-            }
-        }else{
-            $list = Db::table('role')->get();
-            return view('role.roleList',['list'=>$list]);
-        }
-
+    public function roleList(Request $request){
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table = 'res_role';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 5;
+        $order = 'rid desc';
+        //调用ajaxPage方法
+        $arr =  $this-> ajaxPage ( $table , $num , $p , 'rolelists',$where=1,$order);
+        return view('role.roleList',['list'=>$arr['arr'],'page'=>$arr['page']]);
+    }
+    /*
+     * 角色的分页页面
+     */
+    public  function  rolePage(Request $request){
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table = 'res_role';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 5;
+        //调用ajaxPage方法
+        $arr =  $this-> ajaxPage ( $table , $num , $p , 'rolelists');
+        return view('role.rolePage',['list'=>$arr['arr'],'page'=>$arr['page']]);
     }
     /*
      * 角色的添加页面
@@ -58,14 +80,16 @@ class RoleController extends Controller
     public function roleIns(Request $request)
     {
        if($request->input()){
-           $arr['role_name'] = $request->input('role_name');
+           $arr['role_name'] = $request->role_name;
            if($request->input('status')==true){
                $arr['status'] = 1;
            }else{
                $arr['status'] = 0;
            }
            $info = Db::table('role')->insert($arr);
-           echo "<script>alert('添加成功');location.href='rolelist'</script>";
+           if($info){
+               return redirect('rolelist');
+           }
        }else{
            return view('role.roleAdd');
        }
@@ -75,13 +99,11 @@ class RoleController extends Controller
      */
     public function roleUpd(Request $request){
         if($request->input()){
-            $id = $request->input('id');
+            $id = $request->id;
             $list = Db::table('role')
                         ->where('rid',$id)
                         ->get();
             return view('role.roleUpdate',['list'=>$list]);
-        }else{
-
         }
     }
     /*
@@ -89,7 +111,7 @@ class RoleController extends Controller
      */
     public function roleUpdate(Request $request){
         if($request->input()){
-            $arr['role_name'] = $request->input('role_name');
+            $arr['role_name'] = $request->role_name;
             $id = $request->input('rid');
             if($request->input('status')==true){
                 $arr['status'] = 1;
@@ -102,15 +124,13 @@ class RoleController extends Controller
             if($info){
                 return redirect('rolelist');
             }
-        }else{
-
         }
     }
     /*
      *  删除角色操作
      */
     public function roleDelete(Request $request){
-        $id = $request->input('id');
+        $id = $request->id;
         $info = Db::table('user_role')
             ->where('rid',$id)
             ->get();
@@ -129,10 +149,64 @@ class RoleController extends Controller
      *  删除角色成功
      */
     public  function roleDel(Request $request){
-        $id = $request->input('id');
+        $id = $request->id;
         Db::table('role')
             ->where('rid',$id)
             ->delete();
+        Db::table('role_power')
+            ->where('rid',$id)
+            ->delete();
         echo 1;
+    }
+    /*
+    *  赋权
+    */
+    public function roleGive(Request $request){
+        $id = $request->id;
+        //echo $id;die;
+        $list = Db::table('role_power')
+            ->where('rid',$id)
+            ->join('power','role_power.pid','=','power.pid')
+            ->get();
+        $arr=array();
+        foreach($list as $k=>$v){
+            $arr[] = $v->pid;
+        }
+        $number = implode(',',$arr);
+        $table = 'res_power';
+        $fid = 'fid';
+        $arr = $this -> classify($table,$fid);
+        return view('role.rolegive',['list'=>$arr,'give'=>$list,'number'=>$number,'rid'=>$id]);
+    }
+    /*
+    *  修改权限
+    */
+    public function roleGives(Request $request){
+        $rel = $request->rel;
+        $rid = $request->rid;
+        $user = explode(',',$rel);
+        Db::table('role_power')
+            ->where('rid',$rid)
+            ->delete();
+        $re=Db::table('power')
+            ->wherein('pid',$user)
+            ->lists('fid');
+        foreach($re as $k=>$v){
+            if($v==0){
+                unset($re[$k]);
+            }
+        }
+        $user=array_merge($re,$user);
+        $user=array_unique($user);
+        $i=0;
+        foreach($user as $k => $v){
+            $info[$i]['rid'] = $rid;
+            $info[$i]['pid'] = $v;
+            $i++;
+        }
+//        print_r($info);die;
+        Db::table('role_power')
+            ->insert($info);
+        return redirect('rolegive?id='.$rid);
     }
 }

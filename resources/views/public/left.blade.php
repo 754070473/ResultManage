@@ -100,11 +100,7 @@
 
             <ul class="submenu">
                 <li>
-<<<<<<< HEAD
                     <a href="roleadd">
-=======
-                    <a href="">
->>>>>>> e86eedc0313fa76185ff9c4ecd2a985b5b4f817e
                         <i class="icon-double-angle-right"></i>
                         角色添加
                     </a>
