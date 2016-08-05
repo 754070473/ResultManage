@@ -136,7 +136,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="updates">
+                    <a href="examine">
                         <i class="icon-double-angle-right"></i>
                         成绩审核
                     </a>

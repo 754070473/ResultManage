@@ -49,7 +49,11 @@ Route::get('/grade_add','GradeController@grade_add');
 //成绩管理----查看成绩
 Route::get('/show','GradeController@show');
 //成绩管理---成绩审核
-Route::get('/updates','GradeController@updates');
+Route::get('/examine','GradeController@examine');
+//成绩管理---成绩审核分页
+Route::get('/examinePage','GradeController@examinePage');
+//成绩管理---成绩审核
+Route::get('/examineInfo','GradeController@examineInfo');
 //成绩管理---导入
 Route::any('/import','GradeController@import');
 //成绩管理---删除

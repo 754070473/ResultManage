@@ -108,5 +108,87 @@ class GradeController extends Controller
         }
     }
 
+    public function examine(Request $request)
+    {
+        $uid = Session::get('uid');
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table = 'res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 10;
+        //查询条件
+        if( $role_name == '教务' ){
+            $where = 'res_grade.status=2';
+        }elseif( $role_name == '讲师' ){
+            $where = 'res_grade.status=1';
+        }else{
+            $where = 'res_grade.status=0';
+        }
+        //排序
+        $order = 'gid desc';
+        $arr = $this -> ajaxPage( $table , $num , $p , 'examinePage' , $where , $order );
+        return view( 'grade.examine' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+    }
 
+    public function examineInfo(Request $request)
+    {
+        $gid    = $request -> gid ;
+        $status = $request -> status ;
+        $re = DB::table('res_grade')
+        ->where('gid', $gid)
+        ->update(['status' => $status]);
+        if( $re ){
+            $uid = Session::get('uid');
+            $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+            $role_name = $role -> role_name;
+            //当前页码
+            $p = $request -> p ? $request -> p : 1;
+            //查询表名
+            $table = 'res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
+            //每页显示数据条数
+            $num = $request -> num ? $request -> num : 10;
+            //查询条件
+            if( $role_name == '教务' ){
+                $where = 'res_grade.status=2';
+            }elseif( $role_name == '讲师' ){
+                $where = 'res_grade.status=1';
+            }else{
+                $where = 'res_grade.status=0';
+            }
+            //排序
+            $order = 'gid desc';
+            $arr = $this -> ajaxPage( $table , $num , $p , 'examinePage' , $where , $order );
+            return view( 'grade.examinePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+        }else{
+            echo 0;
+        }
+    }
+    
+    public function examinePage(Request $request)
+    {
+        $uid = Session::get('uid');
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table = 'res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 10;
+        //查询条件
+        if( $role_name == '教务' ){
+            $where = 'res_grade.status=2';
+        }elseif( $role_name == '讲师' ){
+            $where = 'res_grade.status=1';
+        }else{
+            $where = 'res_grade.status=0';
+        }
+        //排序
+        $order = 'gid desc';
+        $arr = $this -> ajaxPage( $table , $num , $p , 'examinePage' , $where , $order );
+        return view( 'grade.examinePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+    }
 }
