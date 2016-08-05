@@ -75,14 +75,14 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="tables.html">
+                    <a href="useradd">
                         <i class="icon-double-angle-right"></i>
                         管理员添加
                     </a>
                 </li>
 
                 <li>
-                    <a href="jqgrid.html">
+                    <a href="userList">
                         <i class="icon-double-angle-right"></i>
                         管理员列表
                     </a>
@@ -100,7 +100,7 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="">
                         <i class="icon-double-angle-right"></i>
                         角色添加
                     </a>
@@ -124,19 +124,19 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="grade">
                         <i class="icon-double-angle-right"></i>
                         成绩录入
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="show">
                         <i class="icon-double-angle-right"></i>
                         查看成绩
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="examine">
                         <i class="icon-double-angle-right"></i>
                         成绩审核
                     </a>

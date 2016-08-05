@@ -19,6 +19,7 @@ function ckPage(url,p){
         jQuery.ajax({
             type: 'GET',
             data: 'p=' + p+'&search='+search,
+            url : url,
             success: function (msg) {
                 jQuery('#list').html(msg);
                 jQuery('#search').val(search);
