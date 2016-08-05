@@ -154,13 +154,13 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="{{'collShow'}}">
                         <i class="icon-double-angle-right"></i>
                         创建学院
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="{{URL('groupClaShow')}}">
                         <i class="icon-double-angle-right"></i>
                         创建班级
                     </a>
