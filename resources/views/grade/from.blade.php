@@ -118,7 +118,40 @@
 
 								<form class="form-horizontal" role="form" action="grade_add" onsubmit="return check_all()" method="get">
                                     <div id="div2">
-									<div class="form-group">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1" >姓名</label>
+                                            <div class="col-sm-9">
+                                                <input type="text" id="form-field-0"  class="col-xs-10 col-sm-5" name="name" onblur="s_name()"/>
+                                                <span id="c_name"></span>
+                                            </div>
+                                        </div>
+                                        <div class="space-4"></div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-10" >班级</label>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <select name="class_id" id="form-field-10">
+                                                <option value="">--请选择--</option>
+                                                @foreach($arr5 as $val)
+                                                    <option value="{{$val->class_id}}">{{$val->class_name}}</option>
+                                                    @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="space-4"></div>
+
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-10" >学院</label>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <select name="cid" id="form-field-20">
+                                                <option value="">--请选择--</option>
+                                                @foreach($arr1 as $v)
+                                                    <option value="{{$v->cid}}">{{$v->college_name}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="space-4"></div>
+
+
+                                        <div class="form-group">
 										<label class="col-sm-3 control-label no-padding-right" for="form-field-1" >理论成绩 </label>
 										<div class="col-sm-9">
 											<input type="text" id="form-field-1"  class="col-xs-10 col-sm-5" name="theory" onblur="check_name()"/>
@@ -135,17 +168,7 @@
                                             </div>
                                         </div>
                                         <div class="space-4"></div>
-									<div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-5">身份</label>
-                                        <div class="col-sm-9">
-                                            <select class="col-xs-10 col-sm-5" id="form-field-5" onblur="check_status()" name="status">
-                                                <option value="0">学生</option>
-                                                <option value="1">组长</option>
-                                                <option value="2">讲师</option>
-                                            </select>
-                                            <span id="s_status"></span>
-										</div>
-									</div>
+
 
                                         <div class="form-group">
                                             <label class="col-sm-3 control-label no-padding-right" for="form-field-1" >类型 </label>
@@ -240,6 +263,20 @@
 		<!-- inline scripts related to this page -->
 
 		<script type="text/javascript">
+            //姓名
+            function s_name(){
+                var name=document.getElementById('form-field-0').value;
+                if(name==''){
+                    document.getElementById('c_name').innerHTML="姓名不能为空";
+                    return false;
+                }else{
+                    document.getElementById('c_name').innerHTML="<font color='#8fbc8f '></font>";
+                    return true;
+                }
+            }
+
+
+
             //判断理论成绩
             function check_name(){
                 var theory=document.getElementById('form-field-1').value;
