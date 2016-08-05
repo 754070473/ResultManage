@@ -96,3 +96,28 @@ Route::any('/logDelete', 'UserController@logDelete');
 Route::any('/roleUpdate', 'UserController@roleUpdate');
 //用户管理-回收站
 Route::any('/userRemove', 'UserController@userRemove');
+
+
+
+
+
+
+
+
+
+
+
+// 添加权限
+Route::any('poweradd', 'PowerController@powerAdd');
+// 权限展示
+Route::get('showpower', 'PowerController@showPower');
+// 根据id获取控制器名称
+Route::get('getcont', 'PowerController@getcont');
+// 唯一性验证
+Route::get('checkone', 'PowerController@checkOne');
+Route::get('ajaxone', 'PowerController@ajaxOne');
+// 修改权限
+Route::get('uppower','PowerController@upPower');
+Route::get('savepower','PowerController@savePower');
+// 删除权限
+Route::get('depower','PowerController@dePower');

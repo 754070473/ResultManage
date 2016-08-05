@@ -50,14 +50,14 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="elements.html">
+                    <a href="{{url('poweradd')}}">
                         <i class="icon-double-angle-right"></i>
                         权限添加
                     </a>
                 </li>
 
                 <li>
-                    <a href="buttons.html">
+                    <a href="{{url('showpower')}}">
                         <i class="icon-double-angle-right"></i>
                         权限列表
                     </a>
