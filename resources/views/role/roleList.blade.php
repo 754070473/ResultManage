@@ -340,7 +340,7 @@
             url: "roleupdate",
             data: "id="+id,
             success: function(msg){
-                jQuery("#info").html(msg)
+                jQuery("#list").html(msg)
             }
         });
     }
@@ -380,7 +380,7 @@
             url: "rolegive",
             data: "id="+id,
             success: function(msg){
-                jQuery("#info").html(msg)
+                jQuery("#list").html(msg)
             }
         });
     }
