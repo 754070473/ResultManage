@@ -6,7 +6,7 @@ use Session;
 use Illuminate\Http\Request;
 use Code;
 use Illuminate\Http\RedirectResponse;
-
+use mail;
 
 require_once(__DIR__."/../../../vendor/captcha_code.php");
 
@@ -40,8 +40,8 @@ class LoginController extends Controller
 	{
 		//接受数据
 		 $arr=$request->all();
-		 //账号
-		 $accounts = $arr['accounts'];
+		 //账号,去除账号两边的空白符
+		 $accounts = trim($arr['accounts']);
 		 //密码
 		 $password = $arr['password'];
 		 //验证码
@@ -61,7 +61,7 @@ class LoginController extends Controller
 					 	{
 					 		$uid = $user->uid;
 					 		Session::put('uid',$uid);  //把用户ID存入session
-					 		$users = DB::table('res_user_role')
+					 		/*$users = DB::table('res_user_role')
 				            ->join('res_role_power', 'res_role_power.rid', '=', 'res_user_role.rid')
 				            ->join('res_power', 'res_power.pid', '=', 'res_role_power.pid')
 				            ->where('uid',$uid )
@@ -74,8 +74,7 @@ class LoginController extends Controller
 				            }
 					 		// print_r($power);
 					 		//把用户所对应的角色的权限存入session中；
-					 		Session::put('power',$power);
-
+					 		Session::put('power',$power);*/
 					 		echo 0;
 
 					 	}
@@ -197,10 +196,6 @@ class LoginController extends Controller
 	    else
 	    {
 	    	echo "<script>alert('修改失败')</script>";die;
-	    }
-
-		
-		 
+	    }		 
 	}
-
 }

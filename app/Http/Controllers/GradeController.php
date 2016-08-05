@@ -1,22 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
-use App\excel\PHPExcel\PHPExcel_Cell;
 use Illuminate\Http\Request;
 use DB,Input,Redirect,Session,url;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-<<<<<<< HEAD
-use App\excel\PHPExcel;
-use Cookie;
-=======
-
->>>>>>> 646dea7ea9f7ca79bcf95c739ee9f0ca8fa0d121
-/*
- * @author:dongmengtao
- * @time:2016/08/03
- * @controller:成绩管理
- */
 
 require_once (__DIR__."/../../../vendor/PHPExcel.php");
 header("content-type:text/html;charset=utf-8");
@@ -25,41 +13,50 @@ class GradeController extends Controller
     //查看成绩录入
     public function grade()
     {
-        $arr = DB::table('grade')->where('status','=','1')->get();
-        $arr2 = DB::table('grade')->where('status','=','2')->get();
-        $arr3 = DB::table('grade')->where('status','=','3')->get();
-        $arr4 = DB::table('grade')->where('status','=','4')->get();
-        return view('grade/from',['arr'=>$arr,'arr2'=>$arr2,'arr3'=>$arr3,'arr4'=>$arr4]);
+        $arr1 = DB::table('res_college')->get();
+        $arr5 = DB::table('res_class')->get();
+        return view('grade.from',['arr1'=>$arr1,'arr5'=>$arr5]);
     }
+
     //添加成绩录入
-<<<<<<< HEAD
-    public function grade_add(Request $request){
-        $name = Session::get('name');
-       $theory = $request->input('theory');
-       $exam = $request->input('exam');
-        $add_date = date("Y-m-d H:i:s",time());
-        $add_time = date("H:i:s",time());
-        $status = $request->input('status');
-        $type = $request->input('type');
-        DB::table('grade')->insert(array("theory"=>$theory,'exam'=>$exam,'add_date'=>$add_date,'add_time'=>$add_time,'status'=>$status,'type'=>$type,'name'=>$name));
-=======
     public function grade_add(Request $request)
     {
-        $theory = $request -> input('theory');
-        $exam = $request -> input('exam');
-        $add_date = date("Y-m-d");
-        $add_time = date("H:i:s",time());
-        $status = $request -> input('status');
-        $type = $request -> input('type');
-        DB::table('grade') -> insert( array( "theory" => $theory , 'exam' => $exam , 'add_date' => $add_date , 'add_time' => $add_time , 'status' => $status , 'type'=>$type ) );
->>>>>>> 646dea7ea9f7ca79bcf95c739ee9f0ca8fa0d121
+        $uid = Session::get('uid');
+        //$table = DB :: table('res_grade inner join res_user on res_grade.uid=res_user.uid');
+//        $table = DB::table('res_user_role')
+//            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+//            ->where('uid',$uid)
+//            ->get();
+//        print_r($table);die;
+        $name = $request->input('name');
+        $class_id = $request->input('class_id');
+        $cid = $request->input('cid');
+        $theory = $request->input('theory');
+        $exam = $request->input('exam');
+        $g_add_date = date("Y-m-d H:i:s", time());
+        $add_time = date("H:i:s", time());
+       // $status = $request->input('status');
+        $type = $request->input('type');
+      DB::table('res_grade')->insert(
+           array(
+               'theory' => $theory,
+               'exam' => $exam,
+               'g_add_date' => $g_add_date,
+               'add_time' => $add_time,
+               'type' => $type,
+               'uid' => $uid,
+               'name' => $name,
+               'class_id' => $class_id,
+               'cid' => $cid,
+
+           )
+       );
         return redirect('show');
     }
 
     //查看成绩
-<<<<<<< HEAD
     public function show(Request $request){
-       Session::get('name');
+       $name = Session::get('name');
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
@@ -69,7 +66,7 @@ class GradeController extends Controller
         //查询条件
         $where = 1;
         //排序
-        $order = 'res_grade.add_date desc';
+        $order = 'res_grade.g_add_date desc';
         $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
         //print_r($arr);die;
         //根据用户查询角色 并显示出来
@@ -156,72 +153,49 @@ class GradeController extends Controller
 
     //成绩机试修改
     public function updatess(Request $request){
-        $gid=$request->input('gid');
-        $arr['exam']=$request->input('get.v');
-        $arr1=DB::table('grade')->insert(
-            array('exam'=>$arr)
-        );
-        if($arr1){
-            echo 1;
-        }else{
-            echo 0;
+        $v = $request->v;
+        $gid = $request->input('id');
+        $arr['exam'] = $v;
+        $arr1 = DB::table('res_grade')
+            ->where('gid',$gid)
+            ->update($arr);
+        if ($arr1) {
+            echo 1;die;
+        } else {
+            echo 0;die;
         }
-
-        //当前页码
-        $p = $request -> p ? $request -> p : 1;
-        //查询表名
-        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
-        //每页显示数据条数
-        $num = $request -> num ? $request -> num : 1;
-        //查询条件
-        $where = 1;
-        //排序
-        $order = 'res_grade.add_date desc';
-        $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-        //print_r($arr);die;
-        //根据用户查询角色 并显示出来
-        return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
     }
 
 
     //成绩理论修改
-    public function updates(Request $request){
-        $gid=$request->input('gid');
-        $arr['theory']=$request->input('get.v');
-        $arr1=DB::table('grade')->insert(
-            array('theory'=>$arr)
-        );
-        if($arr1){
-            echo 1;
-        }else{
-            echo 0;
+    public function updates(Request $request)
+    {
+        $v = $request->v;
+        $gid = $request->input('id');
+        $arr['theory'] = $v;
+        $arr1 = DB::table('res_grade')
+            ->where('gid',$gid)
+            ->update($arr);
+        if ($arr1) {
+           return redirect('show');
+        } else {
+            return redirect('show');
         }
-
+    
         //当前页码
-        $p = $request -> p ? $request -> p : 1;
+        $p = $request->p ? $request->p : 1;
         //查询表名
-        $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
+        $table = 'res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
         //每页显示数据条数
-        $num = $request -> num ? $request -> num : 1;
+        $num = $request->num ? $request->num : 1;
         //查询条件
         $where = 1;
         //排序
         $order = 'res_grade.add_date desc';
-        $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
+        $arr = $this->ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
         //print_r($arr);die;
         //根据用户查询角色 并显示出来
-        return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
-=======
-    public function show(){
-        $arr1 = DB::table('role') -> get();
-        $arr = DB::table('grade') -> get();
-        return view('grade/show',[ 'arr1' => $arr1 , 'arr' => $arr ]);
-    }
-    //成绩审核
-    public function updates(){
-        $arr = DB::table('grade') -> get();
-        return view( 'grade/updates' , [ 'arr' => $arr ] );
->>>>>>> 646dea7ea9f7ca79bcf95c739ee9f0ca8fa0d121
+        return view( 'grade.show' , array ( 'arr' => $arr[ 'arr' ] , 'page' => $arr[ 'page' ] ) );
     }
 
 
@@ -262,21 +236,110 @@ class GradeController extends Controller
             $str = mb_convert_encoding($str, 'utf8', 'auto');//根据自己编码修改
             $strs = explode("|*|", $str);
             //拼写sql语句
-            $sql[]= ['name'=>"{$strs[0]}",'theory'=>"{$strs[1]}",'exam'=>"{$strs[2]}",'status'=>"{$strs[3]}",'type'=>"{$strs[4]}"];
+            $sql[] = [
+                'name'=>"{$strs[0]}",
+                'theory'=>"{$strs[1]}",
+                'exam'=>"{$strs[2]}",
+                'status'=>"{$strs[3]}",
+                'type'=>"{$strs[4]
+                }"
+            ];
         }
 //		echo $sql;die;
         foreach( $sql as $key => $val ){
-            $sql[$key]['add_date'] = date( 'Y-m-d' , time() );
+            $sql[$key]['g_add_date'] = date( 'Y-m-d' , time() );
             $sql[$key]['add_time'] = date( 'H:i:s' , time() );
             $sql[$key]['uid'] = Session::get('uid');
         }
-        $res=DB::table('grade')->insert($sql);
+        $res=DB::table('res_grade')->insert($sql);
         if($res){
             echo "<script>alert('导入成功！');location.href='show'</script>";
         }else{
-            echo "<script>alert('上传失败！');location.href='gradd'</script>";
+            echo "<script>alert('导入失败！');location.href='from'</script>";
         }
     }
 
+    public function examine(Request $request)
+    {
+        $uid = Session::get('uid');
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table = 'res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 10;
+        //查询条件
+        if( $role_name == '教务' ){
+            $where = 'res_grade.status=2';
+        }elseif( $role_name == '讲师' ){
+            $where = 'res_grade.status=1';
+        }else{
+            $where = 'res_grade.status=0';
+        }
+        //排序
+        $order = 'gid desc';
+        $arr = $this -> ajaxPage( $table , $num , $p , 'examinePage' , $where , $order );
+        return view( 'grade.examine' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+    }
 
+    public function examineInfo(Request $request)
+    {
+        $gid    = $request -> gid ;
+        $status = $request -> status ;
+        $re = DB::table('res_grade')
+        ->where('gid', $gid)
+        ->update(['status' => $status]);
+        if( $re ){
+            $uid = Session::get('uid');
+            $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+            $role_name = $role -> role_name;
+            //当前页码
+            $p = $request -> p ? $request -> p : 1;
+            //查询表名
+            $table = 'res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
+            //每页显示数据条数
+            $num = $request -> num ? $request -> num : 10;
+            //查询条件
+            if( $role_name == '教务' ){
+                $where = 'res_grade.status=2';
+            }elseif( $role_name == '讲师' ){
+                $where = 'res_grade.status=1';
+            }else{
+                $where = 'res_grade.status=0';
+            }
+            //排序
+            $order = 'gid desc';
+            $arr = $this -> ajaxPage( $table , $num , $p , 'examinePage' , $where , $order );
+            return view( 'grade.examinePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+        }else{
+            echo 0;
+        }
+    }
+    
+    public function examinePage(Request $request)
+    {
+        $uid = Session::get('uid');
+        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role_name = $role -> role_name;
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table = 'res_grade inner join res_user on res_grade.uid=res_user.uid inner join res_class on res_grade.class_id=res_class.class_id inner join res_college on res_class.cid=res_college.cid';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 10;
+        //查询条件
+        if( $role_name == '教务' ){
+            $where = 'res_grade.status=2';
+        }elseif( $role_name == '讲师' ){
+            $where = 'res_grade.status=1';
+        }else{
+            $where = 'res_grade.status=0';
+        }
+        //排序
+        $order = 'gid desc';
+        $arr = $this -> ajaxPage( $table , $num , $p , 'examinePage' , $where , $order );
+        return view( 'grade.examinePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+    }
 }
