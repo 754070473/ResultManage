@@ -40,145 +40,30 @@
                 <span class="menu-text"> 首页 </span>
             </a>
         </li>
+        @foreach($access as $k=>$v)
         <li>
             <a href="javascript:void(0)" class="dropdown-toggle">
-                <i class="icon-desktop"></i>
-                <span class="menu-text"> 权限管理 </span>
+                <i class="{{$v['type']}}"></i>
+                <span class="menu-text"> {{$v['power_name']}} </span>
 
                 <b class="arrow icon-angle-down"></b>
             </a>
 
             <ul class="submenu">
+                @foreach($v['son'] as $key=>$val)
                 <li>
-                    <a href="{{url('poweradd')}}">
+                    @if(isset($val['url']))
+                        <a href="{{$val['url']}}">
+                    @endif
                         <i class="icon-double-angle-right"></i>
-                        权限添加
+                        {{$val['power_name']}}
                     </a>
                 </li>
-
-                <li>
-                    <a href="{{url('showpower')}}">
-                        <i class="icon-double-angle-right"></i>
-                        权限列表
-                    </a>
-                </li>
+                @endforeach
             </ul>
         </li>
-
-        <li>
-            <a href="javascript:void(0)" class="dropdown-toggle">
-                <i class="icon-list"></i>
-                <span class="menu-text"> 管理员管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li>
-                    <a href="useradd">
-                        <i class="icon-double-angle-right"></i>
-                        管理员添加
-                    </a>
-                </li>
-
-                <li>
-                    <a href="userList">
-                        <i class="icon-double-angle-right"></i>
-                        管理员列表
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="javascript:void(0)" class="dropdown-toggle">
-                <i class="icon-edit"></i>
-                <span class="menu-text"> 角色管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li>
-                    <a href="roleadd">
-                        <i class="icon-double-angle-right"></i>
-                        角色添加
-                    </a>
-                </li>
-                <li>
-                    <a href="rolelist">
-                        <i class="icon-double-angle-right"></i>
-                        角色列表
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="javascript:void(0)" class="dropdown-toggle">
-                <i class="icon-list-alt"></i>
-                <span class="menu-text"> 成绩管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li>
-                    <a href="grade">
-                        <i class="icon-double-angle-right"></i>
-                        成绩录入
-                    </a>
-                </li>
-                <li>
-                    <a href="show">
-                        <i class="icon-double-angle-right"></i>
-                        查看成绩
-                    </a>
-                </li>
-                <li>
-                    <a href="examine">
-                        <i class="icon-double-angle-right"></i>
-                        成绩审核
-                    </a>
-                </li>
-            </ul>
-        </li>
-
-        <li>
-            <a href="javascript:void(0)" class="dropdown-toggle">
-                <i class="icon-calendar"></i>
-                <span class="menu-text"> 组建管理 </span>
-
-                <b class="arrow icon-angle-down"></b>
-            </a>
-
-            <ul class="submenu">
-                <li>
-                    <a href="{{'collShow'}}">
-                        <i class="icon-double-angle-right"></i>
-                        创建学院
-                    </a>
-                </li>
-                <li>
-                    <a href="{{URL('groupClaShow')}}">
-                        <i class="icon-double-angle-right"></i>
-                        创建班级
-                    </a>
-                </li>
-                <li>
-                    <a href="form-wizard.html">
-                        <i class="icon-double-angle-right"></i>
-                        创建小组
-                    </a>
-                </li>
-                <li>
-                    <a href="form-wizard.html">
-                        <i class="icon-double-angle-right"></i>
-                        组员录入
-                    </a>
-                </li>
-            </ul>
-        </li>
+        @endforeach
+       
         <li>
             <a href="userlog">
                 <i class="icon-user"></i>
