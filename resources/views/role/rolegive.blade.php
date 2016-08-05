@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
-    <title>用户添加</title>
+    {{--<meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
+    <meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />--}}
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- basic styles -->
+
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
 
@@ -21,9 +23,13 @@
     <link rel="stylesheet" href="assets/css/bootstrap-timepicker.css" />
     <link rel="stylesheet" href="assets/css/daterangepicker.css" />
     <link rel="stylesheet" href="assets/css/colorpicker.css" />
+    <link type="text/css" rel="stylesheet" 	href="css/powerFloat.css" />
+    <link type="text/css" rel="stylesheet" 	href="css/xmenu.css" />
+
 
     <!-- fonts -->
 
+    <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" /> -->
 
     <!-- ace styles -->
 
@@ -47,9 +53,13 @@
     <script src="assets/js/html5shiv.js"></script>
     <script src="assets/js/respond.min.js"></script>
     <![endif]-->
+
+
+
 </head>
 
 <body>
+<div id="list">
 
 <div class="main-container" id="main-container">
     <script type="text/javascript">
@@ -60,8 +70,6 @@
         <a class="menu-toggler" id="menu-toggler" href="#">
             <span class="menu-text"></span>
         </a>
-
-
         <div class="main-content">
             <div class="breadcrumbs" id="breadcrumbs">
                 <script type="text/javascript">
@@ -71,17 +79,12 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="icon-home home-icon"></i>
-                        <a href="#">主页</a>
+                        <a href="#">首页</a>
                     </li>
-
-                    <li>
-                        <a href="#">用户管理</a>
-                    </li>
-                    <li class="active">用户添加</li>
                 </ul><!-- .breadcrumb -->
 
-                <div class="nav-search" id="nav-search" >
-                    <form class="form-search" method="post" action="#">
+                <div class="nav-search" id="nav-search">
+                    <form class="form-search">
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="icon-search nav-search-icon"></i>
@@ -89,14 +92,13 @@
                     </form>
                 </div><!-- #nav-search -->
             </div>
-
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        {{--Form Elements--}}
+                        角色管理
                         <small>
-                            {{--<i class="icon-double-angle-right"></i>--}}
-                            {{--Common form elements and layouts--}}
+                            <i class="icon-double-angle-right"></i>
+                            角色赋权
                         </small>
                     </h1>
                 </div><!-- /.page-header -->
@@ -105,67 +107,170 @@
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
 
+                        <div id="main">
+                            <div id="lead" class="card">
+                                <h3>角色赋权</h3>
+                                <p>
+                                <div class="topnav">
+                                    <a id="selectdept" href="javascript:void(0);" class="as">
+                                        <span>选择权限</span>
+                                    </a>
 
-                        <form class="form-horizontal" role="form">
+                                </div>
+                                </p>
+                                <input type="hidden" value="<?php echo $number?>" id="selectdeptidden" />
+                                <input type="hidden" id="userid" value="<?php echo $rid ?>"/><br/>
+                                <h4>已有权限</h4>
 
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right">角色：</label>
-                                <div class="col-sm-4">
-                                    <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false">
-                                        @foreach($role as $k=>$v)
-                                            <option value="{{$v->rid}}">{{$v->role_name}}</option>
-                                        @endforeach
-                                    </select>
+                                @foreach($give as $v)
+                                    {{$v->power_name}}
+                                    @endforeach
+                            </div>
+                        </div>
+                        <div id="m2" class="xmenu" style="display: none;">
+                            <div class="select-info">
+                                <label class="top-label">权限列表：</label>
+                                <ul>
+                                </ul>
+                                <a  name="menu-confirm" href="javascript:void(0);" class="a-btn">
+                                    <span class="a-btn-text" id="give">确定</span>
+                                </a>
+                            </div>
+                           <?php
+                                foreach($list as $k => $v){
+                            ?>
+                            <dl>
+                                <dt class="open"><?php echo $v['power_name']?></dt>
+                                <dd>
+                                    <ul>
+                                        <?php
+                                            foreach($v['son'] as $key => $val){
+                                        ?>
+                                        <li rel="<?php echo $val['pid']?>" class="<?php echo $val['fid']?>"><?php echo $val['power_name']?></li>
+                                        <?php
+                                        }
+                                        ?>
+                                    </ul>
+                                </dd>
+                            </dl>
+                           <?php
+                            }
+                            ?>
+                        </div>
+                        <div id="modal-form" class="modal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="blue bigger">Please fill the following form fields</h4>
+                                    </div>
+
+                                    <div class="modal-body overflow-visible">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-5">
+                                                <div class="space"></div>
+
+                                                <input type="file" />
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-7">
+                                                <div class="form-group">
+                                                    <label for="form-field-select-3">Location</label>
+
+                                                    <div>
+                                                        <select class="chosen-select" data-placeholder="Choose a Country...">
+                                                            <option value="">&nbsp;</option>
+                                                            <option value="AL">Alabama</option>
+                                                            <option value="AK">Alaska</option>
+                                                            <option value="AZ">Arizona</option>
+                                                            <option value="AR">Arkansas</option>
+                                                            <option value="CA">California</option>
+                                                            <option value="CO">Colorado</option>
+                                                            <option value="CT">Connecticut</option>
+                                                            <option value="DE">Delaware</option>
+                                                            <option value="FL">Florida</option>
+                                                            <option value="GA">Georgia</option>
+                                                            <option value="HI">Hawaii</option>
+                                                            <option value="ID">Idaho</option>
+                                                            <option value="IL">Illinois</option>
+                                                            <option value="IN">Indiana</option>
+                                                            <option value="IA">Iowa</option>
+                                                            <option value="KS">Kansas</option>
+                                                            <option value="KY">Kentucky</option>
+                                                            <option value="LA">Louisiana</option>
+                                                            <option value="ME">Maine</option>
+                                                            <option value="MD">Maryland</option>
+                                                            <option value="MA">Massachusetts</option>
+                                                            <option value="MI">Michigan</option>
+                                                            <option value="MN">Minnesota</option>
+                                                            <option value="MS">Mississippi</option>
+                                                            <option value="MO">Missouri</option>
+                                                            <option value="MT">Montana</option>
+                                                            <option value="NE">Nebraska</option>
+                                                            <option value="NV">Nevada</option>
+                                                            <option value="NH">New Hampshire</option>
+                                                            <option value="NJ">New Jersey</option>
+                                                            <option value="NM">New Mexico</option>
+                                                            <option value="NY">New York</option>
+                                                            <option value="NC">North Carolina</option>
+                                                            <option value="ND">North Dakota</option>
+                                                            <option value="OH">Ohio</option>
+                                                            <option value="OK">Oklahoma</option>
+                                                            <option value="OR">Oregon</option>
+                                                            <option value="PA">Pennsylvania</option>
+                                                            <option value="RI">Rhode Island</option>
+                                                            <option value="SC">South Carolina</option>
+                                                            <option value="SD">South Dakota</option>
+                                                            <option value="TN">Tennessee</option>
+                                                            <option value="TX">Texas</option>
+                                                            <option value="UT">Utah</option>
+                                                            <option value="VT">Vermont</option>
+                                                            <option value="VA">Virginia</option>
+                                                            <option value="WA">Washington</option>
+                                                            <option value="WV">West Virginia</option>
+                                                            <option value="WI">Wisconsin</option>
+                                                            <option value="WY">Wyoming</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label for="form-field-username">Username</label>
+
+                                                    <div>
+                                                        <input class="input-large" type="text" id="form-field-username" placeholder="Username" value="alexdoe" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label for="form-field-first">Name</label>
+
+                                                    <div>
+                                                        <input class="input-medium" type="text" id="form-field-first" placeholder="First Name" value="Alex" />
+                                                        <input class="input-medium" type="text" id="form-field-last" placeholder="Last Name" value="Doe" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-sm" data-dismiss="modal">
+                                            <i class="icon-remove"></i>
+                                            Cancel
+                                        </button>
+
+                                        <button class="btn btn-sm btn-primary">
+                                            <i class="icon-ok"></i>
+                                            Save
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right">名字：</label>
-
-                                <div class="col-sm-9">
-											<span class="input-icon">
-												<input type="text" id="name" />
-											</span>
-                                    <span id="show_msg"></span>
-                                </div>
-                            </div>
-
-
-                            <div class="clearfix form-actions">
-                                <div class="col-md-offset-3 col-md-9">
-                                    <button class="btn btn-info" type="button" id="submit">
-                                        <i class="icon-ok bigger-110"></i>
-                                        添加
-                                    </button>
-
-                                    &nbsp; &nbsp; &nbsp;
-                                    <button class="btn" type="reset">
-                                        <i class="icon-undo bigger-110"></i>
-                                        重置
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="form-group"  id="inser_show"></div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right"></label>
-                                <div class="col-sm-4">
-                                    <table style="display: none" id="table_show">
-                                        <tr>
-                                            <td>已添加用户</td>
-                                        </tr>
-                                        <span id="user_insert" style="font-size: medium">
-                                            <tr>
-                                                <td></td>
-                                            </tr>
-                                        </span>
-                                    </table>
-                                </div>
-                            </div>
-                        </form>
-
-
-                        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
                         </div><!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -230,10 +335,12 @@
 
 <!--[if !IE]> -->
 
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
 
 <!-- <![endif]-->
 
 <!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <![endif]-->
 
 <!--[if !IE]> -->
@@ -281,11 +388,10 @@
 
 <script src="assets/js/ace-elements.min.js"></script>
 <script src="assets/js/ace.min.js"></script>
-<script src="assets/js/userAdd/userAdd.js"></script>
+
 <!-- inline scripts related to this page -->
 
 <script type="text/javascript">
-
     jQuery(function($){
         $.get("{{url('top')}}",function(m){
             $('.main-container').first().before(m);
@@ -310,6 +416,27 @@
                 inp.value="This text field is disabled!";
             }
         });
+       $("#give").click(function(){
+           var rid = $("#userid").val();
+           var arr = $(".select-info").children("ul").children();
+           var rel = '';
+           var len = arr.length
+           for(var i = 0 ; i < len ; i++){
+               rel += ',' + arr.eq(i).attr('rel');
+           }
+           rel = rel.substr( 1 );
+           $.ajax({
+               type: "GET",
+               url: "rolegives",
+               data: "rel="+rel+"&rid="+rid,
+               success: function(msg){
+                       $("#list").html(msg)
+               }
+           });
+       })
+
+
+
 
 
         $(".chosen-select").chosen();
@@ -539,11 +666,6 @@
             tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
             //$('#form-field-tags').autosize({append: "\n"});
         }
-
-
-
-
-        /////////
         $('#modal-form input[type=file]').ace_file_input({
             style:'well',
             btn_choose:'Drop files here or click to choose',
@@ -563,26 +685,12 @@
                 $(this).find('.chosen-search input').css('width' , '200px');
             });
         })
-        /**
-         //or you can activate the chosen plugin after modal is shown
-         //this way select element becomes visible with dimensions and chosen works as expected
-         $('#modal-form').on('shown', function () {
-					$(this).find('.modal-chosen').chosen();
-				})
-         */
-
-    });
-
-</script>
-<input type="hidden" id="token" value="{{ csrf_token() }}" />
-<script>
-    var  _token = $("#token").val();
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': _token
-        }
     });
 </script>
-</body>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="js/jquery-powerFloat-min.js"></script>
+<script type="text/javascript" src="js/jquery-xmenu.js"></script>
+<!-- <div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div> -->
+</div></body>
+
 </html>
-

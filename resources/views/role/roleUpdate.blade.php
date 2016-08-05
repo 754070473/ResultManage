@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
-    <title>用户添加</title>
+    <title>Bootstrap表单组件 - Bootstrap后台管理系统模版Ace下载</title>
+    <meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
+    <meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <!-- basic styles -->
+
     <link href="assets/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="assets/css/font-awesome.min.css" />
 
@@ -24,6 +27,7 @@
 
     <!-- fonts -->
 
+    <!-- <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" /> -->
 
     <!-- ace styles -->
 
@@ -51,6 +55,7 @@
 
 <body>
 
+
 <div class="main-container" id="main-container">
     <script type="text/javascript">
         try{ace.settings.check('main-container' , 'fixed')}catch(e){}
@@ -62,6 +67,7 @@
         </a>
 
 
+
         <div class="main-content">
             <div class="breadcrumbs" id="breadcrumbs">
                 <script type="text/javascript">
@@ -71,17 +77,12 @@
                 <ul class="breadcrumb">
                     <li>
                         <i class="icon-home home-icon"></i>
-                        <a href="#">主页</a>
+                        <a href="#">首页</a>
                     </li>
-
-                    <li>
-                        <a href="#">用户管理</a>
-                    </li>
-                    <li class="active">用户添加</li>
                 </ul><!-- .breadcrumb -->
 
-                <div class="nav-search" id="nav-search" >
-                    <form class="form-search" method="post" action="#">
+                <div class="nav-search" id="nav-search">
+                    <form class="form-search">
 								<span class="input-icon">
 									<input type="text" placeholder="Search ..." class="nav-search-input" id="nav-search-input" autocomplete="off" />
 									<i class="icon-search nav-search-icon"></i>
@@ -93,10 +94,10 @@
             <div class="page-content">
                 <div class="page-header">
                     <h1>
-                        {{--Form Elements--}}
+                        角色管理
                         <small>
-                            {{--<i class="icon-double-angle-right"></i>--}}
-                            {{--Common form elements and layouts--}}
+                            <i class="icon-double-angle-right"></i>
+                            角色名修改
                         </small>
                     </h1>
                 </div><!-- /.page-header -->
@@ -105,67 +106,156 @@
                     <div class="col-xs-12">
                         <!-- PAGE CONTENT BEGINS -->
 
-
-                        <form class="form-horizontal" role="form">
-
+                        <form class="form-horizontal" role="form" action="roleupdates" method="post" onsubmit=" return fun()">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}" />
                             <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right">角色：</label>
-                                <div class="col-sm-4">
-                                    <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false">
-                                        @foreach($role as $k=>$v)
-                                            <option value="{{$v->rid}}">{{$v->role_name}}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right">名字：</label>
+                                <label class="col-sm-3 control-label no-padding-right" for="form-field-1"> 角色名称 </label>
 
                                 <div class="col-sm-9">
-											<span class="input-icon">
-												<input type="text" id="name" />
-											</span>
-                                    <span id="show_msg"></span>
+                                    <input type="text" value="{{$list[0]->role_name}}" name="role_name" id="form-field-1" placeholder="Rolename" class="col-xs-10 col-sm-5" /><font color="red"><span id="error"></span></font>
+                                    <input type="hidden" name="rid" value="{{$list[0]->rid}}"/>
                                 </div>
                             </div>
+                            <div class="form-group">
+                                <label class="col-sm-3 control-label no-padding-right" for="form-field-1"></label>
 
-
+                                <div class="col-sm-9">
+                                    @if($list[0]->status)
+                                    <input type="checkbox" name="status" value="1" checked="checked"/>启用
+                                        @else
+                                        <input type="checkbox" name="status" value="1"/>启用
+                                        @endif
+                                </div>
+                            </div>
                             <div class="clearfix form-actions">
                                 <div class="col-md-offset-3 col-md-9">
-                                    <button class="btn btn-info" type="button" id="submit">
+                                    <button class="btn btn-info" type="submit">
                                         <i class="icon-ok bigger-110"></i>
-                                        添加
+                                        修改
                                     </button>
 
                                     &nbsp; &nbsp; &nbsp;
-                                    <button class="btn" type="reset">
+                                    <button class="btn" type="button" onclick="backup()">
                                         <i class="icon-undo bigger-110"></i>
-                                        重置
+                                        返回
                                     </button>
                                 </div>
                             </div>
+                        </form>
+                        <div id="modal-form" class="modal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                        <h4 class="blue bigger">Please fill the following form fields</h4>
+                                    </div>
 
-                            <div class="form-group"  id="inser_show"></div>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label no-padding-right"></label>
-                                <div class="col-sm-4">
-                                    <table style="display: none" id="table_show">
-                                        <tr>
-                                            <td>已添加用户</td>
-                                        </tr>
-                                        <span id="user_insert" style="font-size: medium">
-                                            <tr>
-                                                <td></td>
-                                            </tr>
-                                        </span>
-                                    </table>
+                                    <div class="modal-body overflow-visible">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-5">
+                                                <div class="space"></div>
+
+                                                <input type="file" />
+                                            </div>
+
+                                            <div class="col-xs-12 col-sm-7">
+                                                <div class="form-group">
+                                                    <label for="form-field-select-3">Location</label>
+
+                                                    <div>
+                                                        <select class="chosen-select" data-placeholder="Choose a Country...">
+                                                            <option value="">&nbsp;</option>
+                                                            <option value="AL">Alabama</option>
+                                                            <option value="AK">Alaska</option>
+                                                            <option value="AZ">Arizona</option>
+                                                            <option value="AR">Arkansas</option>
+                                                            <option value="CA">California</option>
+                                                            <option value="CO">Colorado</option>
+                                                            <option value="CT">Connecticut</option>
+                                                            <option value="DE">Delaware</option>
+                                                            <option value="FL">Florida</option>
+                                                            <option value="GA">Georgia</option>
+                                                            <option value="HI">Hawaii</option>
+                                                            <option value="ID">Idaho</option>
+                                                            <option value="IL">Illinois</option>
+                                                            <option value="IN">Indiana</option>
+                                                            <option value="IA">Iowa</option>
+                                                            <option value="KS">Kansas</option>
+                                                            <option value="KY">Kentucky</option>
+                                                            <option value="LA">Louisiana</option>
+                                                            <option value="ME">Maine</option>
+                                                            <option value="MD">Maryland</option>
+                                                            <option value="MA">Massachusetts</option>
+                                                            <option value="MI">Michigan</option>
+                                                            <option value="MN">Minnesota</option>
+                                                            <option value="MS">Mississippi</option>
+                                                            <option value="MO">Missouri</option>
+                                                            <option value="MT">Montana</option>
+                                                            <option value="NE">Nebraska</option>
+                                                            <option value="NV">Nevada</option>
+                                                            <option value="NH">New Hampshire</option>
+                                                            <option value="NJ">New Jersey</option>
+                                                            <option value="NM">New Mexico</option>
+                                                            <option value="NY">New York</option>
+                                                            <option value="NC">North Carolina</option>
+                                                            <option value="ND">North Dakota</option>
+                                                            <option value="OH">Ohio</option>
+                                                            <option value="OK">Oklahoma</option>
+                                                            <option value="OR">Oregon</option>
+                                                            <option value="PA">Pennsylvania</option>
+                                                            <option value="RI">Rhode Island</option>
+                                                            <option value="SC">South Carolina</option>
+                                                            <option value="SD">South Dakota</option>
+                                                            <option value="TN">Tennessee</option>
+                                                            <option value="TX">Texas</option>
+                                                            <option value="UT">Utah</option>
+                                                            <option value="VT">Vermont</option>
+                                                            <option value="VA">Virginia</option>
+                                                            <option value="WA">Washington</option>
+                                                            <option value="WV">West Virginia</option>
+                                                            <option value="WI">Wisconsin</option>
+                                                            <option value="WY">Wyoming</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label for="form-field-username">Username</label>
+
+                                                    <div>
+                                                        <input class="input-large" type="text" id="form-field-username" placeholder="Username" value="alexdoe" />
+                                                    </div>
+                                                </div>
+
+                                                <div class="space-4"></div>
+
+                                                <div class="form-group">
+                                                    <label for="form-field-first">Name</label>
+
+                                                    <div>
+                                                        <input class="input-medium" type="text" id="form-field-first" placeholder="First Name" value="Alex" />
+                                                        <input class="input-medium" type="text" id="form-field-last" placeholder="Last Name" value="Doe" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button class="btn btn-sm" data-dismiss="modal">
+                                            <i class="icon-remove"></i>
+                                            Cancel
+                                        </button>
+
+                                        <button class="btn btn-sm btn-primary">
+                                            <i class="icon-ok"></i>
+                                            Save
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </form>
-
-
-                        <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
                         </div><!-- PAGE CONTENT ENDS -->
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -230,10 +320,12 @@
 
 <!--[if !IE]> -->
 
+<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
 
 <!-- <![endif]-->
 
 <!--[if IE]>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <![endif]-->
 
 <!--[if !IE]> -->
@@ -281,10 +373,42 @@
 
 <script src="assets/js/ace-elements.min.js"></script>
 <script src="assets/js/ace.min.js"></script>
-<script src="assets/js/userAdd/userAdd.js"></script>
+
 <!-- inline scripts related to this page -->
 
 <script type="text/javascript">
+    var sum = 1;
+    function backup(){
+        location.href="rolelist";
+    }
+    function fun(){
+        if(sum){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    jQuery("#form-field-1").blur(function(){
+        var val = jQuery(this).val();
+        jQuery.ajax({
+            type: "GET",
+            url: "roleadd",
+            data: "role="+val,
+            success: function(msg){
+                if(msg.error==1){
+                    jQuery("#error").html(msg.msg)
+                    sum = 1;
+                }else{
+                    jQuery("#error").html(msg.msg)
+                    sum = 0;
+                }
+            }
+        });
+    })
+
+
+
+
 
     jQuery(function($){
         $.get("{{url('top')}}",function(m){
@@ -572,17 +696,7 @@
          */
 
     });
-
 </script>
-<input type="hidden" id="token" value="{{ csrf_token() }}" />
-<script>
-    var  _token = $("#token").val();
-    $.ajaxSetup({
-        headers: {
-            'X-CSRF-TOKEN': _token
-        }
-    });
-</script>
+<!-- <div style="display:none"><script src='http://v7.cnzz.com/stat.php?id=155540&web_id=155540' language='JavaScript' charset='gb2312'></script></div> -->
 </body>
 </html>
-

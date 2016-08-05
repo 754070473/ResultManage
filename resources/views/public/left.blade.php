@@ -50,14 +50,14 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="elements.html">
+                    <a href="{{url('poweradd')}}">
                         <i class="icon-double-angle-right"></i>
                         权限添加
                     </a>
                 </li>
 
                 <li>
-                    <a href="buttons.html">
+                    <a href="{{url('showpower')}}">
                         <i class="icon-double-angle-right"></i>
                         权限列表
                     </a>
@@ -87,6 +87,12 @@
                         管理员列表
                     </a>
                 </li>
+                <li>
+                    <a href="userRemove">
+                        <i class="icon-double-angle-right"></i>
+                        回收站
+                    </a>
+                </li>
             </ul>
         </li>
 
@@ -100,13 +106,13 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="">
+                    <a href="roleadd">
                         <i class="icon-double-angle-right"></i>
                         角色添加
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="rolelist">
                         <i class="icon-double-angle-right"></i>
                         角色列表
                     </a>
@@ -154,13 +160,13 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="form-elements.html">
+                    <a href="{{'collShow'}}">
                         <i class="icon-double-angle-right"></i>
                         创建学院
                     </a>
                 </li>
                 <li>
-                    <a href="form-wizard.html">
+                    <a href="{{URL('groupClaShow')}}">
                         <i class="icon-double-angle-right"></i>
                         创建班级
                     </a>
