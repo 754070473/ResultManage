@@ -314,7 +314,7 @@
         //alert(v);
             $.ajax({
                 type:'get',
-                url:'updates',
+                url:'updatess',
                 data:"id="+id+"&v="+v,
                 success:function(i){
                     if(i==1){

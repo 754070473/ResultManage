@@ -106,11 +106,10 @@ class GradeController extends Controller
         return view( 'grade.gradePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
     }
 
-
+    //删除
     public function gradeDelete(Request $request){
         $gid=$request->input('gid');
         $re = DB::table('grade')->whereIn( 'gid' , array($gid) )->delete();
-//        var_dump($re);die;
         if( $re ){
             //搜索日期
             $date = $request -> search ? $request -> search : '';
@@ -141,6 +140,9 @@ class GradeController extends Controller
     public function updatess(Request $request){
         $gid=$request->input('gid');
         $arr['exam']=$request->input('get.v');
+        $arr1=DB::table('grade')->insert(
+            array('theory'=>$arr)
+        );
     }
 
 
