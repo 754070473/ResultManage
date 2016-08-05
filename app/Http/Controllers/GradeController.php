@@ -153,7 +153,7 @@ class GradeController extends Controller
         $arr1=DB::table('grade')->insert(
             array('theory'=>$arr)
         );
-        var_dump($arr1);die;
+//        var_dump($arr1);die;
 
 
         //当前页码
