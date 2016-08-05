@@ -100,13 +100,13 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="roleadd">
+                    <a href="{{url('roleadd')}}">
                         <i class="icon-double-angle-right"></i>
                         角色添加
                     </a>
                 </li>
                 <li>
-                    <a href="rolelist">
+                    <a href="{{url('rolelist')}}">
                         <i class="icon-double-angle-right"></i>
                         角色列表
                     </a>
@@ -124,19 +124,19 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="grade">
+                    <a href="{{url('grade')}}">
                         <i class="icon-double-angle-right"></i>
                         成绩录入
                     </a>
                 </li>
                 <li>
-                    <a href="show">
+                    <a href="{{url('show')}}">
                         <i class="icon-double-angle-right"></i>
                         查看成绩
                     </a>
                 </li>
                 <li>
-                    <a href="examine">
+                    <a href="{{url('examine')}}">
                         <i class="icon-double-angle-right"></i>
                         成绩审核
                     </a>
@@ -154,13 +154,13 @@
 
             <ul class="submenu">
                 <li>
-                    <a href="{{'collShow'}}">
+                    <a href="{{url('collShow')}}">
                         <i class="icon-double-angle-right"></i>
                         创建学院
                     </a>
                 </li>
                 <li>
-                    <a href="{{URL('groupClaShow')}}">
+                    <a href="{{url('groupClaShow')}}">
                         <i class="icon-double-angle-right"></i>
                         创建班级
                     </a>
@@ -180,7 +180,7 @@
             </ul>
         </li>
         <li>
-            <a href="userlog">
+            <a href="{{url('userlog')}}">
                 <i class="icon-user"></i>
                 <span class="menu-text"> 管理员日志 </span>
             </a>
