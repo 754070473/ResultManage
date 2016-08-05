@@ -87,6 +87,12 @@
                         管理员列表
                     </a>
                 </li>
+                <li>
+                    <a href="userRemove">
+                        <i class="icon-double-angle-right"></i>
+                        回收站
+                    </a>
+                </li>
             </ul>
         </li>
 

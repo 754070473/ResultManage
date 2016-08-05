@@ -89,8 +89,7 @@
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								用户列表
-
+								用户恢复与删除
 							</h1>
 						</div><!-- /.page-header -->
 
@@ -104,7 +103,7 @@
 											<div class="widget-header header-color-blue">
 												<h5 class="bigger lighter">
 													<i class="icon-table"></i>
-													用户信息
+													回收站
 												</h5>
 											</div>
 											<div class="widget-body">
@@ -121,19 +120,12 @@
 																<th>
 																	<i>@</i>
                                                                     角色
-                                                                    {{--<i><select name="" id="">--}}
-                                                                            {{--<option value="">查看全部</option>--}}
-                                                                           {{--@foreach($role as $k=>$v)--}}
-                                                                            {{--<option value="">只看{{$v->role_name}}</option>--}}
-                                                                           {{--@endforeach--}}
-                                                                        {{--</select></i>--}}
+
 																</th>
                                                                 <th class="hidden-480">账号</th>
-                                                                <th class="hidden-480">添加时间</th>
-                                                                {{--<th class="hidden-480">状态</th>--}}
+
 															</tr>
 														</thead>
-
 
 													</table>
                                                     <tbody>
@@ -148,26 +140,24 @@
 										</div>
 									</div><!-- /span -->
 								</div><!-- /row -->
-
+                                <input type="hidden" id="token" value="{{ csrf_token() }}" />
+                                <script>
+                                    var  _token = $("#token").val();
+                                    $.ajaxSetup({
+                                        headers: {
+                                            'X-CSRF-TOKEN': _token
+                                        }
+                                    });
+                                </script>
                                 <input type="hidden" id="page_up_dn" value="1"/>
-                                <div style="text-align: center;">
-                                    <ul class="pager">
-                                        <li class="previous">
-                                            <a href="javascript:void (0)"  onclick="ckDeleteAll()">删&nbsp;除</a>
-                                        </li>
-                                        <li class="previous">
-                                            <a > <select name="" id="role_update">
-                                                    @foreach($role as $k=>$v)
-                                                        <option value="{{$v->rid}}">角色改变为{{$v->role_name}}</option>
-                                                    @endforeach
-                                                </select>
-                                            </a>
-                                        </li>
-                                        <li class="previous">
-
-                                            <a href="javascript:void (0)"  onclick="updateRole()">修改</a>
-                                        </li>
-                                    </ul>
+                                <ul class="pager">
+                                    <li class="previous">
+                                        <a href="javascript:void (0)"  onclick="ckDeleteAll()">永久删除</a>
+                                    </li>
+                                    <li class="previous">
+                                        <a href="javascript:void (0)"  onclick="userRestore()">还原</a>
+                                    </li>
+                                </ul>
                                     <center>
                                         <div style="text-align: center;width:500px;">
                                             <ul class="pager">
@@ -299,7 +289,7 @@
 
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
-        <script src="assets/js/userAdd/userList.js"></script>
+        <script src="assets/js/userAdd/userRemove.js"></script>
 
 		<!-- inline scripts related to this page -->
 
@@ -362,7 +352,7 @@
                     }
                     log_id = log_id.substr(1);
                     $.ajax({
-                        type: 'get',
+                        type: 'post',
                         url: '/roleUpdate',
                         data: 'id=' + log_id+"&date="+role_update,
                         success: function (msg) {

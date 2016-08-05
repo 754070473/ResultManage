@@ -201,15 +201,15 @@
   function checkcontroller() {
   		var value=$("#controller").val();
   		if(value==''){
-  			$("#s_controller").html('<font color="red">控制器不能为空</font>');
+  			$("#s_controller").html('<img src="images/no.png" />   <font color="red">控制器不能为空</font>');
   			return false;
   		}else{
   			var reg=/^[a-z]{4,16}$/i;
   			if(!reg.test(value)){
-  				$("#s_controller").html('<font color="red">控制器只能由4-32位字母组成</font>');
+  				$("#s_controller").html('<img src="images/no.png" />   <font color="red">控制器只能由4-32位字母组成</font>');
   				return false;
   			}else{
-  				$("#s_controller").html('<font color="red">可以使用</font>');
+  				$("#s_controller").html('<img src="images/ok.png" />');
   				return true;
   			}
   		}
@@ -222,11 +222,11 @@
   function checkaction() {
       var value=$("#action").val();
       if(value==''){
-        $("#s_action").html('<font color="red">方法名不能为空</font>');
+        $("#s_action").html('<img src="images/no.png" />   <font color="red">方法名不能为空</font>');
       }else{
         var reg=/^[a-z]{4,16}$/i;
         if(!reg.test(value)){
-          $("#s_action").html('<font color="red">方法名只能由4-32位字母组成</font>');
+          $("#s_action").html('<img src="images/no.png" />   <font color="red">方法名只能由4-32位字母组成</font>');
         }else{
   				$.ajax({
 				   type: "GET",
@@ -234,9 +234,9 @@
 				   data: "value="+value+"&name=action",
 				   success: function(msg){
 				      if(msg=='1'){
-				      	$("#s_action").html('<font color="red">此方法已存在</font>');
+				      	$("#s_action").html('<img src="images/no.png" />   <font color="red">此方法已存在</font>');
 				      }else{
-				      	$("#s_action").html('<font color="red">可以使用</font>');
+				      	$("#s_action").html('<img src="images/ok.png" />');
 				      	flag1=true;
 				      }
 				   }
@@ -253,11 +253,11 @@
   function checkpower_name() {
       var value=$("#power_name").val();
       if(value==''){
-        $("#s_name").html('<font color="red">权限名称不能为空</font>');
+        $("#s_name").html('<img src="images/no.png" />   <font color="red">权限名称不能为空</font>');
       }else{
         var reg=/^[\u4E00-\u9FA5]{2,10}$/;
         if(!reg.test(value)){
-          $("#s_name").html('<font color="red">权限名称只能为2-10位汉字</font>');
+          $("#s_name").html('<img src="images/no.png" />   <font color="red">权限名称只能为2-10位汉字</font>');
         }else{
     				$.ajax({
   				   type: "GET",
@@ -265,11 +265,11 @@
   				   data: "value="+value+"&name=power_name",
   				   success: function(msg){
   				     if(msg=='1'){
-  				      	$("#s_name").html('<font color="red">此权限名称已存在</font>');
+  				      	$("#s_name").html('<img src="images/no.png" />   <font color="red">此权限名称已存在</font>');
   				      	
   				      }else{
   				      	flag2=true;
-                  $("#s_name").html('<font color="red">可以使用</font>');
+                  $("#s_name").html('<img src="images/ok.png" />');
   				      }
   				   }
   				});
