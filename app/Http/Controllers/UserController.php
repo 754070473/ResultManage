@@ -59,7 +59,7 @@ class UserController extends Controller
      */
     private function role( )
     {
-           return  DB::table('role')->get();
+           return  DB::table('res_role')->get();
     }
 
     /**
@@ -72,14 +72,14 @@ class UserController extends Controller
     {
         if( 'all' == $type )
         {
-           return   DB::table('user')
+           return   DB::table('res_user')
                     ->join('user_role', 'user.uid', '=', 'user_role.uid')
                     ->join('role', 'role.rid', '=', 'user_role.rid')
                     ->get();
         }
         else if(  'one' == $type )
         {
-            $firse =  DB::table('user')
+            $firse =  DB::table('res_user')
                         ->join('user_role', 'user.uid', '=', 'user_role.uid')
                         ->join('role', 'role.rid', '=', 'user_role.rid')
                         ->where("user.uid","=","$where")
@@ -224,9 +224,9 @@ class UserController extends Controller
         $page_num = 10;
 
         //  计算总页码
-        $num = DB::table('user')
-            ->join('user_role', 'user.uid', '=', 'user_role.uid')
-            ->join('role', 'role.rid', '=', 'user_role.rid')
+        $num = DB::table('res_user')
+            ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
+            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
             ->where('status',"!=","2")
             ->count();
         $pages = ceil($num/$page_num);
@@ -248,9 +248,9 @@ class UserController extends Controller
 
         empty( $request['numLine'] ) ? $numLine = 10 : $numLine = $request['numLine'];
 
-        $firse['data'] =  DB::table('user')
-            ->join('user_role', 'user.uid', '=', 'user_role.uid')
-            ->join('role', 'role.rid', '=', 'user_role.rid')
+        $firse['data'] =  DB::table('res_user')
+            ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
+            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
             ->where('status',"!=","2")
             ->skip($limit)
             ->take($page_num)
@@ -291,7 +291,7 @@ class UserController extends Controller
         {
             echo 0;die;
         }
-       echo DB::table('user')
+       echo DB::table('res_user')
             ->where('uid', $id)
             ->update([$ziduan => "$value"]);
     }
@@ -308,7 +308,7 @@ class UserController extends Controller
         if(empty($array)){
             echo 0;
         }else{
-            echo DB::table('user')
+            echo DB::table('res_user')
                 ->whereIn("uid",$array)
                 ->update(['status' => "2"]);
         }
@@ -327,7 +327,7 @@ class UserController extends Controller
         if(empty($array)){
             echo 0;
         }else{
-            echo DB::table('user_role')
+            echo DB::table('res_user_role')
                 ->whereIn("uid",$array)
                 ->update(['rid' => "$date"]);
         }
@@ -336,7 +336,7 @@ class UserController extends Controller
 
     public function userRemove(){
 
-        return view('user.userList');
+        return view('res_user.userList');
     }
 
 
