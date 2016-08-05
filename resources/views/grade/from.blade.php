@@ -101,10 +101,15 @@
 								<small>
 									<i class="icon-double-angle-right"></i>
 									成绩录入
-                                    <i class="icon-double-angle-right"></i>
-                                   <a href="import">导入<img src="images/dr.png"></a>
 								</small>
 							</h1>
+                            <form action="import" enctype="multipart/form-data" method="post" style="margin-top: -30px;">
+                                <input type="hidden" name="_token" id="_token" value="{{ csrf_token()}}">
+                                <button type="submit" class="btn btn-xs btn-danger" style="float:right">
+                                    导入
+                                </button>
+                                <input type="file" name="myfile" style="float:right">
+                            </form>
 						</div><!-- /.page-header -->
 
 						<div class="row">

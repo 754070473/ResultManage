@@ -6,7 +6,6 @@
  * @package  Laravel
  * @author   Taylor Otwell <taylorotwell@gmail.com>
  */
-
 /*
 |--------------------------------------------------------------------------
 | Register The Auto Loader
@@ -20,7 +19,6 @@
 */
 
 require __DIR__.'/../bootstrap/autoload.php';
-
 /*
 |--------------------------------------------------------------------------
 | Turn On The Lights

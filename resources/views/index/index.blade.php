@@ -1301,7 +1301,7 @@
 <script src="assets/js/flot/jquery.flot.resize.min.js"></script>
 
 <!-- ace scripts -->
-
+<s ></s>
 
 <!-- inline scripts related to this page -->
 

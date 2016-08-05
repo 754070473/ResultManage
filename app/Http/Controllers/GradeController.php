@@ -1,19 +1,24 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\excel\PHPExcel\PHPExcel_Cell;
 use Illuminate\Http\Request;
 use DB,Input,Redirect,Session,url;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+<<<<<<< HEAD
 use App\excel\PHPExcel;
 use Cookie;
+=======
+
+>>>>>>> 646dea7ea9f7ca79bcf95c739ee9f0ca8fa0d121
 /*
  * @author:dongmengtao
  * @time:2016/08/03
  * @controller:成绩管理
  */
 
-
+require_once (__DIR__."/../../../vendor/PHPExcel.php");
 header("content-type:text/html;charset=utf-8");
 class GradeController extends Controller
 {
@@ -27,6 +32,7 @@ class GradeController extends Controller
         return view('grade/from',['arr'=>$arr,'arr2'=>$arr2,'arr3'=>$arr3,'arr4'=>$arr4]);
     }
     //添加成绩录入
+<<<<<<< HEAD
     public function grade_add(Request $request){
         $name = Session::get('name');
        $theory = $request->input('theory');
@@ -36,10 +42,22 @@ class GradeController extends Controller
         $status = $request->input('status');
         $type = $request->input('type');
         DB::table('grade')->insert(array("theory"=>$theory,'exam'=>$exam,'add_date'=>$add_date,'add_time'=>$add_time,'status'=>$status,'type'=>$type,'name'=>$name));
+=======
+    public function grade_add(Request $request)
+    {
+        $theory = $request -> input('theory');
+        $exam = $request -> input('exam');
+        $add_date = date("Y-m-d");
+        $add_time = date("H:i:s",time());
+        $status = $request -> input('status');
+        $type = $request -> input('type');
+        DB::table('grade') -> insert( array( "theory" => $theory , 'exam' => $exam , 'add_date' => $add_date , 'add_time' => $add_time , 'status' => $status , 'type'=>$type ) );
+>>>>>>> 646dea7ea9f7ca79bcf95c739ee9f0ca8fa0d121
         return redirect('show');
     }
 
     //查看成绩
+<<<<<<< HEAD
     public function show(Request $request){
        Session::get('name');
         //当前页码
@@ -193,23 +211,36 @@ class GradeController extends Controller
         //print_r($arr);die;
         //根据用户查询角色 并显示出来
         return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
+=======
+    public function show(){
+        $arr1 = DB::table('role') -> get();
+        $arr = DB::table('grade') -> get();
+        return view('grade/show',[ 'arr1' => $arr1 , 'arr' => $arr ]);
+    }
+    //成绩审核
+    public function updates(){
+        $arr = DB::table('grade') -> get();
+        return view( 'grade/updates' , [ 'arr' => $arr ] );
+>>>>>>> 646dea7ea9f7ca79bcf95c739ee9f0ca8fa0d121
     }
 
 
 
     //管理员列表导入
-    public function import(){
+    public function import()
+    {
 //        $this->load->library('/PHPExcel.php');
-        new PHPExcel();
+        $PHPExcel = new \PHPExcel();
         //这里是导入excel2007 的xlsx格式，如果是2003格式可以把“excel2007”换成“Excel5"
         //怎么样区分用户上传的格式是2003还是2007呢？可以获取后缀  例如：xls的都是2003格式的
         //xlsx 的是2007格式的  一般情况下是这样的
-        $objReader = PHPExcel_IOFactory::createReader('excel2007');
+        $objReader = \PHPExcel_IOFactory::createReader('excel2007');
         //导入的excel路径
         $excelpath=$_FILES['myfile']['tmp_name'];
+//        echo $excelpath;die;
         @$objPHPExcel=$objReader->load($excelpath);
         if($objPHPExcel){
-            $objReader = PHPExcel_IOFactory::createReader('Excel2007');
+            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
             //导入的excel路径
             $excelpath=$_FILES['myfile']['tmp_name'];
             $objPHPExcel=$objReader->load($excelpath);
@@ -219,11 +250,9 @@ class GradeController extends Controller
         $highestRow=$sheet->getHighestRow();
         //取得总列数
         $highestColumn=$sheet->getHighestColumn();
-        $link=mysql_connect("127.0.0.1","root","root")or die('连接失败');;
-        mysql_select_db("grade",$link)or die('选择失败');
-        mysql_query("set names utf8");
+
         //从第二行开始读取数据  因为第一行是表格的表头信息
-        $sql = "insert into grade (theory,exam,add_date,add_time,status,type) values ";
+        $sql = "";
         for($j=2;$j<=$highestRow;$j++) {
             $str = "";
             //从A列读取数据
@@ -233,16 +262,19 @@ class GradeController extends Controller
             $str = mb_convert_encoding($str, 'utf8', 'auto');//根据自己编码修改
             $strs = explode("|*|", $str);
             //拼写sql语句
-            $sql .= "('{$strs[0]}','{$strs[1]}','{$strs[2]}','{$strs[3]}','{$strs[4]}','{$strs[5]}','{$strs[6]}','{$strs[7]}','{$strs[8]}'),";
+            $sql[]= ['name'=>"{$strs[0]}",'theory'=>"{$strs[1]}",'exam'=>"{$strs[2]}",'status'=>"{$strs[3]}",'type'=>"{$strs[4]}"];
         }
 //		echo $sql;die;
-        $sql=substr($sql,0,-1);
-//		echo $sql;die;
-        $res=mysql_query($sql);
-        if(mysql_affected_rows()==$highestRow-1){
+        foreach( $sql as $key => $val ){
+            $sql[$key]['add_date'] = date( 'Y-m-d' , time() );
+            $sql[$key]['add_time'] = date( 'H:i:s' , time() );
+            $sql[$key]['uid'] = Session::get('uid');
+        }
+        $res=DB::table('grade')->insert($sql);
+        if($res){
             echo "<script>alert('导入成功！');location.href='show'</script>";
         }else{
-            echo "<script>alert('上传失败！，总共目前上传了 '.".mysql_affected_rows().");location.href='from'</script>";
+            echo "<script>alert('上传失败！');location.href='gradd'</script>";
         }
     }
 
