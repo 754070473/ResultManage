@@ -15,7 +15,13 @@
 Route::get('/index', 'IndexController@index');
 Route::get('/', 'IndexController@index');
 
-
+//文件模板下载f
+/*Route::get('testResponseDownload',function(){
+    return response()->download(
+        realpath(base_path('public/images')).'/spr_x.png',
+        'Laravel学院.jpg'
+    );
+});*/
 //登录页
 Route::any('/loginIndex', 'LoginController@index');
 //登录
