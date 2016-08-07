@@ -25,7 +25,7 @@ abstract class Controller extends BaseController
             }
             //权限控制
             if( Session::get('uid') != 1 ){
-                $this->userPower();
+                // $this->userPower();
             }
         }
     }

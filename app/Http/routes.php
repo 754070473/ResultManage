@@ -141,3 +141,6 @@ Route::get('groupManAdd','GroupController@groupManAdd');
 //创建小组
 Route::get('groupMan','GroupController@groupMan');
 Route::post('studentAdd','GroupController@studentAdd');
+
+// 柱状图
+Route::get('zt','YieldController@Index');
