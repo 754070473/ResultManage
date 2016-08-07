@@ -61,22 +61,20 @@ class LoginController extends Controller
 					 	{
 					 		$uid = $user->uid;
 					 		Session::put('uid',$uid);  //把用户ID存入session
-					 		$users = DB::table('res_user')
-				            ->join('res_role_power', 'res_role_power.rid', '=', 'res_user.rid')
-				            ->join('res_power', 'res_power.pid', '=', 'res_role_power.pid')
-				            ->where('uid',$uid )
-				            ->get();
-				            foreach ($users as $key => $v) 
-				            {
-				            	$power[$key]['pid'] = $v->pid;
-				            	$power[$key]['controller'] = $v->controller;
-				            	$power[$key]['action'] = $v->action;
-				            }
-					 		// print_r($power);
-					 		//把用户所对应的角色的权限存入session中；
-					 		Session::put('power',$power);
-					 		echo 0;
+							if($uid != 1){
+								$table = 'res_user inner join res_role_power on res_user.rid=res_role_power.rid inner join res_power on res_role_power.pid=res_power.pid';
+								$users = $this -> classify($table , 'uid='.$uid.' and fid');
+								/*$users = DB::table( 'res_user' )
+									->join( 'res_role_power' , 'res_role_power.rid' , '=' , 'res_user.rid' )
+									->join( 'res_power' , 'res_power.pid' , '=' , 'res_role_power.pid' )
+									->where( 'uid' , $uid )
+									->get();*/
 
+								// print_r($power);
+								//把用户所对应的角色的权限存入session中；
+								Session::put( 'power' , $users );
+							}
+							echo 0;
 					 	}
 					 	else
 					 	{

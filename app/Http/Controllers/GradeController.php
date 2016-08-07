@@ -239,7 +239,7 @@ class GradeController extends Controller
     //删除
     public function gradeDelete(Request $request){
         $gid=$request->input('gid');
-        $re = DB::table('grade')->whereIn( 'gid' , array($gid) )->delete();
+        $re = DB::table('res_grade')->whereIn( 'gid' , array($gid) )->delete();
         if( $re ){
             //搜索日期
             $date = $request -> search ? $request -> search : '';
@@ -253,10 +253,10 @@ class GradeController extends Controller
             if($date == '') {
                 $where = 1;
             }else{
-                $where = "DATE(`add_date`) = '$date'";
+                $where = "DATE(`g_add_date`) = '$date'";
             }
             //排序
-            $order = 'res_grade.add_date desc';
+            $order = 'res_grade.g_add_date desc';
             $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
 //        print_r($arr);die;
             return view( 'grade.gradePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
@@ -411,10 +411,12 @@ class GradeController extends Controller
         //每页显示数据条数
         $num = $request -> num ? $request -> num : 10;
         //查询条件
-        if( $role_name == '讲师' ){
+        if( $role_name == '教务' ){
             $where = 'res_grade.status=2';
-        }else{
+        }elseif($role_name == '讲师'){
             $where = 'res_grade.status=1';
+        }else{
+            $where = 'res_grade.status=0';
         }
         //排序
         $order = 'gid desc';

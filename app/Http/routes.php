@@ -57,7 +57,6 @@ Route::any('/updatess','GradeController@updatess');
 Route::any('/import','GradeController@import');
 //成绩管理---删除
 Route::any('/gradeDelete','GradeController@gradeDelete');
-Route::get('/show','GradeController@show');
 Route::get('/examine','GradeController@examine');
 //成绩管理---成绩理论、机试修改
 
@@ -137,3 +136,8 @@ Route::get('uppower','PowerController@upPower');
 Route::get('savepower','PowerController@savePower');
 // 删除权限
 Route::get('depower','PowerController@dePower');
+//创建小组
+Route::get('groupManAdd','GroupController@groupManAdd');
+//创建小组
+Route::get('groupMan','GroupController@groupMan');
+Route::post('studentAdd','GroupController@studentAdd');

@@ -106,7 +106,7 @@
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
-
+		
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
@@ -158,7 +158,71 @@
 								
 		</div>
 	
-						
+					<table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                            <thead>
+                            <tr>
+                                <th class="center">
+                                    <label>
+                                        <input type="checkbox" class="ace" />
+                                        <span class="lbl"></span>
+                                    </label>
+                                </th>
+                                <th>id</th>
+                                <th>学院名称</th>
+                                <th class="hidden-480">班级名称</th>
+                                <th>操作</th>
+                            </tr>
+                            </thead>
+
+                            <tbody>
+                            @foreach( $arr1 as $key => $val )
+                                <tr>
+                                    <td class="center">
+                                        <label>
+                                            <input type="checkbox" class="ace" />
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{$val->cid}}
+                                    </td>
+                                    <td>{{$val->college_name}}</td>
+                                    <td>{{$val->class_name}}</td>
+                                     <td>
+									    <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+
+									        <button class="btn btn-xs btn-danger">
+									            <i class="icon-trash bigger-120"></i>
+									        </button>
+									        
+									        <div style="display: none" id="tian">
+									        	<h2>1</h2>
+									        </div>
+									        <button class="btn btn-xs btn-danger" id="cr_group_{{$val->class_id}}" onclick="creatGroup({{$val->class_id}})">
+									            <i >添加小组</i>
+									        </button>
+									    </div>
+									    <div id="div_{{$val->class_id}}"  style="display:none;">
+									        <select  id="group_{{$val->class_id}}" >
+									            <option value="">请选择</option>
+									            <option value="4">4组</option>
+									            <option value="6">6组</option>
+									            <option value="8">8组</option>
+									            <option value="10">10组</option>
+									        </select>
+									        <button class="btn btn-xs btn-danger" onclick="creatGroupPro({{$val->class_id}})">
+									            <i >创建</i>
+									        </button>
+    									</div>
+
+
+								 </td>
+                               </tr>
+
+                            @endforeach
+                            </tbody>
+                        </table>	
+
 		<div class="theme-popover">
 
 		     
@@ -300,6 +364,33 @@
 </body>
 </html>
 <script>
+	function  creatGroup(id){
+    $('#div_' + id).show()
+    $('#cr_group_' + id).hide()
+
+}
+
+function  creatGroupPro(id) {
+    var gid = $('#group_' + id).val()
+
+    if (gid != null) {
+        $.ajax({
+        url:"{{URL('groupManAdd')}}",
+        type:"get",
+        data:"class_id="+id+"&num="+gid,
+        success:function(msg)
+        {
+        // alert(msg)
+            location.href="{{URL('collShow')}}";
+
+        }
+        })
+    } else
+    {
+        alert('请选择创建个数')
+    }
+
+}
 
 
    $(":button").click(function(){

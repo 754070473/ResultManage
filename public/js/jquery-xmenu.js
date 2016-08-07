@@ -144,7 +144,7 @@
 				eventType: owl.eventType,
 				offsets: {
 					x: 0,
-					y: -1 
+					y: -150
 				},
 				target: $dropmenu, 	 		
 				showCall: function(){ 				

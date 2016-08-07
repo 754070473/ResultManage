@@ -205,3 +205,10 @@
 <script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
 <script type="text/javascript" src="js/jquery-powerFloat-min.js"></script>
 <script type="text/javascript" src="js/jquery-xmenu.js"></script>
+<script type="text/javascript">
+    jQuery(function($) {
+        $(document).on('#selectdept','click',function(){
+            $('#m2').css({'left': '300px', 'top': '200px'});
+        })
+    });
+</script>

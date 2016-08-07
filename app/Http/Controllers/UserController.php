@@ -73,15 +73,13 @@ class UserController extends Controller
         if( 'all' == $type )
         {
            return   DB::table('res_user')
-                    ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
-                    ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+                    ->join('res_role', 'res_role.rid', '=', 'res_user.rid')
                     ->get();
         }
         else if(  'one' == $type )
         {
             $firse =  DB::table('res_user')
-                        ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
-                        ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+                        ->join('res_role', 'res_role.rid', '=', 'res_user.rid')
                         ->where("res_user.uid","=","$where")
                         ->limit(1)
                         ->get();
@@ -123,95 +121,6 @@ class UserController extends Controller
 
         return view('user.userAdd',['role'=>$role]);
     }
-
-    public function userAddPro( Request $request )
-    {
-        //接受值，参数 post
-        $input = $request->all();
-
-        //用户名
-        empty($input['username'])?$input['username']="":$username=$input['username'];
-        //角色
-        empty($input['usertype'])?$input['usertype']="":$usertype=$input['usertype'];
-
-        /*表单过滤*/
-//  var_dump($username) ;
-        if( empty( $username ) || empty( $usertype ) )
-        {
-            $this->__SWITCH(1);die;
-        }
-
-        $preg= '/[\x{4e00}-\x{9fa5}]{2,10}/u';
-        if(!preg_match($preg,$username) )
-        {
-            $this->__SWITCH(2);die;
-        }
-
-        if( $request->isMethod('post') )
-        {
-            //插入数据
-            $time = time();
-            //汉字转拼音（生僻字不支持）
-            $pinyin = $this->utf8_to("$input[username]");
-            //密码随机4位数字
-            $password = $pinyin;
-
-            $date = array(
-                'username' => "$input[username]",
-                'accounts' => "$pinyin". rand(1000, 9999),
-                'password' => "$password",
-                'add_date' => "$time",
-                'status' => 1,
-            );
-
-            //添加用户  并获取上一条ID
-            $insertID = $this->insertUser( $date , "res_user" );
-
-            $role = [
-                'uid' => "$insertID",
-                'rid' => "$input[usertype]",
-            ];
-
-            //插入角色
-            $bool = $this->insertRole( $role , "res_user_role" );
-
-            if (1 == $bool)
-            {
-                //查询上一条chu
-                $UserRole = $this->user( 'one' , $insertID );
-                $return_echo =[
-                    '账号创建成功[' => $UserRole->role_name,
-                    " ] 姓名 ["      => $UserRole->username,
-                    "] 账户 ["              => $UserRole->accounts,
-                    "] 密码 ["              => '默认为账户拼音部分',
-                    "]"      => '',
-                ];
-                $this->__ECHO( $return_echo );
-            }
-            else
-            {
-                $return_echo = [
-                    '账号创建失败，姓名 [' => $input['username'],
-                      "]"      => '',
-                ];
-
-                $this->__ECHO( $return_echo );
-
-            }
-        }
-    }
-
-    /**
-     * 用户列表
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function userList()
-    {
-        $role = $this->role();
-
-        return view('user.userList',['role'=>$role]);
-    }
-
     /**
      * 用户信息分页
      * @param Request $request
@@ -226,8 +135,8 @@ class UserController extends Controller
 
         //  计算总页码
         $num = DB::table('res_user')
-            ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
-            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+            //   ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
+            ->join('res_role', 'res_role.rid', '=', 'res_user.rid')
             ->where('res_user.status',"=","$type")
             ->count();
         $pages = ceil($num/$page_num);
@@ -250,8 +159,7 @@ class UserController extends Controller
         empty( $request['numLine'] ) ? $numLine = 10 : $numLine = $request['numLine'];
 
         $firse['data'] =  DB::table('res_user')
-            ->join('res_user_role', 'res_user.uid', '=', 'res_user_role.uid')
-            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
+            ->join('res_role', 'res_role.rid', '=', 'res_user.rid')
             ->where('res_user.status',"=","$type")
             ->skip($limit)
             ->take($page_num)
@@ -266,7 +174,35 @@ class UserController extends Controller
         echo json_encode($firse);
     }
 
+    /**
+     * 用户列表
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function userList()
+    {
+        $role = $this->role();
 
+        return view('user.userList',['role'=>$role]);
+    }
+
+    /**
+     * ajax  修改角色
+     * @param Request $request
+     */
+    public function roleUpdate( Request $request )
+    {
+        empty( $request['id'] ) ? $id = "" : $id = $request['id'];
+        empty( $request['date'] ) ? $date = "" : $date = $request['date'];
+        $array=explode(',',$id);
+        if(empty($array)){
+            echo 0;
+        }else{
+            echo DB::table('res_user')
+                ->whereIn("uid",$array)
+                ->update(['rid' => "$date"]);
+        }
+
+    }
     /**
      * ajax 修改用户名  账户
      * @param Request $request
@@ -297,7 +233,90 @@ class UserController extends Controller
             ->update([$ziduan => "$value"]);
     }
 
+    /**
+     * @param Request $request
+     */
+    public function userAddPro( Request $request )
+    {
+        //接受值，参数 post
+        $input = $request->all();
 
+        //用户名
+        empty($input['username'])?$input['username']="":$username=$input['username'];
+        //角色
+        empty($input['usertype'])?$input['usertype']="":$usertype=$input['usertype'];
+
+        /*表单过滤*/
+//  var_dump($username) ;
+        if( empty( $username ) || empty( $usertype ) )
+        {
+            $this->__SWITCH(1);die;
+        }
+
+        $preg= '/[\x{4e00}-\x{9fa5}]{2,10}/u';
+        if(!preg_match($preg,$username) )
+        {
+            $this->__SWITCH(2);die;
+        }
+        if( $request->isMethod('post') )
+        {
+            $newname  = preg_replace('# #', '', $input['username']);
+            //插入数据
+            $time = time();
+            //汉字转拼音（生僻字不支持）
+            $pinyin = $this->utf8_to("$newname");
+            //密码随机4位数字
+            $password = $pinyin;
+
+            $date = array(
+                'username' => "$input[username]",
+                'accounts' => "$pinyin". rand(1000, 9999),
+                'password' => "$password",
+                'add_date' => "$time",
+                'status' => 1,
+            );
+
+            //添加用户  并获取上一条ID
+            $insertID = $this->insertUser( $date , "res_user" );
+
+            $role = [
+                // 'uid' => "$insertID",
+                'rid' => "$input[usertype]",
+            ];
+
+
+
+            //插入角色
+            //  $bool = $this->insertRole( $role , "res_user_role" );
+            $bool =     DB::table('res_user')
+                ->where('uid', $insertID)
+                ->update($role);
+
+            if (1 == $bool)
+            {
+                //查询上一条chu
+                $UserRole = $this->user( 'one' , $insertID );
+                $return_echo =[
+                    '账号创建成功[' => $UserRole->role_name,
+                    " ] 姓名 ["      => $UserRole->username,
+                    "] 账户 ["              => $UserRole->accounts,
+                    "] 密码 ["              => '默认为账户拼音部分',
+                    "]"      => '',
+                ];
+                $this->__ECHO( $return_echo );
+            }
+            else
+            {
+                $return_echo = [
+                    '账号创建失败，姓名 [' => $input['username'],
+                    "]"      => '',
+                ];
+
+                $this->__ECHO( $return_echo );
+
+            }
+        }
+    }
     /**
      * 放入回收站  还原
      * @param Request $request
@@ -313,26 +332,6 @@ class UserController extends Controller
             echo DB::table('res_user')
                 ->whereIn("uid",$array)
                 ->update(['status' => "$type"]);
-        }
-
-    }
-
-
-    /**
-     * ajax  修改角色
-     * @param Request $request
-     */
-    public function roleUpdate( Request $request )
-    {
-        empty( $request['id'] ) ? $id = "" : $id = $request['id'];
-        empty( $request['date'] ) ? $date = "" : $date = $request['date'];
-        $array=explode(',',$id);
-        if(empty($array)){
-            echo 0;
-        }else{
-            echo DB::table('res_user_role')
-                ->whereIn("uid",$array)
-                ->update(['rid' => "$date"]);
         }
 
     }

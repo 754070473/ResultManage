@@ -111,6 +111,8 @@ a.as span {
     border-radius: 0px 0px 4px 4px;
     outline: medium none;
 	width: 500px;
+    left: 250px;
+    top: 100px;
 }
 
 
