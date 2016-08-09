@@ -1,12 +1,16 @@
 <?php
 namespace App\Http\Controllers;
 
-use DB;
-use Session;
 use Illuminate\Http\Request;
+use DB,Input,Redirect,Session,url;
+use App\Http\Requests;
+use App\Http\Controllers\Controller;
+
+
 header("Content-type: text/html; charset=utf-8"); 
 class GroupController extends Controller
 {
+    //查看学院页面
             public function groupShow(Request $request)
             {
                 //当前页码
@@ -18,11 +22,14 @@ class GroupController extends Controller
                 //查询条件
                 $where = 1;
                 //排序
-                
                 $arr = $this -> ajaxPage( $table , $num , $p , 'logPage' , $where );
                 foreach($arr['arr'] as $k=>$v)
                 {
-                    $num=count(DB::table('res_class')->where('cid',$v->cid )->lists('class_name'));
+                    $num=count(
+                        DB::table('res_class')
+                            ->where('ser_id',$v->cid )
+                            ->lists('class_name')
+                    );
                     $arr['arr'][$k]->num=$num;
                 }
                 
@@ -33,104 +40,180 @@ class GroupController extends Controller
             
           /*
            *@学院添加
-           *
            */
             public function groupCollAdd(Request $request)
             {
-
-            	  $coll_name = $request->coll_name;
+            	$coll_name = $request->coll_name;
+                //避免空格
+                $coll_name  = preg_replace('# #', '', $coll_name);
+                //汉字转拼音（生僻字不支持）
+                $coll_accounts = $this->utf8_to("$coll_name");
                   $reg = '/[^\x{4e00}-\x{9fa5}]{1,10}/u';
-                  if(preg_match($reg,$coll_name))
-                  {
+                  if(preg_match($reg,$coll_name)) {
                         echo "学院名称必须为汉字且小于10位";
-                  }else
-                  {
-                     // echo $coll_name;
-                        $id=DB::table('res_college')->insert([
-                            'college_name'=>$coll_name,
-                          ]);
-                        if($id)
-                        {
+                  }else{
+                        $id=DB::table('res_college')
+                            ->insert([
+                                'college_name'=>$coll_name,
+                           ]);
+                        $add_date = date('Y-m-d H:i:s',time());
+                      DB::table('res_user')->insert([
+                          'username'=>$coll_name,
+                          'accounts'=>$coll_accounts,
+                          'add_date'=>$add_date,
+                          'password'=>'1234',
+                          'status'=>'1',
+                          'rid'=>'1'
+                      ]);
+
+                        if($id){
                             echo 1;
-                        }else
-                        {
+                        }else{
                             echo 0;
                         }
                   }
-               
-
-                // echo $id;
             }
 
+    //查看系
+    public function series(Request $request){
+        //当前页码
+        $p = $request -> p ? $request -> p : 1;
+        //查询表名
+        $table = 'res_series';
+        //每页显示数据条数
+        $num = $request -> num ? $request -> num : 10;
+        //查询条件
+        $where = 1;
+        //排序
+        $arr = $this -> ajaxPage( $table , $num , $p , 'logPage' , $where );
+        foreach($arr['arr'] as $k=>$v)
+        {
+            $num=count(
+                DB::table('res_series')
+                    ->where('ser_id',$v->cid )
+                    ->lists('ser_name')
+            );
+
+            $arr['arr'][$k]->num=$num;
+        }
+        // print_r($arr['arr']);die;
+        // echo 1;
+        return view('group.seriesShow',array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+    }
+
+
+    //创建系
+    public function seAdd(Request $request){
+        $ser_name = $request->ser_name;
+        //避免空格
+        $ser_name  = preg_replace('# #', '', $ser_name);
+        //汉字转拼音（生僻字不支持）
+        $se_accounts = $this->utf8_to("$ser_name");
+        $reg = '/[^\x{4e00}-\x{9fa5}]{1,10}/u';
+        if(preg_match($reg,$ser_name)) {
+            echo "系名称必须为汉字且小于10位";
+        }else{
+            $id=DB::table('res_series')
+                ->insert([
+                    'ser_name'=>$ser_name,
+                ]);
+            $add_date = date('Y-m-d H:i:s',time());
+            DB::table('res_user')->insert([
+                'username'=>$ser_name,
+                'accounts'=>$se_accounts,
+                'add_date'=>$add_date,
+                'password'=>'1234',
+                'status'=>'1',
+                'rid'=>'1'
+            ]);
+
+            if($id){
+                echo 1;
+            }else{
+                echo 0;
+            }
+        }
+    }
+
+
+    //查看班级页面
         public function groupClaShow(Request $request)
         {
             $arr=DB::table('res_college')->select('cid','college_name')->get();
+            $arr2=DB::table("res_series")->select('ser_id','ser_name')->get();
             //当前页码
             $p = $request -> p ? $request -> p : 1;
             //查询表名
-            $table = 'res_college inner join res_class on res_college.cid=res_class.cid';
+            $table = array(
+            [ 'table1' => 'res_college' , 'table2' => 'res_series' , 'join' => 'cid' ] ,
+            [ 'table1' => 'res_series' , 'table2' => 'res_class' , 'join' => 'ser_id' ]
+        );
             //每页显示数据条数
             $num = $request -> num ? $request -> num : 10;
             //查询条件
             $where = 1;
             //排序
-
-            $arr1= $this -> ajaxPage( $table , $num , $p , 'logPage' , $where );
-
-            // print_r($arr1);die;
-            return view('group.classShow',array( 'arr' => $arr,'arr1'=>$arr1['arr']));
+            $page = array('num' => $num , 'p' => $p , 'url' => 'logPage');
+            $arr1= $this -> databasesSelect( $table , $where , 0 , 1 , $page );
+             //print_r($arr1);die;
+            return view('group.classShow',array( 'arr' => $arr,'arr1'=>$arr1['arr'],'arr2' => $arr2));
         }
 
     /*
      *@班级添加
-     *
      */
+     public function groupClaAdd(Request $request)
+       {
+            $class_name=$request->class_name;
+          // $ser_name=$request->ser_name;
+           // $coll_id=$request->coll_id;
+           //避免空格
+           $class_name  = preg_replace('# #', '', $class_name);
+           //汉字转拼音（生僻字不支持）
+           $coll_accounts = $this->utf8_to("$class_name");
+            // echo $class_name;
+            // echo $coll_id;die;
+            $reg="/^[0-9]+[A-Z]+$/";
+            if(preg_match($reg,$class_name)){
+                echo "班级名称应由数字字母组成";
+            }else {
+              // echo $coll_name;
+              $id=DB::table('res_class')
+                  ->insert([
+                     //'cid'=>$coll_id,
+                      'class_name'=>$class_name,
+                 ]);
+                $add_date = date('Y-m-d H:i:s',time());
+                DB::table('res_user')->insert([
+                    'username'=>$class_name,
+                    'accounts'=>$coll_accounts,
+                    'add_date'=>$add_date,
+                    'password'=>'1234',
+                    'status'=>'1',
+                    'rid'=>'1'
+                ]);
 
-            public function groupClaAdd(Request $request)
-            {
-
-                  $class_name=$request->class_name;
-                  $coll_id=$request->coll_id;
-                  // echo $class_name;
-                  // echo $coll_id;die;
-                  $reg="/^[0-9]+[A-Z]+$/";
-                  if(preg_match($reg,$class_name))
-                  {
-                        echo "班级名称应由数字字母组成";
-                  }else
-                  {
-                     // echo $coll_name;
-                        $id=DB::table('res_class')->insert([
-                            'cid'=>$coll_id,
-                            'class_name'=>$class_name,
-                          ]);
-                      $time = time();
-                        DB::table('res_user')->insert([
-                            'username'=>$class_name,
-                            'accounts'=>$class_name,
-                            'add_date'=>$time,
-                            'password'=>'1234',
-                            'status'=>'1',
-                            'rid'=>'2'
-                          ]);
-                        if($id)
-                        {
-                            echo 1;
-                        }else
-                        {
-                            echo 0;
-                        }
-                  }
-       
-
-        
+//              $time = time();
+//               DB::table('res_user')
+//                   ->insert([
+//                      'username'=>$class_name,
+//                      'accounts'=>$class_name,
+//                       'add_date'=>$time,
+//                       'password'=>'1234',
+//                       'status'=>'1',
+//                       'rid'=>'2'
+//                   ]);
+                if($id){
+                  echo 1;
+                }else{
+                  echo 0;
+                }
             }
-
+       }
 
 
     public function groupAdd(Request $request)
     {
-
         $cla_name=$request->cla_name;
         $reg="/^[0-9]+[A-Z]+$/";
         if(preg_match($reg,$cla_name))
@@ -167,12 +250,17 @@ class GroupController extends Controller
         //小组数量
         $num = $request['num'];
 
-        $class = DB::table('res_class') -> where('class_id' , $class_id) -> first();
+        $class = DB::table('res_class')
+                -> where('class_id' , $class_id)
+                -> first();
         $class_name = $class -> class_name;
         $time = time();
         if(!empty($class_id)&&!empty($num)){
             for($i=1;$i<=$num;$i++){
-                $str=array('class_id'=>$class_id,'group_name'=>'第'.$i.'组');
+                $str=array(
+                    'class_id'=>$class_id,
+                    'group_name'=>'第'.$i.'组'
+                );
                 $groupid = DB::table("res_group")->insertGetId( $str );
                 $date = array(
                     'accounts' => "$class_name$groupid",

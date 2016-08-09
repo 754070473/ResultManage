@@ -35,7 +35,7 @@ class PublicController extends Controller
             '添加角色'=>'roleadd',
             '角色列表'=>'rolelist',
             '成绩录入'=>'grade',
-            '查看成绩'=>'show',
+            '查看成绩'=>'gdList',
             '成绩审核'=>'examine',
             '创建班级'=>'groupClaShow',
             '创建学院'=>'collShow',

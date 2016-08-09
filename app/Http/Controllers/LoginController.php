@@ -72,6 +72,7 @@ class LoginController extends Controller
 
 								// print_r($power);
 								//把用户所对应的角色的权限存入session中；
+
 								Session::put( 'power' , $users );
 							}
 							echo 0;
