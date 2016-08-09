@@ -42,6 +42,8 @@ Route::any('/upda', 'LoginController@update_pwd');
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
+//公共页面  右侧内容
+Route::get('/main', 'PublicController@main');
 
 //管理员日志
 Route::get('/userlog', 'IndexController@userLog');
@@ -140,11 +142,42 @@ Route::get('uppower','PowerController@upPower');
 Route::get('savepower','PowerController@savePower');
 // 删除权限
 Route::get('depower','PowerController@dePower');
+
+
+
+//创建小组页面
+Route::get('build','BuildController@bulidIndex');
+Route::get('buildAdd','BuildController@buildAdd');
+// //创建小组成员列表
+Route::get('buildIndex','BuildController@index');
+// //添加小组成员
+Route::get('addBuild','BuildController@add_build');
+
 //创建小组
 Route::get('groupManAdd','GroupController@groupManAdd');
 //创建小组
 Route::get('groupMan','GroupController@groupMan');
 Route::post('studentAdd','GroupController@studentAdd');
+
+
+
+//学生成绩列表
+Route::get('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单（1）
+Route::get('/jwList','GradeController@jwList');                        //附加控制器 --- 成绩列表 --- 教务查看表单（0）
+Route::get('/xiDirectorList','Grade2Controller@xiDirectorList');        //附加控制器 --- 成绩列表 --- 系主任查看表单（0）
+Route::get('/teacherList','Grade2Controller@teacherList');              //附加控制器 --- 成绩列表 --- 讲师查看表单（0）
+Route::post('/ajaxStudent','Grade2Controller@ajaxStudent');            //ajax获取成绩
+
+//教学周期列表
+Route::get('periodList','PeriodController@periodList');
+//教学周期分页
+Route::get('periodPage','PeriodController@periodPage');
+//教学周期添加
+Route::get('periodAdd','PeriodController@periodAdd');
+//教学周期添加入库
+Route::get('periodInfo','PeriodController@periodInfo');
+//考试安排详情页面
+Route::get('periodExam','PeriodController@periodExam');
 
 // 柱状图
 Route::get('zt','YieldController@Index');
