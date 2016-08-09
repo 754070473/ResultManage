@@ -12,7 +12,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $table = array(
+        /*$table = array(
             [ 'table1' => 'res_grade' , 'table2' => 'res_user' , 'join' => 'uid' ] ,
             [ 'table1' => 'res_grade' , 'table2' => 'res_class' , 'join' => 'class_id' ] ,
             [ 'table1' => 'res_class' , 'table2' => 'res_college' , 'join' => 'cid' ]
@@ -21,7 +21,7 @@ class IndexController extends Controller
         $order = 'res_user.uid desc';
         $page = array( 'num' => 10 , 'p' => 1 , 'url' => 'index' );
         $arr = $this -> databasesSelect( $table , $where , 0 , $order , $page );
-        print_r($arr);die;
+        print_r($arr);die;*/
         return view('index.index');
     }
     

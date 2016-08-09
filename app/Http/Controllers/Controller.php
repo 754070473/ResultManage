@@ -167,14 +167,27 @@ abstract class Controller extends BaseController
         }
         $pri_list = Session::get('power');
 //        print_r($pri_list);die;
-//        echo "<br>";
-//        echo $controller;
-//        echo "<br>";
-//        echo $function;
+        $power = require_once ('Auth/PowerConfig.php');
         $sign = 0;
+        $power_list = array();
         foreach( $pri_list as $key => $val ){
-            if($controller == $val['controller']){
-                $sign = 1;
+            if( array_key_exists($val['power_name'] , $power['navigation']) ) {
+                foreach ( $val[ 'son' ] as $k => $v ) {
+                    if ( array_key_exists( $v[ 'power_name' ] , $power[ 'navigation' ] ) ) {
+                        foreach ( $power[ 'navigation' ][ $v[ 'power_name' ] ][ 1 ] as $kk => $vv ) {
+                            $power_list[ $power[ 'navigation' ][ $val[ 'power_name' ] ][ 1 ] ][] = $vv;
+                        }
+                    } elseif ( array_key_exists( $v[ 'power_name' ] , $power[ 'not_navigation' ] ) ) {
+                        foreach ( $power[ 'not_navigation' ][ $v[ 'power_name' ] ] as $kk => $vv ) {
+                            $power_list[ $power[ 'navigation' ][ $val[ 'power_name' ] ][ 1 ] ][] = $vv;
+                        }
+                    }
+                }
+            }
+        }
+        if( array_key_exists( $controller , $power_list )){
+            if( in_array( $function , $power_list[$controller] ) ){
+                $sign == 1;
             }
         }
         if($sign == 0){
@@ -221,12 +234,14 @@ abstract class Controller extends BaseController
             foreach ( $table as $key => $val ) {
                 $sql .= ' inner join `' . $val[ 'table2' ] . '` on ' . '`' . $val[ 'table1' ] . '`.`' . $val[ 'join' ] . '`=' . '`' . $val[ 'table2' ] . '`.`' . $val[ 'join' ] . '`';
             }
+        }else{
+            $sql = $table;
         }
         if( $page == 0){
             if( $limit == 0 ) {
-                $arr = DB::select( "select * from $table where $where order by $order " );
+                $arr = DB::select( "select * from $sql where $where order by $order " );
             }else{
-                $arr = DB::select( "select * from $table where $where order by $order limit 1" );
+                $arr = DB::select( "select * from $sql where $where order by $order limit 1" );
                 $arr = $arr[0];
             }
         } else {

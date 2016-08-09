@@ -36,6 +36,8 @@ Route::any('/upda', 'LoginController@update_pwd');
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
+//公共页面  右侧内容
+Route::get('/main', 'PublicController@main');
 
 //管理员日志
 Route::get('/userlog', 'IndexController@userLog');
@@ -141,3 +143,14 @@ Route::get('groupManAdd','GroupController@groupManAdd');
 //创建小组
 Route::get('groupMan','GroupController@groupMan');
 Route::post('studentAdd','GroupController@studentAdd');
+
+//教学周期列表
+Route::get('periodList','PeriodController@periodList');
+//教学周期分页
+Route::get('periodPage','PeriodController@periodPage');
+//教学周期添加
+Route::get('periodAdd','PeriodController@periodAdd');
+//教学周期添加入库
+Route::get('periodInfo','PeriodController@periodInfo');
+//考试安排详情页面
+Route::get('periodExam','PeriodController@periodExam');
