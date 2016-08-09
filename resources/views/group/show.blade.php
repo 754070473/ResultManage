@@ -99,10 +99,10 @@
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								学院列表
+								组建管理
 								<small>
 									<i class="icon-double-angle-right"></i>
-									Dynamic tables and grids using jqGrid plugin
+                                    创建学院
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -182,9 +182,15 @@
 		     <div class="theme-popbod dform">
 		           <form class="theme-signin" name="loginform" action="" method="post">
 		                <ol>
-	                     <li><strong>创建学院：</strong><input class="ipt" type="text" id="college_name" placeholder="请输入学院…" size="50" /><span id="ti"></span></li>
+	                     <li>
+                             <strong>创建学院：</strong>
+                             <input class="ipt" type="text" id="college_name" placeholder="请输入学院…" size="50" />
+                             <span id="ti"></span>
+                         </li>
 	                  
-	                     <li><input class="btn btn-primary" type="button"  value=" 创建 " /></li>
+	                     <li>
+                             <input class="btn btn-primary" type="button"  value=" 创建 " />
+                         </li>
 	                </ol>
 	           </form>
 	     	 </div>
@@ -327,38 +333,29 @@
 </html>
 <script>
 
-
+    //判断创建学院
    $("input:button").click(function(){
    		// alert(1)
    		var coll_name=$("#college_name").val()
    		// alert(coll_name)
    		var reg=/^[\u4e00-\u9fa5]{1,10}$/
    		// console.log(reg.test(coll_name))
-   		if(coll_name=="")
-   		{
+   		if(coll_name==""){
    			$("#ti").html("    *    <font color='red'>你必须输入创建的学院</font>")
-   		}else if(!reg.test(coll_name))
-   		{
+   		}else if(!reg.test(coll_name)){
 
    			$("#ti").html("    *    <font color='red'>你输入的学院名称必须为汉字且不超过10位</font>")
-   		}else
-   		{
-
-   			// alert(2)
+   		}else{
    			$.ajax({
    				url:"{{URL('collAdd')}}",
    				type:"get",
    				data:"coll_name="+coll_name,
    				success:function(msg)
    				{
-   					// alert(msg)
-   					if(msg==1)
-   					{
+   					if(msg==1){
    						location.reload();
-   					}else
-   					{
-
-   					}
+   					}else {
+                    }
    				}
    			})
    		}

@@ -224,9 +224,9 @@ abstract class Controller extends BaseController
         }
         if( $page == 0){
             if( $limit == 0 ) {
-                $arr = DB::select( "select * from $table where $where order by $order " );
+                $arr = DB::select( "select * from $sql where $where order by $order " );
             }else{
-                $arr = DB::select( "select * from $table where $where order by $order limit 1" );
+                $arr = DB::select( "select * from $sql where $where order by $order limit 1" );
                 $arr = $arr[0];
             }
         } else {

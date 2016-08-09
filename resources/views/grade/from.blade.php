@@ -141,7 +141,9 @@
                                             @endforeach
                                             @endforeach
                                         </tbody>
+
                                     </table>
+                                    <input class="laydate-icon" id="search" onclick="laydate()" placeholder="点击选择日期">
                                     <center><input type="button" value="录入成绩" id="choice"/></center>
                                 </div>
 								{{--</form>--}}
@@ -215,6 +217,7 @@
 
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
+        <script src="laydate/laydate.js"></script>
 
 		<!-- inline scripts related to this page -->
 
@@ -225,6 +228,14 @@
              */
 
             jQuery("#choice").click(function(){
+                var dates = jQuery("#search").val();
+                var str = new Date();
+                var times = str.getFullYear()+"-";
+                     times += str.getMonth()+1+"-";
+                     times += str.getDate();
+                if(dates==''){
+                    dates = times;
+                }
                 var ace2 = $('.li');
                 var ace22 = $('.ji');
                 var len = ace2.length;
@@ -258,7 +269,7 @@
                    $.ajax({
                         type: 'get',
                         url: 'grade_add',
-                        data: 'log_id1=' + log_id+"&log_id2="+log_id2+"&sid="+sid,
+                        data: 'log_id1=' + log_id+"&log_id2="+log_id2+"&sid="+sid+"&dates="+dates,
                         success: function (msg) {
                             if(msg==1){
                                 alert('已录入')
