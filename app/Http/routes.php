@@ -15,7 +15,13 @@
 Route::get('/index', 'IndexController@index');
 Route::get('/', 'IndexController@index');
 
-
+//文件模板下载f
+/*Route::get('testResponseDownload',function(){
+    return response()->download(
+        realpath(base_path('public/images')).'/spr_x.png',
+        'Laravel学院.jpg'
+    );
+});*/
 //登录页
 Route::any('/loginIndex', 'LoginController@index');
 //登录
@@ -60,8 +66,6 @@ Route::any('/import','GradeController@import');
 //成绩管理---删除
 Route::any('/gradeDelete','GradeController@gradeDelete');
 Route::get('/examine','GradeController@examine');
-//成绩管理---成绩理论、机试修改
-
 //成绩管理---成绩审核分页
 Route::get('/examinePage','GradeController@examinePage');
 //成绩管理---成绩审核
@@ -69,9 +73,6 @@ Route::get('/examineInfo','GradeController@examineInfo');
 Route::get('/updatess','GradeController@updatess');
 //成绩管理---导入
 Route::any('/import','GradeController@import');
-//成绩管理---删除
-
-Route::get('/gradeDelete','GradeController@gradeDelete');
 //成绩管理---分页
 Route::any('/gradePage','GradeController@gradePage');
 //成绩管理---搜索
@@ -115,6 +116,9 @@ Route::get('/rolegives','RoleController@roleGives');        //修改角色的权
 Route::get('collShow', 'GroupController@groupShow');
 //创建学院
 Route::get('collAdd','GroupController@groupCollAdd');
+//创建系页面
+Route::get('series','GroupController@series');
+Route::get('seAdd','GroupController@seAdd');
 //创建班级
 Route::get('claAdd','GroupController@groupClaAdd');
 //班级表单
@@ -138,11 +142,31 @@ Route::get('uppower','PowerController@upPower');
 Route::get('savepower','PowerController@savePower');
 // 删除权限
 Route::get('depower','PowerController@dePower');
+
+
+
+//创建小组页面
+Route::get('build','BuildController@bulidIndex');
+Route::get('buildAdd','BuildController@buildAdd');
+// //创建小组成员列表
+Route::get('buildIndex','BuildController@index');
+// //添加小组成员
+Route::get('addBuild','BuildController@add_build');
+
 //创建小组
 Route::get('groupManAdd','GroupController@groupManAdd');
 //创建小组
 Route::get('groupMan','GroupController@groupMan');
 Route::post('studentAdd','GroupController@studentAdd');
+
+
+
+//学生成绩列表
+Route::get('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单（1）
+Route::get('/jwList','GradeController@jwList');                        //附加控制器 --- 成绩列表 --- 教务查看表单（0）
+Route::get('/xiDirectorList','Grade2Controller@xiDirectorList');        //附加控制器 --- 成绩列表 --- 系主任查看表单（0）
+Route::get('/teacherList','Grade2Controller@teacherList');              //附加控制器 --- 成绩列表 --- 讲师查看表单（0）
+Route::post('/ajaxStudent','Grade2Controller@ajaxStudent');            //ajax获取成绩
 
 //教学周期列表
 Route::get('periodList','PeriodController@periodList');

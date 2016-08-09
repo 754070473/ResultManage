@@ -61,13 +61,6 @@
             </ul>
         </li>
         @endforeach
-       
-        {{--<li>
-            <a href="userlog">
-                <i class="icon-user"></i>
-                <span class="menu-text"> 管理员日志 </span>
-            </a>
-        </li>--}}
         <li>
             <a href="{{url('exitProcess')}}">
                 <i class="icon-off"></i>
