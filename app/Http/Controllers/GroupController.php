@@ -2,6 +2,7 @@
 namespace App\Http\Controllers;
 
 use DB;
+use Session;
 use Illuminate\Http\Request;
 header("Content-type: text/html; charset=utf-8"); 
 class GroupController extends Controller

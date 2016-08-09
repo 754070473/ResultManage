@@ -39,7 +39,7 @@ class PublicController extends Controller
             '成绩审核'=>'examine',
             '创建班级'=>'groupClaShow',
             '创建学院'=>'collShow',
-            '组员录入'=>'groupMan'
+            '组员录入'=>'build'
         ];
         foreach ($access as $key => $value) {
             $access[$key]['type']=$access_msg[$value['power_name']];

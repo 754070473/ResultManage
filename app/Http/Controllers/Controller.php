@@ -24,9 +24,9 @@ abstract class Controller extends BaseController
                 exit;
             }
             //权限控制
-            if( Session::get('uid') != 1 ){
-                $this->userPower();
-            }
+            // if( Session::get('uid') != 1 ){
+            //     $this->userPower();
+            // }
         }
     }
 
@@ -166,11 +166,12 @@ abstract class Controller extends BaseController
             return;
         }
         $pri_list = Session::get('power');
-//        print_r($pri_list);die;
-//        echo "<br>";
-//        echo $controller;
-//        echo "<br>";
-//        echo $function;
+       print_r($pri_list);
+       echo "<br>";
+       echo $controller;
+       echo "<br>";
+       echo $function;
+       die;
         $sign = 0;
         foreach( $pri_list as $key => $val ){
             if($controller == $val['controller']){
