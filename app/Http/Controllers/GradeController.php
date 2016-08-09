@@ -3,8 +3,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB,Input,Redirect,Session,url;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
+
+/*
+ * @author:dongmengtao
+ * @time:2016/0803
+ * @controller:成绩管理
+ */
+
 
 require_once (__DIR__."/../../../vendor/PHPExcel.php");
 header("content-type:text/html;charset=utf-8");
@@ -13,53 +18,59 @@ class GradeController extends Controller
     //查看成绩录入
     public function grade()
     {
-        $arr1 = DB::table('res_college')->get();
-        $arr5 = DB::table('res_class')->get();
-        return view('grade.from',['arr1'=>$arr1,'arr5'=>$arr5]);
+        $uid = Session::get('uid');
+        $id = Db::table('res_class')
+            ->where('uid',$uid)
+            ->first();
+        $class_id = $id->class_id;
+        $class_name = $id->class_name;
+        $info = $this->tree($pid=0);
+        return view('grade.from',['list'=>$info,'class_name'=>$class_name]);
     }
-
+    public function tree($pid){
+        $list = DB::table("res_students")
+            ->where('pid',$pid)
+            ->get();
+        foreach($list as $k=>$v){
+            $list[$k]->son = $this->tree($v->sid);
+        }
+        return $list;
+    }
     //添加成绩录入
     public function grade_add(Request $request)
     {
         $uid = Session::get('uid');
-        //$table = DB :: table('res_grade inner join res_user on res_grade.uid=res_user.uid');
-//        $table = DB::table('res_user_role')
-//            ->join('res_role', 'res_role.rid', '=', 'res_user_role.rid')
-//            ->where('uid',$uid)
-//            ->get();
-//        print_r($table);die;
-        $name = $request->input('name');
-        $class_id = $request->input('class_id');
-        $cid = $request->input('cid');
-        $theory = $request->input('theory');
-        $exam = $request->input('exam');
-        $g_add_date = date("Y-m-d H:i:s", time());
-        $add_time = date("H:i:s", time());
-       // $status = $request->input('status');
-        $type = $request->input('type');
-      DB::table('res_grade')->insert(
-           array(
-               'theory' => $theory,
-               'exam' => $exam,
-               'g_add_date' => $g_add_date,
-               'add_time' => $add_time,
-               'type' => $type,
-               'uid' => $uid,
-               'name' => $name,
-               'class_id' => $class_id,
-               'cid' => $cid,
-
-           )
-       );
-        return redirect('show');
+        $id = Db::table('res_class')
+            ->where('uid',$uid)
+            ->first();
+        $class_id = $id->class_id;
+        $group_id = $request->group_id;
+        $sid  = explode(',',$request['sid']);
+        $lilun  = explode(',',$request['log_id1']);
+        $jineng = explode(',',$request['log_id2']);
+        $dates = date("Y-m-d",time());
+        $list = array();
+        $sql ="insert into res_grade(theory,exam,g_add_date,uid) VALUES ";
+        foreach($sid as $k =>$v){
+            $sql.="('".$lilun[$k]."','".$jineng[$k]."','".$dates."','".$sid[$k]."'"."),";
+        }
+        $sql = substr($sql,0,-1);
+        $res = DB::insert($sql);
+        if($res){
+            echo 1;
+        }
     }
 
     //查看成绩
     public function show(Request $request){
        $uid = Session::get('uid');
-        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role = DB::table( 'res_user' )
+              -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' )
+              -> where('uid' , $uid)
+              -> first();
+        //角色  账号
         $role_name = $role -> role_name;
-        $accounts = $role->accounts;
+        $accounts = $role -> accounts;
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
@@ -79,7 +90,10 @@ class GradeController extends Controller
                 }
             }
             $group = substr($accounts , strrpos( $accounts , $str )+1);
-            $student = DB::table('res_students') -> join( 'res_user' , 'res_students.uid' , '=' , 'res_user.uid' ) -> where('gr_id' , $group) -> get();
+            $student = DB::table('res_students')
+                     -> join( 'res_user' , 'res_students.uid' , '=' , 'res_user.uid' )
+                     -> where('gr_id' , $group)
+                     -> get();
             foreach($student as $key => $val){
                 $name[] = $val -> username;
             }
@@ -97,6 +111,7 @@ class GradeController extends Controller
         return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
     }
 
+    //多条件查询
     public function search(Request $request){
         $search = $request -> search ? $request -> search : '';
         $sel_username = $request -> username ? $request -> username : '';
@@ -104,9 +119,12 @@ class GradeController extends Controller
         $exam2 = $request -> exam2 ? $request -> exam2 : '';
         $type = $request -> type ? $request -> type : '';
         $uid = Session::get('uid');
-        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
+        $role = DB::table( 'res_user' )
+            -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' )
+            -> where('uid' , $uid)
+            -> first();
         $role_name = $role -> role_name;
-        $accounts = $role->accounts;
+        $accounts = $role -> accounts;
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
@@ -246,7 +264,8 @@ class GradeController extends Controller
             //当前页码
             $p = $request -> p ? $request -> p : 1;
             //查询表名
-            $table='res_user inner join res_role on res_user.rid=res_role.rid inner join  res_grade on res_user.uid=res_grade.uid';
+            $table='res_user inner join res_role on res_user.rid=res_role.rid
+                  inner join  res_grade on res_user.uid=res_grade.uid';
             //每页显示数据条数
             $num = $request -> num ? $request -> num : 10;
             //查询条件
