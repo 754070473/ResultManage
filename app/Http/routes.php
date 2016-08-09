@@ -141,3 +141,14 @@ Route::get('groupManAdd','GroupController@groupManAdd');
 //创建小组
 Route::get('groupMan','GroupController@groupMan');
 Route::post('studentAdd','GroupController@studentAdd');
+
+
+
+//学生成绩列表
+Route::get('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单（1）
+Route::get('/jwList','GradeController@jwList');                        //附加控制器 --- 成绩列表 --- 教务查看表单（0）
+Route::get('/xiDirectorList','Grade2Controller@xiDirectorList');        //附加控制器 --- 成绩列表 --- 系主任查看表单（0）
+Route::get('/teacherList','Grade2Controller@teacherList');              //附加控制器 --- 成绩列表 --- 讲师查看表单（0）
+Route::post('/ajaxStudent','Grade2Controller@ajaxStudent');            //ajax获取成绩
+
+
