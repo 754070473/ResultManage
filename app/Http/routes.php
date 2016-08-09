@@ -15,7 +15,13 @@
 Route::get('/index', 'IndexController@index');
 Route::get('/', 'IndexController@index');
 
-
+//文件模板下载f
+/*Route::get('testResponseDownload',function(){
+    return response()->download(
+        realpath(base_path('public/images')).'/spr_x.png',
+        'Laravel学院.jpg'
+    );
+});*/
 //登录页
 Route::any('/loginIndex', 'LoginController@index');
 //登录
@@ -58,8 +64,6 @@ Route::any('/import','GradeController@import');
 //成绩管理---删除
 Route::any('/gradeDelete','GradeController@gradeDelete');
 Route::get('/examine','GradeController@examine');
-//成绩管理---成绩理论、机试修改
-
 //成绩管理---成绩审核分页
 Route::get('/examinePage','GradeController@examinePage');
 //成绩管理---成绩审核
@@ -67,9 +71,6 @@ Route::get('/examineInfo','GradeController@examineInfo');
 Route::get('/updatess','GradeController@updatess');
 //成绩管理---导入
 Route::any('/import','GradeController@import');
-//成绩管理---删除
-
-Route::get('/gradeDelete','GradeController@gradeDelete');
 //成绩管理---分页
 Route::any('/gradePage','GradeController@gradePage');
 //成绩管理---搜索
@@ -113,6 +114,9 @@ Route::get('/rolegives','RoleController@roleGives');        //修改角色的权
 Route::get('collShow', 'GroupController@groupShow');
 //创建学院
 Route::get('collAdd','GroupController@groupCollAdd');
+//创建系页面
+Route::get('series','GroupController@series');
+Route::get('seAdd','GroupController@seAdd');
 //创建班级
 Route::get('claAdd','GroupController@groupClaAdd');
 //班级表单

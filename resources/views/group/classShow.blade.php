@@ -2,7 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8" />
-		<title>jquery网格插件 - Bootstrap后台管理系统模版Ace下载</title>
+		<title>八维成绩管理系统</title>
 
 		<meta name="keywords" content="Bootstrap模版,Bootstrap模版下载,Bootstrap教程,Bootstrap中文" />
 		<meta name="description" content="站长素材提供Bootstrap模版,Bootstrap教程,Bootstrap中文翻译等相关Bootstrap插件下载" />
@@ -99,10 +99,10 @@
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
-								创建班级
+								组件管理
 								<small>
 									<i class="icon-double-angle-right"></i>
-									Dynamic tables and grids using jqGrid plugin
+                                    创建班级
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -137,6 +137,17 @@
 											
 				                          		</td>
 				                          	</tr>
+                                        {{--<tr>--}}
+                                            {{--<td><h3>选 择 系： &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  </h3></td>--}}
+                                            {{--<td>--}}
+                                                {{--<select id="ser_id">--}}
+                                                    {{--<option value="0" selected>请选择</option>--}}
+                                                    {{--@foreach( $arr2 as $key => $va )--}}
+                                                        {{--<option value="{{$va->ser_id}}">{{$va->ser_name}}</option>--}}
+                                                    {{--@endforeach--}}
+                                                {{--</select>--}}
+                                            {{--</td>--}}
+                                        {{--</tr>--}}
 				                          	<br>
 				                          <tr>
 						                        	<td>
@@ -169,11 +180,11 @@
                                 </th>
                                 <th>id</th>
                                 <th>学院名称</th>
+                                {{--<th>系名称</th>--}}
                                 <th class="hidden-480">班级名称</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
-
                             <tbody>
                             @foreach( $arr1 as $key => $val )
                                 <tr>
@@ -187,6 +198,7 @@
                                         {{$val->cid}}
                                     </td>
                                     <td>{{$val->college_name}}</td>
+                                    {{--<td>{{$val->ser_name}}</td>--}}
                                     <td>{{$val->class_name}}</td>
                                      <td>
 									    <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
@@ -396,20 +408,17 @@ function  creatGroupPro(id) {
    $(":button").click(function(){
    		// alert(1)
    		var coll_id=$("#coll_id").val();
+      // var ser_id=$("#ser_id").val();
    		var class_name=$("#class_name").val();
    		// alert(coll_id)
-   		// alert(class_name)
+//   		alert(class_name)
    		// alert(coll_name)
-   		var reg=/^[\u4e00-\u9fa5]{1,10}$/;	
-
+   		var reg=/^[\u4e00-\u9fa5]{1,10}$/;
    		// console.log(reg.test(coll_name))
    		if(class_name=="")
    		{
    			$("#ti").html("    *    <font color='red'>你必须输入创建的班级名称</font>")
-   		}else
-
-   		{
-
+   		}else{
    			// alert(2)
    			$.ajax({
    				url:"{{URL('claAdd')}}",
@@ -417,14 +426,11 @@ function  creatGroupPro(id) {
    				data:"class_name="+class_name+"&coll_id="+coll_id,
    				success:function(msg)
    				{
-   					// alert(msg)
-   					
+//   					alert(msg)
    						// alert(msg)
    						location.href="{{URL('collShow')}}";
-   					
    				}
    			})
    		}
-
    })
 </script>
