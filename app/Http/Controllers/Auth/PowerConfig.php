@@ -8,7 +8,7 @@ return array(
         '管理员管理'=>['icon-list','User'],
         '成绩管理'=>['icon-list-alt','Grade'],
         '组建管理'=>['icon-calendar','Group'],
-        '教学周期列表'=>['periodList',['periodList'] ],
+        '教学周期列表'=>['periodList',['periodList','periodPage'] ],
         '添加权限'=>['poweradd',['powerAdd'] ],
         '权限列表'=>['showpower',['showpower'] ],
         '管理员添加'=>['useradd',['useraddpro'] ],
@@ -20,11 +20,14 @@ return array(
         '创建学院'=>['groupClaShow',['collShow'] ],
         '创建班级'=>['collShow',['groupClaShow'] ],
         '组员录入'=>['groupMan',['groupMan'] ],
-        '成绩录入'=>['grade',['grade']]
+        '成绩录入'=>['grade',['grade','import','grade_add']]
     ] ,
     'not_navigation' => [
-        '成绩录入' => [
-            'grade','import','grade_add'
+        '新增教学周期' => [
+            'periodAdd','periodInfo'
+        ] ,
+        '考试安排详情' => [
+            'periodExam','periodExamInfo'
         ]
     ]
 );

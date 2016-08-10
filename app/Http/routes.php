@@ -169,12 +169,14 @@ Route::get('/teacherList','Grade2Controller@teacherList');              //附加
 Route::post('/ajaxStudent','Grade2Controller@ajaxStudent');            //ajax获取成绩
 
 //教学周期列表
-Route::get('periodList','PeriodController@periodList');
+Route::get('/periodList','PeriodController@periodList');
 //教学周期分页
-Route::get('periodPage','PeriodController@periodPage');
+Route::get('/periodPage','PeriodController@periodPage');
 //教学周期添加
-Route::get('periodAdd','PeriodController@periodAdd');
+Route::get('/periodAdd','PeriodController@periodAdd');
 //教学周期添加入库
-Route::get('periodInfo','PeriodController@periodInfo');
+Route::get('/periodInfo','PeriodController@periodInfo');
 //考试安排详情页面
-Route::get('periodExam','PeriodController@periodExam');
+Route::get('/periodExam','PeriodController@periodExam');
+//考试安排详情页面
+Route::get('/periodExamInfo','PeriodController@periodExamInfo');

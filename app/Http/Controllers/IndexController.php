@@ -12,19 +12,9 @@ class IndexController extends Controller
      */
     public function index()
     {
-        /*$table = array(
-            [ 'table1' => 'res_grade' , 'table2' => 'res_user' , 'join' => 'uid' ] ,
-            [ 'table1' => 'res_grade' , 'table2' => 'res_class' , 'join' => 'class_id' ] ,
-            [ 'table1' => 'res_class' , 'table2' => 'res_college' , 'join' => 'cid' ]
-        );
-        $where = 'res_grade.status=3';
-        $order = 'res_user.uid desc';
-        $page = array( 'num' => 10 , 'p' => 1 , 'url' => 'index' );
-        $arr = $this -> databasesSelect( $table , $where , 0 , $order , $page );
-        print_r($arr);die;*/
         return view('index.index');
     }
-    
+
     /**
      * 管理员日志
      */
@@ -44,7 +34,7 @@ class IndexController extends Controller
 //        print_r($arr);die;
         return view( 'index.userLog' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
     }
-    
+
     /**
      * 日志分页
      */

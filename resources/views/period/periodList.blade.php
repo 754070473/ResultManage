@@ -209,9 +209,9 @@
             });
             $('.btn-success').click(function(){
                 var per_id = $(this).attr('per_id');
-                $.get({
-                    type : 'get' ,
-                    url : 'periodExam' ,
+                $.ajax({
+                    type : 'GET' ,
+                    url : '{{url("periodExam")}}' ,
                     data : 'per_id='+per_id ,
                     success : function(msg){
                         $('#list').html(msg);
