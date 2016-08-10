@@ -12,7 +12,7 @@ class IndexController extends Controller
      */
     public function index()
     {
-<<<<<<< .mine
+
         /*$table = array(
             [ 'table1' => 'res_grade' , 'table2' => 'res_user' , 'join' => 'uid' ] ,
             [ 'table1' => 'res_grade' , 'table2' => 'res_class' , 'join' => 'class_id' ] ,
@@ -23,7 +23,7 @@ class IndexController extends Controller
         $page = array( 'num' => 10 , 'p' => 1 , 'url' => 'index' );
         $arr = $this -> databasesSelect( $table , $where , 0 , $order , $page );
         print_r($arr);die;*/
-=======
+
         // $table = array(
         //     [ 'table1' => 'res_grade' , 'table2' => 'res_user' , 'join' => 'uid' ] ,
         //     [ 'table1' => 'res_grade' , 'table2' => 'res_class' , 'join' => 'class_id' ] ,
@@ -34,7 +34,7 @@ class IndexController extends Controller
         // $page = array( 'num' => 10 , 'p' => 1 , 'url' => 'index' );
         // $arr = $this -> databasesSelect( $table , $where , 0 , $order , $page );
         // print_r($arr);die;
->>>>>>> .theirs
+
         return view('index.index');
     }
     

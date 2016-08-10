@@ -50,15 +50,29 @@ class GradeController extends Controller
         $lilun  = explode(',',$request['log_id1']);
         $jineng = explode(',',$request['log_id2']);
         $dates = $request->dates;
+        $times = date("Y-m-d",time());
+        $type = DB::table('res_exam')
+            ->where('exam_date',$dates)
+            ->lists('exam_type');
+        if(empty($type) || $type[0]==0){
+            echo 1;die;
+        }
+        $info = DB::table('res_grade')
+            ->where('uid',$uid)
+            ->where('g_add_date',$dates)
+            ->get();
+        if(!empty($info)){
+            echo 3;die;
+        }
         $list = array();
-        $sql ="insert into res_grade(theory,exam,g_add_date,uid) VALUES ";
+        $sql ="insert into res_grade(theory,exam,g_add_date,sid,type,uid,add_time) VALUES ";
         foreach($sid as $k =>$v){
-            $sql.="('".$lilun[$k]."','".$jineng[$k]."','".$dates."','".$sid[$k]."'"."),";
+            $sql.="('".$lilun[$k]."','".$jineng[$k]."','".$dates."','".$sid[$k]."','".$type[0]."','".$uid."','".$times."'),";
         }
         $sql = substr($sql,0,-1);
         $res = DB::insert($sql);
         if($res){
-            echo 1;
+            echo 2;
         }
     }
 
@@ -338,6 +352,29 @@ class GradeController extends Controller
     //管理员列表导入
     public function import()
     {
+        $uid = Session::get('uid');
+        if(empty($_FILES['myfile']['tmp_name']))
+        {
+            echo "<script>alert('不能为空');location.href='grade';</script>";die;
+        }
+        $date = $_POST['dates'];
+        $dates = date('Y-m-d',time());
+        $type = Db::table('res_exam')
+            ->where('exam_date',$date)
+            ->lists('exam_type');
+        @$id = $type[0];
+        if(!$id || empty($type)){
+            echo "<script>alert('这天没有考试');location.href='grade';</script>";die;
+        }
+        $res = DB::table('res_exam')
+            ->where('g_add_time',$date)
+            ->where('uid',$uid)
+            ->get();
+        if(!empty($res)){
+            echo "<script>alert('你已经提交过了');location.href='grade';</script>";die;
+        }
+
+        //print_r($_FILES['myfile']);die;
 //        $this->load->library('/PHPExcel.php');
         $PHPExcel = new \PHPExcel();
         //这里是导入excel2007 的xlsx格式，如果是2003格式可以把“excel2007”换成“Excel5"
@@ -359,8 +396,8 @@ class GradeController extends Controller
         $highestRow=$sheet->getHighestRow();
         //取得总列数
         $highestColumn=$sheet->getHighestColumn();
-
         //从第二行开始读取数据  因为第一行是表格的表头信息
+
         $sql = "";
         for($j=2;$j<=$highestRow;$j++) {
             $str = "";
@@ -372,39 +409,23 @@ class GradeController extends Controller
             $strs = explode("|*|", $str);
             //拼写sql语句
             $sql[] = [
-                'class_id' => "{$strs[0]}",
-                'name'=>"{$strs[1]}",
+                'student_name' => "{$strs[0]}",
+                'exam'=>"{$strs[1]}",
                 'theory'=>"{$strs[2]}",
-                'exam'=>"{$strs[3]}",
-                'type'=>"{$strs[4]}"
+                'type'=>$type[0],
+                'uid'=>$uid,
+                'add_time'=>$dates,
+                'g_add_date'=>$date,
             ];
         }
-//		echo $sql;die;
-        $uid = Session::get('uid');
-        $class = DB::table('res_class') -> where('class_name' , $sql[0]['class_id']) -> first();
-        $class_id = $class -> class_id;
-        $role = DB::table( 'res_user' ) -> join( 'res_role' , 'res_user.rid' , '=' , 'res_role.rid' ) -> where('uid' , $uid) -> first();
-        $role_name = $role -> role_name;
-        if( $role_name == '教务' ){
-            $status = 2;
-        }elseif( $role_name == '讲师' ){
-            $status = 1;
-        }else{
-            $status = 0;
+        for($i=0;$i<count($sql);$i++){
+            $info[] = Db::table('res_students')
+                    ->where('student_name',$sql[$i]['student_name'])
+                    ->lists('sid');
         }
-        foreach( $sql as $key => $val ){
-            if( $val['type'] == '日考' ){
-                $sql[$key]['type'] = 1;
-            }elseif( $val['type'] == '周考' ){
-                $sql[$key]['type'] = 2;
-            }else {
-                $sql[$key]['type'] = 3;
-            }
-            $sql[$key]['status'] = $status;
-            $sql[$key]['class_id'] = $class_id;
-            $sql[$key]['g_add_date'] = date( 'Y-m-d' , time() );
-            $sql[$key]['add_time'] = date( 'H:i:s' , time() );
-            $sql[$key]['uid'] = $uid;
+        foreach($info as $k =>$v){
+            $sql[$k]['sid'] = $info[$k][0];
+            unset($sql[$k]['student_name']);
         }
         $res=DB::table('res_grade')->insert($sql);
         if($res){
