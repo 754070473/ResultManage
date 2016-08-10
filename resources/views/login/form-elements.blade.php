@@ -54,7 +54,7 @@
 	</head>
 
 	<body>
-		</div>
+		
 
 		<div class="main-container" id="main-container">
 			<script type="text/javascript">
@@ -166,7 +166,7 @@
 
 
 
-									
+										</div>
 									</div><!-- /row -->
 
 									<div class="space-24"></div>					
