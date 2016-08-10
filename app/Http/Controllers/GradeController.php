@@ -106,7 +106,6 @@ class GradeController extends Controller
         //排序
         $order = 'res_grade.g_add_date desc';
         $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-        //print_r($arr);die;
         //根据用户查询角色 并显示出来
         return view('grade.show',array('arr'=>$arr['arr'],'page'=>$arr['page']));
     }
@@ -195,7 +194,6 @@ class GradeController extends Controller
         //排序
         $order = 'res_grade.g_add_date desc';
         $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-        //print_r($arr);die;
         //根据用户查询角色 并显示出来
         return view('grade.searchs',
             array( 
@@ -250,7 +248,6 @@ class GradeController extends Controller
         //排序
         $order = 'res_grade.g_add_date desc';
         $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-//        print_r($arr);die;
         return view( 'grade.gradePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
     }
 
@@ -277,7 +274,6 @@ class GradeController extends Controller
             //排序
             $order = 'res_grade.g_add_date desc';
             $arr = $this -> ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-//        print_r($arr);die;
             return view( 'grade.gradePage' , array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
         }else{
             echo 0;
@@ -327,7 +323,6 @@ class GradeController extends Controller
         //排序
         $order = 'res_grade.add_date desc';
         $arr = $this->ajaxPage( $table , $num , $p , 'gradePage' , $where , $order );
-        //print_r($arr);die;
         //根据用户查询角色 并显示出来
         return view( 'grade.show' , array ( 'arr' => $arr[ 'arr' ] , 'page' => $arr[ 'page' ] ) );
     }
@@ -511,146 +506,41 @@ class GradeController extends Controller
      * 角色判断
      * 决定查看列表
      */
-    public function gdList(){
-        $uid =  Session::get('uid');
-        $users = DB::table( 'res_user' )
-            ->select('role_name')
-            ->join( 'res_role' , 'res_role.rid' , '=' , 'res_user.rid' )
-            ->where( 'uid' , $uid )
-            ->get();
-        if( '教务' == $users[0]->role_name )
-            echo  $this->yuansheng();
-    //        if( '系主任' == $users[0]->role_name )
-    //            echo $this->xiDirectorList();
-    //        if( '讲师' == $users[0]->role_name )
-    //            echo $this->teacherList();
-        }
-    /**
-     * 教务
-     */
-    /*
-     * 程序可拆分使用，组合使用浪费资源
-    public function jwList(){
-    //查询所有学院
-    $college =  DB::table('res_college')->get();
-    //查询学院的所有系
-    foreach($college as $k=>$v)
+    public function gdList()
     {
-        //主表  系res_series
-        //联查表 学院表res_college  根据学院cid
-        $arr =  DB::table('res_series')
-            ->join('res_college', 'res_series.cid', '=', 'res_college.cid')
-            ->where("res_series.cid","=",$v->cid)
+        $uid = Session::get('uid');
+        $users = DB::table('res_user')
+            ->select('role_name')
+            ->join('res_role', 'res_role.rid', '=', 'res_user.rid')
+            ->where('uid', $uid)
             ->get();
-//            print_r($arr);die;
-        //查询系中的所有班级
-        //主表  班级表 res_class
-        //联查表 系 res_series   根据系ser_id
-        foreach($arr as $kxi=>$vxi)
+        $date = DB::table('res_period')
+            ->get();
+        $Aa  = date('Y-m-d',time()-24*60*60);//小于今天
+        $datecheck = DB::table('res_period')
+            ->where('start_date','<',"$Aa")
+            ->where('end_date','>',"$Aa")
+            ->get();;
+        if( '教务' == $users[0]->role_name )
         {
-            $arr[$kxi]->class  =  DB::table('res_class')
-                ->select('class_id','class_name')
-                ->join('res_series', 'res_class.ser_id', '=', 'res_series.ser_id')
-                ->where("res_series.ser_id","=",$vxi->ser_id)
+             return view('grade.cljiaowu',['college'=>$this->yuansheng(),'date'=>$date,'datecheck'=>$datecheck[0]]);
+        }
+
+        if( '系主任' == $users[0]->role_name ){
+            $arr =  DB::table('res_series')
+                ->where("res_series.uid","=",$uid)
                 ->get();
-            //查询班级的所有成绩
-            //主表  学生表
-            //联查表 班级表 res_class   成绩表 res_grade  根据班级 class_id
-            foreach($arr[$kxi]->class as $kgrade=>$vgrade)
-            {
-                $Aa  = date('Y-m-d',time()-24*60*60);//小于今天
-                $Ba = date('Y-m-d',time()-24*60*60*10);//大于前天
-                $arr[$kxi]->class[$kgrade]->grade =  DB::table('res_students')
-                    ->select('*')
-                    ->join('res_class', 'res_class.class_id', '=', 'res_students.class_id')
-                    ->join('res_grade', 'res_grade.sid', '=', 'res_students.sid')
-                    ->where("res_students.class_id","=",$vgrade->class_id)
-                    ->where('g_add_date','<',"$Aa")
-                    ->where('g_add_date','>',"$Ba")
-                    ->get();
-                if(!empty($arr[$kxi]->class[$kgrade]->grade)){
-                    $manNum=count($arr[$kxi]->class[$kgrade]->grade);//计算班级总人数
-                    $theory=0;
-                    $exam=0;
-                    foreach($arr[$kxi]->class[$kgrade]->grade as $vtheory=>$ktheory){
-                        if(intval($ktheory->theory) >= 90){
-                            $theory++;
-                        }
-                    }
-                    foreach($arr[$kxi]->class[$kgrade]->grade as $vexam=>$kexam){
-                        if(intval($kexam->exam) >= 90){
-                            $exam++;
-                        }
-                    }
-//                        unset()
-                    $f= 2;//小数后几位
-                    $newtheory = sprintf("%.".$f."f",substr(sprintf("%.6f", (($theory/$manNum)*100)), 0, -2));//理论成绩成才
-                    $newexam=sprintf("%.".$f."f",substr(sprintf("%.6f", (($exam/$manNum)*100)), 0, -2));//机试成绩成才
-                }else{
-                    $newtheory = 0;
-                    $newexam= 0;
-                }
-                $arr[$kxi]->class[$kgrade]->theory=$newtheory;
-                $arr[$kxi]->class[$kgrade]->exam =$newexam;
+            return view('grade.xizhuren', ['ser_id' => $arr[0]->ser_id,'college'=>$this->yuansheng(),'date'=>$date,'checkdate'=>$datecheck]);
+        }
 
-            }
-            unset($newtheory);
-            unset($newexam);
-            if(!empty($arr[$kxi]->class)){
-                $manNum=count($arr[$kxi]->class);//计算班级总人数
-                $theory2=0;
-                $exam2=0;
-                foreach($arr[$kxi]->class as $vtheory=>$ktheory){
-                    $theory2+=(float)$ktheory->theory;
-                }
-                foreach($arr[$kxi]->class as $vexam=>$kexam){
-                    $exam2+=(float)$kexam->exam;
-                }
-                $f= 2;//小数后几位
-                $newtheory2 = sprintf("%.".$f."f",substr(sprintf("%.10f", ($theory2/$manNum)), 0, -2));//理论成绩成才
-                $newexam2=sprintf("%.".$f."f",substr(sprintf("%.10f", ($exam2/$manNum)), 0, -2));//机试成绩成才
-            }else{
-                $newtheory2 = 0;
-                $newexam2= 0;
-            }
-            $arr[$kxi]->theory=$newtheory2;
-            $arr[$kxi]->exam =$newexam2;
-            unset($arr[$kxi]->class);//删除班级，释放内存
-        }
-        if(!empty($arr)){
-            $manNum=count($arr);//计算班级总人数
-            $theory3=0;
-            $exam3=0;
-            foreach($arr as $vtheory=>$ktheory){
-                $theory3+=(float)$ktheory->theory;
-            }
-            foreach($arr as $vexam=>$kexam){
-                $exam3+=(float)$kexam->exam;
-            }
-            $f= 2;//小数后几位
-            $newtheory3 = sprintf("%.".$f."f",substr(sprintf("%.10f", ($theory3/$manNum)), 0, -2));//理论成绩成才
-            $newexam3=sprintf("%.".$f."f",substr(sprintf("%.10f", ($exam3/$manNum)), 0, -2));//机试成绩成才
-        }else{
-            $newtheory3 = 0;
-            $newexam3= 0;
-        }
-        $college[$k]->theory=$newtheory3;
-        $college[$k]->exam =$newexam3;
-        unset($newtheory3);
-        unset($newexam3);
-        if(!empty($arr)){
-            $college[$k]->xi = $arr;
-            unset($arr);
-        }else{
-            $college[$k]->xi = [];;
-        }
+        if( '讲师' == $users[0]->role_name ){
+             $class = DB::table('res_class')
+                ->select('class_id', 'class_name')
+                ->where('uid', $uid)
+                ->get();
+             return view('grade.cljiangshi', ['class' => $class,'date'=>$date,'checkdate'=>$datecheck]);
+         }
     }
-
-//        print_r($college);die;
-    return view('grade.cljiaowu',['college'=>$college]);
-}
-*/
-
     public function sum_stu($arr){
 
     }
@@ -686,6 +576,9 @@ class GradeController extends Controller
      */
     function yuansheng()
     {
+//        $Aa  = date('Y-m-d',time()-24*60*60);//小于今天
+//        ->where('start_date','<',"$Aa")
+//        ->where('end_date','>',"$Aa")
         $sql = 'select * from res_grade
                 INNER JOIN res_students on res_grade.sid=res_students.sid
                 INNER JOIN res_class on res_students.class_id=res_class.class_id
@@ -755,10 +648,6 @@ class GradeController extends Controller
             $class_all[]=$class[$k];
         }
         unset($class_id_uq);
-        //$college_all 学院
-        //$series_all 系
-        //$class_all 班级
-
         $cl = [];//所有班级加入cl
         foreach ($class_all as $kclass =>$vclass)
         {
@@ -868,7 +757,8 @@ class GradeController extends Controller
             $average[$kcollege]['theory']=$newtheory3;
             $average[$kcollege]['exam'] =$newexam3;
         }
-        return view('grade.cljiaowu',['college'=>$average]);
+        return $average;
+
     }
 
     /**
@@ -876,16 +766,41 @@ class GradeController extends Controller
      */
     function ajaxStudent(Request $request)
     {
-        $Aa  = date('Y-m-d',time()-24*60*60);//小于今天
-        $Ba = date('Y-m-d',time()-24*60*60*10);//大于前天
-        $arr =   DB::table('res_students')
-            ->select('student_name','theory','exam')
-            ->join('res_class', 'res_class.class_id', '=', 'res_students.class_id')
-            ->join('res_grade', 'res_grade.sid', '=', 'res_students.sid')
-            ->where("res_students.class_id","=",$request['class_id'])
-            ->where('g_add_date','<',"$Aa")
-            ->where('g_add_date','>',"$Ba")
-            ->get();
-        echo json_encode($arr);
+        $id = intval($request['class_id']);
+        if(!empty($id)){
+
+            //查询时间表
+            $Aa  = date('Y-m-d',time()-24*60*60);//小于今天
+            $date = DB::table('res_period')
+                ->join('res_exam','res_period.per_id','=','res_exam.per_id')
+                ->where('start_date','<',"$Aa")
+                ->where('end_date','>',"$Aa")
+                ->get();
+            $dat=[];
+            $week = array('日','一','二','三','四','五','六');
+            foreach($date as $k=>$v){
+                $time = strtotime( $v -> exam_date );
+                $arr =   DB::table('res_students')
+                    ->select('student_name','theory','exam','g_add_date')
+                    ->join('res_class', 'res_class.class_id', '=', 'res_students.class_id')
+                    ->join('res_grade', 'res_grade.sid', '=', 'res_students.sid')
+                    ->where("res_students.class_id","=",$id)
+                    ->where('g_add_date','=',$v->exam_date)
+                    ->orderBy('res_grade.sid','asc')
+                    ->get();
+                $arr['week'] = '星期'.$week[date('w',$time)];
+                $arr['date'] = $v -> exam_date;
+                if(!empty($arr)){
+                    $dat['arr'][] =$arr;
+                }else{
+                    $dat['arr'][] =[];
+                }
+            }
+            $dat['stu'] =  DB::table('res_students')->select('sid','student_name')->where('class_id','=',$id)->orderBy('sid','asc')->get();
+            $cc= json_decode(json_encode($dat),true);
+            return view('grade.studentgd',['student'=>$cc]);
+        }else{
+            echo 0;
+        }
     }
 }
