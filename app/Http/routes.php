@@ -42,6 +42,8 @@ Route::any('/upda', 'LoginController@update_pwd');
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
+//公共页面  右侧内容
+Route::get('/main', 'PublicController@main');
 
 //管理员日志
 Route::get('/userlog', 'IndexController@userLog');
@@ -163,4 +165,16 @@ Route::get('/xiDirectorList','Grade2Controller@xiDirectorList');        //附加
 Route::get('/teacherList','Grade2Controller@teacherList');              //附加控制器 --- 成绩列表 --- 讲师查看表单（0）
 Route::post('/ajaxStudent','Grade2Controller@ajaxStudent');            //ajax获取成绩
 
+//教学周期列表
+Route::get('periodList','PeriodController@periodList');
+//教学周期分页
+Route::get('periodPage','PeriodController@periodPage');
+//教学周期添加
+Route::get('periodAdd','PeriodController@periodAdd');
+//教学周期添加入库
+Route::get('periodInfo','PeriodController@periodInfo');
+//考试安排详情页面
+Route::get('periodExam','PeriodController@periodExam');
 
+// 柱状图
+Route::get('zt','YieldController@Index');

@@ -40,23 +40,21 @@
                 <span class="menu-text"> 首页 </span>
             </a>
         </li>
-        @foreach($access as $k=>$v)
+        @foreach($navigation as $key=>$val)
         <li>
             <a href="javascript:void(0)" class="dropdown-toggle">
-                <i class="{{$v['type']}}"></i>
-                <span class="menu-text"> {{$v['power_name']}} </span>
+                <i class="{{$val['url']}}"></i>
+                <span class="menu-text"> {{$val['power_name']}} </span>
 
                 <b class="arrow icon-angle-down"></b>
             </a>
 
             <ul class="submenu">
-                @foreach($v['son'] as $key=>$val)
+                @foreach($val['son'] as $k=>$v)
                 <li>
-                    @if(isset($val['url']))
-                        <a href="{{$val['url']}}">
-                    @endif
+                        <a href="{{$v['url']}}">
                         <i class="icon-double-angle-right"></i>
-                        {{$val['power_name']}}
+                        {{$v['power_name']}}
                     </a>
                 </li>
                 @endforeach

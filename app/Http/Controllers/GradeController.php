@@ -24,15 +24,16 @@ class GradeController extends Controller
             ->first();
         $class_id = $id->class_id;
         $class_name = $id->class_name;
-        $info = $this->tree($pid=0);
+        $info = $this->tree($pid=0,$class_id);
         return view('grade.from',['list'=>$info,'class_name'=>$class_name]);
     }
-    public function tree($pid){
+    public function tree($pid,$class_id){
         $list = DB::table("res_students")
+            ->where('class_id',$class_id)
             ->where('pid',$pid)
             ->get();
         foreach($list as $k=>$v){
-            $list[$k]->son = $this->tree($v->sid);
+            $list[$k]->son = $this->tree($v->sid,$class_id);
         }
         return $list;
     }
@@ -48,7 +49,7 @@ class GradeController extends Controller
         $sid  = explode(',',$request['sid']);
         $lilun  = explode(',',$request['log_id1']);
         $jineng = explode(',',$request['log_id2']);
-        $dates = date("Y-m-d",time());
+        $dates = $request->dates;
         $list = array();
         $sql ="insert into res_grade(theory,exam,g_add_date,uid) VALUES ";
         foreach($sid as $k =>$v){
