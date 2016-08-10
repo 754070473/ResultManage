@@ -15,7 +15,13 @@
 Route::get('/index', 'IndexController@index');
 Route::get('/', 'IndexController@index');
 
-
+//文件模板下载f
+/*Route::get('testResponseDownload',function(){
+    return response()->download(
+        realpath(base_path('public/images')).'/spr_x.png',
+        'Laravel学院.jpg'
+    );
+});*/
 //登录页
 Route::any('/loginIndex', 'LoginController@index');
 //登录
@@ -36,6 +42,8 @@ Route::any('/upda', 'LoginController@update_pwd');
 Route::get('/top', 'PublicController@top');
 //公共页面  左侧导航
 Route::get('/left', 'PublicController@left');
+//公共页面  右侧内容
+Route::get('/main', 'PublicController@main');
 
 //管理员日志
 Route::get('/userlog', 'IndexController@userLog');
@@ -134,6 +142,40 @@ Route::get('uppower','PowerController@upPower');
 Route::get('savepower','PowerController@savePower');
 // 删除权限
 Route::get('depower','PowerController@dePower');
+
+
+
+//创建小组页面
+Route::get('build','BuildController@bulidIndex');
+//进行分组
+Route::get('buildAdd','BuildController@buildAdd');
+// //创建小组成员列表
+Route::get('buildIndex','BuildController@index');
+// //添加小组成员
+Route::get('addBuild','BuildController@add_build');
+
+
+
+
+
+//学生成绩列表
+Route::any('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单
+Route::post('/ajaxStudent','GradeController@ajaxStudent');            //ajax获取成绩
+
+//教学周期列表
+Route::get('periodList','PeriodController@periodList');
+//教学周期分页
+Route::get('periodPage','PeriodController@periodPage');
+//教学周期添加
+Route::get('periodAdd','PeriodController@periodAdd');
+//教学周期添加入库
+Route::get('periodInfo','PeriodController@periodInfo');
+//考试安排详情页面
+Route::get('periodExam','PeriodController@periodExam');
+
+// 柱状图
+Route::get('zt','YieldController@Index');
+Route::get('pie','YieldController@Pie');
 //创建小组
 Route::get('groupManAdd','GroupController@groupManAdd');
 //创建小组

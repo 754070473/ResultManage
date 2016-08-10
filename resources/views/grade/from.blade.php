@@ -100,7 +100,7 @@
 								成绩管理
 								<small>
 									<i class="icon-double-angle-right"></i>
-									成绩录入
+									<?php echo $class_name; ?>
 								</small>
 							</h1>
                             <form action="import" enctype="multipart/form-data" method="post" style="margin-top: -30px;">
@@ -108,91 +108,52 @@
                                 <button type="submit" class="btn btn-xs btn-danger" style="float:right">
                                     导入
                                 </button>
-                                <input type="file" name="myfile" style="float:right">
+                                <center>
+                                <input class="laydate-icon" name="dates" id="search" onclick="laydate()" placeholder="点击选择日期">
+                                </center>
+                                    <input type="file" name="myfile" style="float:right">
                             </form>
 						</div><!-- /.page-header -->
 
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
+								{{--<form class="form-horizontal" role="form" action="grade_add" onsubmit="return check_all()" method="get">--}}
+                                <div id="list">
+                                <table class="table table-striped table-bordered">
+                                        <thead>
+                                        <tr>
+                                            <th class="center">小组人员</th>
+                                            <th class="center">理论成绩</th>
+                                            <th class="center">机试成绩</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        @foreach($list as $k)
+                                        <tr>
+                                            <td class="center"><font color="red">组长:{{$k->student_name}}</font></td>
+                                            <td class="center"><input type="text" class="li" def="{{$k->sid}}"/></td>
+                                            <td class="center"><input type="text" class="ji"/></td>
+                                        </tr>
+                                        @foreach($k->son as $v)
+                                            <tr>
+                                                <td class="center"> {{$v->student_name}}</td>
+                                                <td class="center"><input type="text" class="li" def="{{$v->sid}}"/></td>
+                                                <td class="center"><input type="text" class="ji"/></td>
+                                            </tr>
+                                            @endforeach
+                                            @endforeach
+                                        </tbody>
 
-								<form class="form-horizontal" role="form" action="grade_add" onsubmit="return check_all()" method="get">
-                                    <div id="div2">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1" >姓名</label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="form-field-0"  class="col-xs-10 col-sm-5" name="name" onblur="s_name()"/>
-                                                <span id="c_name"></span>
-                                            </div>
-                                        </div>
-                                        <div class="space-4"></div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-10" >班级</label>
-                                            &nbsp;&nbsp;&nbsp;
-                                            <select name="class_id" id="form-field-10">
-                                                <option value="">--请选择--</option>
-                                                @foreach($arr5 as $val)
-                                                    <option value="{{$val->class_id}}">{{$val->class_name}}</option>
-                                                    @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="space-4"></div>
+                                    </table>
 
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-10" >学院</label>
-                                            &nbsp;&nbsp;&nbsp;
-                                            <select name="cid" id="form-field-20">
-                                                <option value="">--请选择--</option>
-                                                @foreach($arr1 as $v)
-                                                    <option value="{{$v->cid}}">{{$v->college_name}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="space-4"></div>
-
-
-                                        <div class="form-group">
-										<label class="col-sm-3 control-label no-padding-right" for="form-field-1" >理论成绩 </label>
-										<div class="col-sm-9">
-											<input type="text" id="form-field-1"  class="col-xs-10 col-sm-5" name="theory" onblur="check_name()"/>
-                                            <span id="s_num"></span>
-										</div>
-									</div>
-									<div class="space-4"></div>
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1" >机试成绩 </label>
-                                            <div class="col-sm-9">
-                                                <input type="text" id="form-field-2"  class="col-xs-10 col-sm-5" name="exam" onblur="check_exam()"/>
-                                                <span id="s_exam"></span>
-                                            </div>
-                                        </div>
-                                        <div class="space-4"></div>
-
-
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label no-padding-right" for="form-field-1" >类型 </label>
-                                            <div class="col-sm-9">
-                                                <select class="col-xs-10 col-sm-5" name="type" id="form-field-6" onblur="check_type()">
-                                                    <option value="1">日考</option>
-                                                    <option value="2">周考</option>
-                                                    <option value="3">月考</option>
-                                                </select>
-                                                <span id="s_type"></span>
-                                            </div>
-                                        </div>
-									<div class="clearfix form-actions">
-										<div class="col-md-offset-3 col-md-9">
-                                            <input type="submit" value="提交" class="btn btn-success">
-                                            <input type="reset" value="重置" class="btn btn-success">
-										</div>
-									</div>
-
-                                    </div>
-								</form>
+                                    <center><input type="button" value="录入成绩" id="choice"/></center>
+                                </div>
+								{{--</form>--}}
 
 
 							</div><!-- /.col -->
+
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
 				</div><!-- /.main-content -->
@@ -259,10 +220,71 @@
 
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
+        <script src="laydate/laydate.js"></script>
 
 		<!-- inline scripts related to this page -->
 
 		<script type="text/javascript">
+
+            /**
+             * 批量放入回收站
+             */
+
+            jQuery("#choice").click(function(){
+                var dates = jQuery("#search").val();
+                /*var str = new Date();
+                var times = str.getFullYear()+"-";
+                     times += str.getMonth()+1+"-";
+                     times += str.getDate();*/
+                if(dates==''){
+                    alert('时间不能为空')
+                    return false;
+                }
+                var ace2 = $('.li');
+                var ace22 = $('.ji');
+                var len = ace2.length;
+                var len2 = ace22.length;
+                if( len >0 && len2 >0 ) {
+                    var log_id = '';
+                    var log_id2 = '';
+                    var si = '';
+                    for(var sid = 0; sid <len; sid++){
+                        si += ',' + ace2.eq(sid).attr('def');
+                    }
+                    sid = si.substr(1);
+                    for (var i = 0; i < len; i++) {
+                        if (ace2.eq(i).val() != "") {
+                            log_id += ',' + ace2.eq(i).val();
+                        } else {
+                            log_id += ',' + "0";
+                        }
+                    }
+                    log_id = log_id.substr(1);
+                    for (var i2 = 0; i2 < len2; i2++) {
+                        if (ace22.eq(i2).val() != "") {
+                            log_id2 += ',' + ace22.eq(i2).val();
+                        } else {
+                            log_id2 += ',' + "0";
+                        }
+                    }
+                    log_id2 = log_id2.substr(1);
+
+                }
+                   $.ajax({
+                        type: 'get',
+                        url: 'grade_add',
+                        data: 'log_id1=' + log_id+"&log_id2="+log_id2+"&sid="+sid+"&dates="+dates,
+                        success: function (msg) {
+                            if(msg==1){
+                                alert('这一天无考试,不能录入')
+                            }else if(msg==2){
+                                alert('录入成功')
+                            }else if(msg==3){
+                                alert("不能重复录入")
+                            }
+                        }
+                    });
+            })
             //姓名
             function s_name(){
                 var name=document.getElementById('form-field-0').value;
@@ -274,9 +296,6 @@
                     return true;
                 }
             }
-
-
-
             //判断理论成绩
             function check_name(){
                 var theory=document.getElementById('form-field-1').value;

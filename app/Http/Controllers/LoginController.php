@@ -61,6 +61,7 @@ class LoginController extends Controller
 					 	{
 					 		$uid = $user->uid;
 					 		Session::put('uid',$uid);  //把用户ID存入session
+					 		Session::put('user_info',$user->rid);//存入用户角色id
 							if($uid != 1){
 								$table = 'res_user inner join res_role_power on res_user.rid=res_role_power.rid inner join res_power on res_role_power.pid=res_power.pid';
 								$users = $this -> classify($table , 'uid='.$uid.' and fid');
@@ -72,6 +73,7 @@ class LoginController extends Controller
 
 								// print_r($power);
 								//把用户所对应的角色的权限存入session中；
+
 								Session::put( 'power' , $users );
 							}
 							echo 0;
