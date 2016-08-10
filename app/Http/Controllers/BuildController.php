@@ -23,14 +23,20 @@ class BuildController extends Controller
          //$res_class_id = DB::select("select * from res_students where gr_id = 0 and class_id ='$class_id' ");
         if ($res) 
         {
-            //查看组名称
-            // $groupname = DB::table('res_group')->where()
-            //查看各组成员
-            $users = DB::table('res_group')
-            ->join('res_students', 'res_students.gr_id', '=', 'res_group.gr_id')
-            ->where('res_group.class_id',$class_id)
-            ->orderBy('res_students.gr_id')
-            ->get();
+
+            //查看组长
+           $leader = DB::select("select * from res_students inner join res_group on res_students.gr_id=res_group.gr_id where pid = 0 and res_students.class_id = $class_id");
+            $users = array();
+           // print_r($leader);die;
+           foreach ($leader as $key => $v) 
+           {
+              $users[] = $v;
+              $user = DB::select("select * from res_students inner join res_group on res_students.gr_id=res_group.gr_id where pid =".$v->sid);
+              if(!empty($user)){
+                $users = array_merge($users,$user);
+              }
+           }
+           // print_r($users);die;
             $arr = array();
             $group = array();
             foreach($res as $key => $val)
@@ -39,7 +45,7 @@ class BuildController extends Controller
             }
             if (empty($users)) 
             {
-                $arr = $group;
+                $array = $group;
             }
             else
             {
@@ -78,6 +84,8 @@ class BuildController extends Controller
                     $array = $arr;
                 }
             }
+            // echo 1;die;
+            // print_r($array);die;
            return view('build.buildindex',['arr' => $array]);
         }
         else
@@ -116,17 +124,19 @@ class BuildController extends Controller
     //添加成员页面
 	public function index(Request $request)
 	{
-        $arr = $request->all();
+        $arr = $request->all();     //接受所有的数据
         // print_r($arr);die;
-        $gr_id = $arr['gr_id'];
+        $gr_id = $arr['gr_id'];      //小组的id
 		//取出当前班级用户的id
 		$uid = Session::get('uid');
+        //查出本班级为分组的成员
 		$users = DB::table('res_class')
             ->join('res_students', 'res_students.class_id', '=', 'res_class.class_id')
             ->where('uid',$uid)
             ->where('gr_id',0)
             ->get();
   // print_r($users);die;
+        //获取名字和id
         foreach ($users as $key => $v) 
         {
         	$name[$key]['name'] = $v->student_name;
@@ -144,14 +154,15 @@ class BuildController extends Controller
         // print_r($arr);die;
         $gr_id = $arr['gr_id'];  //小组id
         $str = $arr['str'];    //接受的组员id，'字符串'
-        $id=explode(',',$str);
-        $pid=$id[0];
-       $re=DB::update("update res_students set gr_id = $gr_id  where sid = $pid");
+        $id=explode(',',$str);  
+        $pid=$id[0];     //默认小组第一个人为组长
+       $re=DB::update("update res_students set gr_id = $gr_id , pid=0 where sid = $pid");
        // var_dump($re);die;
        $str=substr($str,strpos($str,',')+1);  
         // var_dump($str);die;
        $res=DB::update("update res_students set gr_id = $gr_id , pid=$pid where sid in ($str)");  
-        if($res&&$res){
+        if($res&&$res)
+        {
             echo 1;
         }    
 

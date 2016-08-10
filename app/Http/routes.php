@@ -147,26 +147,20 @@ Route::get('depower','PowerController@dePower');
 
 //创建小组页面
 Route::get('build','BuildController@bulidIndex');
+//进行分组
 Route::get('buildAdd','BuildController@buildAdd');
 // //创建小组成员列表
 Route::get('buildIndex','BuildController@index');
 // //添加小组成员
 Route::get('addBuild','BuildController@add_build');
 
-//创建小组
-Route::get('groupManAdd','GroupController@groupManAdd');
-//创建小组
-Route::get('groupMan','GroupController@groupMan');
-Route::post('studentAdd','GroupController@studentAdd');
+
 
 
 
 //学生成绩列表
-Route::get('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单（1）
-Route::get('/jwList','GradeController@jwList');                        //附加控制器 --- 成绩列表 --- 教务查看表单（0）
-Route::get('/xiDirectorList','Grade2Controller@xiDirectorList');        //附加控制器 --- 成绩列表 --- 系主任查看表单（0）
-Route::get('/teacherList','Grade2Controller@teacherList');              //附加控制器 --- 成绩列表 --- 讲师查看表单（0）
-Route::post('/ajaxStudent','Grade2Controller@ajaxStudent');            //ajax获取成绩
+Route::any('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单
+Route::post('/ajaxStudent','GradeController@ajaxStudent');            //ajax获取成绩
 
 //教学周期列表
 Route::get('periodList','PeriodController@periodList');
