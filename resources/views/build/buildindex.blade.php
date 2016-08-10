@@ -85,7 +85,7 @@
 							</form>
 						</div><!-- #nav-search -->
 					</div>
-	@if(!$arr)
+	@if(!isset($arr))
 					<div class="page-content">
 						<div class="page-header">
 							<h1>
@@ -145,26 +145,6 @@
 							</div><!-- /.col -->
 						</div><!-- /.row -->
 					</div><!-- /.page-content -->
-
-					<script>
-	$('#butt').click(function(){
-		
-		// alert(1)
-		var bulid = $('#select1 option:selected').val();
-		// alert(bulid);
-		$.ajax({
-             type: "get",
-             url: "{{url('buildAdd')}}",
-             data: 'bulid='+bulid,
-             success: function(msg){
-	              if (msg==0) 
-	              {
-	              	  location.href="{{url(build)}}"
-	              }
-             }
-           });
-	})
-</script>
 					@else
 					<div class="page-content" id="list">
                 <div class="page-header">
@@ -206,7 +186,7 @@
                                             </td> 
                                             <td>
                                             	@if(isset($var[0]->student_name))
-                                            	{{$var[0]->student_name}}
+                                            	<font color='red' size='3'>{{$var[0]->student_name}}</font>
                                             	@else
                                             	暂无组长
                                             	@endif
@@ -470,6 +450,27 @@
                 }
             });
         </script>
+        @if(!isset($arr))
+        <script>
+			$('#butt').click(function(){
+				
+				// alert(1)
+				var bulid = $('#select1 option:selected').val();
+				// alert(bulid);
+				$.ajax({
+		             type: "get",
+		             url: "{{url('buildAdd')}}",
+		             data: 'bulid='+bulid,
+		             success: function(msg){
+			              if (msg==0) 
+			              {
+			              	  location.href="{{url('build')}}"
+			              }
+		             }
+		           });
+			})
+		</script>
+		@endif
 </body>
 </html>
 
