@@ -176,3 +176,11 @@ Route::get('periodExam','PeriodController@periodExam');
 // 柱状图
 Route::get('zt','YieldController@Index');
 Route::get('pie','YieldController@Pie');
+//创建小组
+Route::get('groupManAdd','GroupController@groupManAdd');
+//创建小组
+Route::get('groupMan','GroupController@groupMan');
+Route::post('studentAdd','GroupController@studentAdd');
+Route::get('digui','GroupController@digui');
+//班级pk
+Route::get('pkAdd','GroupController@pkAdd');
