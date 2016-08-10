@@ -74,53 +74,13 @@
         <div class="row"> 
          <div class="col-xs-12"> 
           <div class="table-responsive">
-              <div class="form-group">
-                  <label class="col-sm-3 control-label">角色：</label>
-                  <div class="col-sm-4">
-                      <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false"  style="display: none;">
-                          @foreach($date as $dk=>$dv)
-                              @if($datecheck->per_id==$dv->per_id)
-                                  <option value="{{$dv->per_id}}" selected = "selected">开始时间{{$dv->start_date}}--结束时间{{$dv->end_date}} </option>
-                            @else
-                              <option value="{{$dv->per_id}}">开始时间{{$dv->start_date}}--结束时间{{$dv->end_date}}</option>
-                              @endif
-                          @endforeach
-                          </select>
-                  </div>
-              </div>
-           <table id="sample-table-1" class="table table-striped table-bordered table-hover">
-               <tr  class="tree-folder-header">
-                   <td class="center" style="width: 50%;">学院
-
-
-                   </td>
-                   <td class="center" msg>成材率</td>
-               </tr>
-               @foreach($college as $k=>$val)
-                   <tr  class="tree-folder-header" onclick="clk({{$val['cid']}})">
-
-                       <td class="center">{{$val['college_name']}}</td>
-                       <td class="hidden-480" > {{$val['theory']}}%</td>
-                   </tr>
-                       @foreach($val['xi'] as $k2=>$val2)
-                           <tr  class="xi_{{$val['cid']}}"  id="{{$val2['ser_id']}}" style="display: none;" onclick="clk2({{$val2['ser_id']}})">
-                               <td  class="center">|---{{$val2['ser_name']}} 专业</td>
-                               <td  class="center"> {{$val2['theory']}} %</td>
-                           </tr>
-                           @foreach($val2['class'] as $k3=>$val3)
-                               <tr  class="class_{{$val2['ser_id']}}" style="display: none;" onclick="student({{$val3['class_id']}})">
-                                   <td class="center" >{{$val3['class_name']}}</td>
-                                   <td class="center"> {{$val3['theory']}} %</td>
-                               </tr>
-                               @if($k3==0)
-                               <tr style="width:100%;display:none;"  id="student1_{{$val3['class_id']}}" class="none">
-                                   <td class="center" colspan="2"><center><div id="student2_{{$val3['class_id']}}"></div></center></td>                                                                          </td>
-                               </tr>
-                                @endif
-                           @endforeach
-                       @endforeach
-                   @endforeach
-                  </table>
+              @foreach($class as $k=>$v)
+                  <input type="hidden" class="class" value="{{$v->class_id}}"/>
+              @endforeach
+              <span style="background-color: #ffff00;width: 50px;height: 50px;">技能</span>
+          <div id="student">
+            {{--这里是学生成绩表单--}}
+          </div>
 
           </div>
           <!-- /.table-responsive --> 
@@ -133,7 +93,7 @@
        </div>
        <!-- /.col --> 
       </div>
-      <!-- /.row --> 
+      <!-- /.row -->
      </div>
      <!-- /.page-content --> 
     </div>
@@ -216,76 +176,28 @@
       });
   </script>
   <script type="text/javascript">
-// 树状图收缩
-
-/**
- * 开启系
- * 关闭所有
- * @param a
- */
-  function  clk(a){
-      var  aa='xi_'+a;
-    if($("."+aa).css('display')=='none'){
-         $("."+aa).show(); //显示
-    }else{
-        var ace2 = $('.'+aa);
-        var len = ace2.length;
-        if( len >0 ) {
-            for (var i = 0; i < len; i++) {
-                    $(".class_" +ace2.eq(i).attr('id') ).hide();
-            }
-        }
-            $("."+aa).hide(); //隐藏
-            $('.none').hide()
-    }
-
-  }
-function  clk2(a){
-    var  aa='class_'+a;
-    if($("."+aa).css('display')=='none'){
-        $("."+aa).show(); //显示
-    }else{
-        $('.none').hide()
-        $("."+aa).hide(); //隐藏
-    }
-}
-
-$('#usertype').change(function () {
-            var gdList= $('#gdList').val()
-            alert(gdList)
-//            $.ajax({
-//                type: 'post',
-//                url: 'gdList',
-//                data: 'gdList=' + gdList,
-//                success: function (msg) {
-//                    if(msg!=0){
-//                        $("#student2_"+a).html(msg);
-//                        $("#"+aa).show(); //显示
-//                    }
-//                }
-//            })
-        }
-)
-
-
-function  chdate(a) {
-    var aa = 'student1_' + a;
-    if ($("#" + aa).css('display') == 'none') {
-        $.ajax({
-            type: 'post',
-            url: 'ajaxStudent',
-            data: 'class_id=' + a,
-            success: function (msg) {
-                if (msg != 0) {
-                    $("#student2_" + a).html(msg);
-                    $("#" + aa).show(); //显示
-                }
-            }
-        });
-    }
-}
   jQuery(function($){
-        $.get("{{url('top')}}",function(m){
+      var ace2 = $('.class');
+      var len = ace2.length;
+      if( len >0 ) {
+          for (var i = 0; i < len; i++) {
+              /**
+               * 讲师查看本班成绩
+               */
+              $.ajax({
+                  type: 'post',
+                  url: 'ajaxStudent',
+                  data: 'class_id=' + ace2.eq(i).val(),
+                  success: function (msg) {
+                      if (msg != 0) {
+                          $("#student").append("<hr />" + msg);
+                      }
+                  }
+              });
+          }
+      }
+
+      $.get("{{url('top')}}",function(m){
             $('.main-container').first().before(m);
         })
     });

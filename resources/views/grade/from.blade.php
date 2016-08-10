@@ -108,7 +108,10 @@
                                 <button type="submit" class="btn btn-xs btn-danger" style="float:right">
                                     导入
                                 </button>
-                                <input type="file" name="myfile" style="float:right">
+                                <center>
+                                <input class="laydate-icon" name="dates" id="search" onclick="laydate()" placeholder="点击选择日期">
+                                </center>
+                                    <input type="file" name="myfile" style="float:right">
                             </form>
 						</div><!-- /.page-header -->
 
@@ -141,7 +144,9 @@
                                             @endforeach
                                             @endforeach
                                         </tbody>
+
                                     </table>
+
                                     <center><input type="button" value="录入成绩" id="choice"/></center>
                                 </div>
 								{{--</form>--}}
@@ -215,6 +220,7 @@
 
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
+        <script src="laydate/laydate.js"></script>
 
 		<!-- inline scripts related to this page -->
 
@@ -225,6 +231,15 @@
              */
 
             jQuery("#choice").click(function(){
+                var dates = jQuery("#search").val();
+                /*var str = new Date();
+                var times = str.getFullYear()+"-";
+                     times += str.getMonth()+1+"-";
+                     times += str.getDate();*/
+                if(dates==''){
+                    alert('时间不能为空')
+                    return false;
+                }
                 var ace2 = $('.li');
                 var ace22 = $('.ji');
                 var len = ace2.length;
@@ -258,10 +273,14 @@
                    $.ajax({
                         type: 'get',
                         url: 'grade_add',
-                        data: 'log_id1=' + log_id+"&log_id2="+log_id2+"&sid="+sid,
+                        data: 'log_id1=' + log_id+"&log_id2="+log_id2+"&sid="+sid+"&dates="+dates,
                         success: function (msg) {
                             if(msg==1){
-                                alert('已录入')
+                                alert('这一天无考试,不能录入')
+                            }else if(msg==2){
+                                alert('录入成功')
+                            }else if(msg==3){
+                                alert("不能重复录入")
                             }
                         }
                     });

@@ -14,8 +14,10 @@ class YieldController extends Controller
 	{
 		//获取用户角色和用户id
 		$role_id=Session::get('user_info');
+		$role=DB::table('res_role')->where('rid',$role_id)->first();
+		// print_r($role->role_name);die;
 		$uid=Session::get('uid');
-		if($role_id==3){
+		if($role->role_name=='学院'){
 			// 查询学院下的系和班级
 			$sql='SELECT * FROM	res_college 
 			LEFT JOIN res_series ON res_college.cid = res_series.cid
@@ -32,7 +34,7 @@ class YieldController extends Controller
 			// 展示统计数据
 			return view('yield.show',['arr'=>$data,'name'=>$name]);
 
-		}else if($role_id==4){
+		}else if($role->role_name=='系'){
 			// 查询系下的班级
 			$sql='SELECT * FROM	res_series 
 			LEFT JOIN res_class ON res_series.ser_id = res_class.ser_id
@@ -48,7 +50,7 @@ class YieldController extends Controller
 			// 展示统计数据
 			return view('yield.show',['arr'=>$data,'name'=>$name]);
 
-		}else if($role_id==2){
+		}else if($role->role_name=='班级'){
 			// 查询系下的班级
 			$sql='SELECT cl_pk_id FROM	 res_class LEFT JOIN res_class_pk on res_class.class_id=res_class_pk.cl_id WHERE uid = '.$uid.' limit 1';
 			$arr=DB::select($sql);
@@ -62,7 +64,7 @@ class YieldController extends Controller
 			$arr=DB::select($sql);
 			// 对象转数组
 			$arr=array_map('get_object_vars', $arr);
-			
+
 			// print_r($arr);die;
 			// 计算班级和系的成材率
 			$data=$this->getPieclass($arr);
@@ -236,8 +238,9 @@ class YieldController extends Controller
 		$time = $request->time;
 		//获取用户角色和用户id
 		$role_id=Session::get('user_info');
+		$role=DB::table('res_role')->where('rid',$role_id)->first();
 		$uid=Session::get('uid');
-		if($role_id==3){
+		if($role->role_name=='学院'){
 			// 查询学院下的系和班级
 			$sql='SELECT * FROM	res_college 
 			LEFT JOIN res_series ON res_college.cid = res_series.cid
@@ -256,25 +259,26 @@ class YieldController extends Controller
 			// 展示统计数据
 			return view('yield.showpie',['arr'=>$data,'title'=>$data['name'],'subtitle'=>$time."未成才率分析图"]);
 
-		}else if($role_id==4){
-			// 查询系下的班级
-			$sql='SELECT * FROM	res_series 
-			LEFT JOIN res_class ON res_series.ser_id = res_class.ser_id
-			LEFT JOIN res_grade ON res_class.class_id = res_grade.class_id
-			WHERE res_series.uid = '.$uid.' ORDER BY g_add_date';
-			$arr=DB::select($sql);
-			// 对象转数组
-			$arr=array_map('get_object_vars', $arr);
-			$name=$arr[0]['ser_name'];
-			// 计算班级和系的成材率
-			$data=$this->getClass($arr);
-			// print_r($data);die;
-			// 展示统计数据
-			return view('yield.show',['arr'=>$data,'name'=>$name]);
-
 		}
+		// else if($role->role_name=='学院'){
+		// 	// 查询系下的班级
+		// 	$sql='SELECT * FROM	res_series 
+		// 	LEFT JOIN res_class ON res_series.ser_id = res_class.ser_id
+		// 	LEFT JOIN res_grade ON res_class.class_id = res_grade.class_id
+		// 	WHERE res_series.uid = '.$uid.' ORDER BY g_add_date';
+		// 	$arr=DB::select($sql);
+		// 	// 对象转数组
+		// 	$arr=array_map('get_object_vars', $arr);
+		// 	$name=$arr[0]['ser_name'];
+		// 	// 计算班级和系的成材率
+		// 	$data=$this->getClass($arr);
+		// 	// print_r($data);die;
+		// 	// 展示统计数据
+		// 	return view('yield.show',['arr'=>$data,'name'=>$name]);
 
-		return view('yield.showpie');
+		// }
+
+		// return view('yield.showpie');
 	}
 	public function getPie($data)
 	{
