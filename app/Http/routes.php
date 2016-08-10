@@ -145,17 +145,14 @@ Route::get('depower','PowerController@dePower');
 
 //创建小组页面
 Route::get('build','BuildController@bulidIndex');
+//进行分组
 Route::get('buildAdd','BuildController@buildAdd');
 // //创建小组成员列表
 Route::get('buildIndex','BuildController@index');
 // //添加小组成员
 Route::get('addBuild','BuildController@add_build');
 
-//创建小组
-Route::get('groupManAdd','GroupController@groupManAdd');
-//创建小组
-Route::get('groupMan','GroupController@groupMan');
-Route::post('studentAdd','GroupController@studentAdd');
+
 
 
 
