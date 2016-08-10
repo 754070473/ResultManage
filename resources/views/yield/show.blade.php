@@ -67,7 +67,8 @@
                         </small>
                     </h1>
                 </div><!-- /.page-header -->
-
+                <input type="button" value="折线图" class="change_tu" tu_type="line">
+                <input type="button" value="柱形图" class="change_tu" tu_type="column">
                 <div id="container"></div>
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
@@ -138,10 +139,15 @@
     });
 </script>
 <script>
-$(function () {
+var type='line';
+showimg();
+function showimg() {
     $('#container').highcharts({
+         chart: {
+            type: ''+type
+        },
         title: {
-            text: '软工学院',//主标题
+            text: '{{$name}}',//主标题
             x: -20 //center
         },
         subtitle: {
@@ -170,9 +176,20 @@ $(function () {
             verticalAlign: 'middle',
             borderWidth: 0
         },
-        series: [{!! $arr['data'] !!}]
+        series: {!! $arr['data'] !!}
     });
-});
+}
+$(".change_tu").click(function () {
+    type=$(this).attr('tu_type');
+    showimg();
+})
+$(document).on('click','tspan',function(){
+    var time=$(this).html();
+    var reg=/^[0-9]{1,4}\/[0-9]{1,2}\/[0-9]{1,2}$/;
+    if(reg.test(time)){
+        location.href="pie?time="+time;
+    }
+})
 </script>
 </body>
 </html>

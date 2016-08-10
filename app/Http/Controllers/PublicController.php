@@ -24,6 +24,7 @@ class PublicController extends Controller
 //        print_r($access);die;
         $power = require_once ('Auth/PowerConfig.php');
         $access_msg = $power['navigation'];
+        $navigation=array();
         foreach ($access as $key => $value) {
             if( array_key_exists($value['power_name'] , $access_msg) ){
                 $navigation[$key]['power_name'] = $value['power_name'];
@@ -36,7 +37,7 @@ class PublicController extends Controller
                 }
             }
         }
-//        print_r($navigation);die;
+       // print_r($navigation);die;
         return view('public.left',['navigation'=>$navigation]);
     }
 }

@@ -181,3 +181,4 @@ Route::get('periodExam','PeriodController@periodExam');
 
 // 柱状图
 Route::get('zt','YieldController@Index');
+Route::get('pie','YieldController@Pie');
