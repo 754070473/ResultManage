@@ -25,7 +25,7 @@
 
 		<!-- fonts -->
 
-		<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" />
+
 
 		<!-- ace styles -->
 
@@ -102,7 +102,7 @@
 								组建管理
 								<small>
 									<i class="icon-double-angle-right"></i>
-                                    创建学院
+                                    创建系
 								</small>
 							</h1>
 						</div><!-- /.page-header -->
@@ -119,9 +119,7 @@
 										<i class="icon-remove"></i>
 									</button>
 								</div>
-                                {{--@foreach($arr1 as $ke => $vl)--}}
-                                    {{--{{$v->ser_name}}--}}
-                                {{--@endforeach--}}
+								
 						<table id="sample-table-1" class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
@@ -132,10 +130,9 @@
                                     </label>
                                 </th>
                                 <th>id</th>
-                                <th>学院名称</th>
-                                {{--<th>系名称</th>--}}
+                                <th>系名称</th>
                                 <th class="hidden-480">班级个数</th>
-                                {{--<th>操作</th>--}}
+                                <th>操作</th>
                             </tr>
                             </thead>
 
@@ -149,19 +146,30 @@
                                         </label>
                                     </td>
                                     <td>
-                                        {{$val->cid}}
+                                        {{$val->ser_id}}
                                     </td>
-                                    <td>{{$val->college_name}}</td>
-                                    {{--<td>{{$val->ser_name}}</td>--}}
+                                    <td>{{$val->ser_name}}</td>
                                     <td>{{$val->num}}</td>
+                                    <td>
+                                        <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
+
+                                            <button class="btn btn-xs btn-danger">
+                                                <i class="icon-trash bigger-120"></i>
+                                            </button>
+                                            
+                                            <div style="display: none" id="tian">
+                                            	<h2>1</h2>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
-                      	 <a class="btn btn-primary btn-large theme-login" href="javascript:;">创建学院</a>
+                      	 <a class="btn btn-primary btn-large theme-login" href="javascript:;">创建系</a>
 
-                                <?php echo $page?>
-                                {{--  最近老师让看了职来职往，看到里面的陈默，年轻帅气多金，于是我就在想，我什么时候也能变得向他那样，变得，万事瞩目，成为一颗耀眼的明星，我想大家肯定都是这样想，为什么他那么的耀眼，但是都没有看见人家背后的努力于艰辛，只看见人前的人模人样，所以不要羡慕他人，多看看人家背后的努力，于是我就开始在百度上面搜索引擎的按出陈默两字，出来了个人介绍以及微博，虽然他的粉丝有很多他的微博每发出一个微博，都告诉人们一个道理，让人们记住这些道理，--}}
+                       <?php echo $page?>
+				
 		
 		</div>
 	
@@ -169,14 +177,14 @@
 		<div class="theme-popover">
 		     <div class="theme-poptit">
 		          <a href="javascript:;" title="关闭" class="close">×</a>
-		          <h3>欢迎 创建 学院</h3>
+		          <h3>欢迎 创建 系</h3>
 		     </div>
 		     <div class="theme-popbod dform">
 		           <form class="theme-signin" name="loginform" action="" method="post">
 		                <ol>
 	                     <li>
-                             <strong>创建学院：</strong>
-                             <input class="ipt" type="text" id="college_name" placeholder="请输入学院…" size="50" />
+                             <strong>创建系：</strong>
+                             <input class="ipt" type="text" id="ser_name" placeholder="请输入系…" size="50" />
                              <span id="ti"></span>
                          </li>
 	                  
@@ -256,12 +264,11 @@
 
 		<!--[if !IE]> -->
 
-		<!-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script> -->
 
 		<!-- <![endif]-->
 
 		<!--[if IE]>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+
 <![endif]-->
 
 		<!--[if !IE]> -->
@@ -325,23 +332,22 @@
 </html>
 <script>
 
-    //判断创建学院
+    //判断创建系
    $("input:button").click(function(){
    		// alert(1)
-   		var coll_name=$("#college_name").val()
+   		var ser_name=$("#ser_name").val()
    		// alert(coll_name)
    		var reg=/^[\u4e00-\u9fa5]{1,10}$/
    		// console.log(reg.test(coll_name))
-   		if(coll_name==""){
-   			$("#ti").html("    *    <font color='red'>你必须输入创建的学院</font>")
-   		}else if(!reg.test(coll_name)){
-
-   			$("#ti").html("    *    <font color='red'>你输入的学院名称必须为汉字且不超过10位</font>")
+   		if(ser_name==""){
+   			$("#ti").html("    *    <font color='red'>你必须输入创建的系</font>")
+   		}else if(!reg.test(ser_name)){
+   			$("#ti").html("    *    <font color='red'>你输入的系名称必须为汉字且不超过10位</font>")
    		}else{
    			$.ajax({
-   				url:"{{URL('collAdd')}}",
+   				url:"{{URL('seAdd')}}",
    				type:"get",
-   				data:"coll_name="+coll_name,
+   				data:"ser_name="+ser_name,
    				success:function(msg)
    				{
    					if(msg==1){
@@ -353,7 +359,4 @@
    		}
 
    })
-
-
-
 </script>
