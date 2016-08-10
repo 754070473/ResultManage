@@ -176,6 +176,23 @@ class RoleController extends Controller
         $table = 'res_power';
         $fid = 'fid';
         $arr = $this -> classify($table,$fid);
+        foreach( $list as $key => $val ){
+            $power[] = $val->pid;
+        }
+        foreach( $arr as $key => $val ){
+            if( in_array( $val['pid'] , $power ) ){
+                $arr[$key]['sign'] = 1;
+            }else{
+                $arr[$key]['sign'] = 0;
+            }
+            foreach($val['son'] as $k => $v ){
+                if( in_array( $v['pid'] , $power ) ){
+                    $arr[$key]['son'][$k]['sign'] = 1;
+                }else{
+                    $arr[$key]['son'][$k]['sign'] = 0;
+                }
+            }
+        }
         return view('role.rolegive',['list'=>$arr,'give'=>$list,'number'=>$number,'rid'=>$id]);
     }
     /*
