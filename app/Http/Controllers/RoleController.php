@@ -176,6 +176,7 @@ class RoleController extends Controller
         $table = 'res_power';
         $fid = 'fid';
         $arr = $this -> classify($table,$fid);
+        $power = array();
         foreach( $list as $key => $val ){
             $power[] = $val->pid;
         }
