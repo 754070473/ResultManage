@@ -25,7 +25,7 @@ abstract class Controller extends BaseController
             }
             //权限控制
             if( Session::get('uid') != 1 ){
-                $this->userPower();
+                 $this->userPower();
             }
         }
     }
@@ -185,9 +185,10 @@ abstract class Controller extends BaseController
                 }
             }
         }
+        $sign = 0;
         if( array_key_exists( $controller , $power_list )){
             if( in_array( $function , $power_list[$controller] ) ){
-                $sign == 1;
+                $sign = 1;
             }
         }
         if($sign == 0){

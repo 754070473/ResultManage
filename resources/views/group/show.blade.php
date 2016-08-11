@@ -119,7 +119,9 @@
 										<i class="icon-remove"></i>
 									</button>
 								</div>
-								
+                                {{--@foreach($arr1 as $ke => $vl)--}}
+                                    {{--{{$v->ser_name}}--}}
+                                {{--@endforeach--}}
 						<table id="sample-table-1" class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
@@ -131,8 +133,9 @@
                                 </th>
                                 <th>id</th>
                                 <th>学院名称</th>
+                                {{--<th>系名称</th>--}}
                                 <th class="hidden-480">班级个数</th>
-                                <th>操作</th>
+                                {{--<th>操作</th>--}}
                             </tr>
                             </thead>
 
@@ -149,27 +152,16 @@
                                         {{$val->cid}}
                                     </td>
                                     <td>{{$val->college_name}}</td>
+                                    {{--<td>{{$val->ser_name}}</td>--}}
                                     <td>{{$val->num}}</td>
-                                    <td>
-                                        <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
-
-                                            <button class="btn btn-xs btn-danger">
-                                                <i class="icon-trash bigger-120"></i>
-                                            </button>
-                                            
-                                            <div style="display: none" id="tian">
-                                            	<h2>1</h2>
-                                            </div>
-                                        </div>
-                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
                         </table>
                       	 <a class="btn btn-primary btn-large theme-login" href="javascript:;">创建学院</a>
 
-                       <?php echo $page?>
-				
+                                <?php echo $page?>
+                                {{--  最近老师让看了职来职往，看到里面的陈默，年轻帅气多金，于是我就在想，我什么时候也能变得向他那样，变得，万事瞩目，成为一颗耀眼的明星，我想大家肯定都是这样想，为什么他那么的耀眼，但是都没有看见人家背后的努力于艰辛，只看见人前的人模人样，所以不要羡慕他人，多看看人家背后的努力，于是我就开始在百度上面搜索引擎的按出陈默两字，出来了个人介绍以及微博，虽然他的粉丝有很多他的微博每发出一个微博，都告诉人们一个道理，让人们记住这些道理，--}}
 		
 		</div>
 	
@@ -361,4 +353,7 @@
    		}
 
    })
+
+
+
 </script>

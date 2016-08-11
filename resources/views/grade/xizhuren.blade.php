@@ -73,42 +73,17 @@
         <!-- PAGE CONTENT BEGINS --> 
         <div class="row"> 
          <div class="col-xs-12"> 
-          <div class="table-responsive">
-              <div class="form-group">
-                  <label class="col-sm-3 control-label">角色：</label>
-                  <div class="col-sm-4">
-                      <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false"  style="display: none;">
-                          @foreach($date as $dk=>$dv)
-                              @if($datecheck->per_id==$dv->per_id)
-                                  <option value="{{$dv->per_id}}" selected = "selected">开始时间{{$dv->start_date}}--结束时间{{$dv->end_date}} </option>
-                            @else
-                              <option value="{{$dv->per_id}}">开始时间{{$dv->start_date}}--结束时间{{$dv->end_date}}</option>
-                              @endif
-                          @endforeach
-                          </select>
-                  </div>
-              </div>
+          <div class="table-responsive"> 
            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
-               <tr  class="tree-folder-header">
-                   <td class="center" style="width: 50%;">学院
-
-
-                   </td>
-                   <td class="center" msg>成材率</td>
-               </tr>
                @foreach($college as $k=>$val)
-                   <tr  class="tree-folder-header" onclick="clk({{$val['cid']}})">
-
-                       <td class="center">{{$val['college_name']}}</td>
-                       <td class="hidden-480" > {{$val['theory']}}%</td>
-                   </tr>
                        @foreach($val['xi'] as $k2=>$val2)
-                           <tr  class="xi_{{$val['cid']}}"  id="{{$val2['ser_id']}}" style="display: none;" onclick="clk2({{$val2['ser_id']}})">
-                               <td  class="center">|---{{$val2['ser_name']}} 专业</td>
+                           @if($val2['ser_id']==$ser_id)
+                           <tr  class="xi_{{$val['cid']}}"  id="{{$val2['ser_id']}}"  onclick="clk2({{$val2['ser_id']}})">
+                               <td  class="center">{{$val['college_name']}}---<a>{{$val2['ser_name']}}</a>---班级列表 </td>
                                <td  class="center"> {{$val2['theory']}} %</td>
                            </tr>
                            @foreach($val2['class'] as $k3=>$val3)
-                               <tr  class="class_{{$val2['ser_id']}}" style="display: none;" onclick="student({{$val3['class_id']}})">
+                               <tr  class="class_{{$val2['ser_id']}}" onclick="student({{$val3['class_id']}})">
                                    <td class="center" >{{$val3['class_name']}}</td>
                                    <td class="center"> {{$val3['theory']}} %</td>
                                </tr>
@@ -118,7 +93,9 @@
                                </tr>
                                 @endif
                            @endforeach
+                           @endif
                        @endforeach
+
                    @endforeach
                   </table>
 
@@ -250,40 +227,6 @@ function  clk2(a){
     }
 }
 
-$('#usertype').change(function () {
-            var gdList= $('#gdList').val()
-            alert(gdList)
-//            $.ajax({
-//                type: 'post',
-//                url: 'gdList',
-//                data: 'gdList=' + gdList,
-//                success: function (msg) {
-//                    if(msg!=0){
-//                        $("#student2_"+a).html(msg);
-//                        $("#"+aa).show(); //显示
-//                    }
-//                }
-//            })
-        }
-)
-
-
-function  chdate(a) {
-    var aa = 'student1_' + a;
-    if ($("#" + aa).css('display') == 'none') {
-        $.ajax({
-            type: 'post',
-            url: 'ajaxStudent',
-            data: 'class_id=' + a,
-            success: function (msg) {
-                if (msg != 0) {
-                    $("#student2_" + a).html(msg);
-                    $("#" + aa).show(); //显示
-                }
-            }
-        });
-    }
-}
 function  student(a){
     var  aa='student1_'+a;
     if($("#"+aa).css('display')=='none'){
@@ -303,6 +246,7 @@ function  student(a){
         $('.none').hide();
     }
 }
+
   jQuery(function($){
         $.get("{{url('top')}}",function(m){
             $('.main-container').first().before(m);

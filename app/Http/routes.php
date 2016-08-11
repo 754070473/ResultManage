@@ -146,37 +146,43 @@ Route::get('depower','PowerController@dePower');
 
 
 //创建小组页面
-Route::get('build','BuildController@bulidIndex');
-Route::get('buildAdd','BuildController@buildAdd');
+Route::get('build','GroupController@bulidIndex');
+//进行分组
+Route::get('buildAdd','GroupController@buildAdd');
 // //创建小组成员列表
-Route::get('buildIndex','BuildController@index');
+Route::get('buildIndex','GroupController@index');
 // //添加小组成员
-Route::get('addBuild','BuildController@add_build');
+Route::get('addBuild','GroupController@add_build');
 
+
+
+
+
+//学生成绩列表
+Route::any('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单
+Route::post('/ajaxStudent','GradeController@ajaxStudent');            //ajax获取成绩
+
+//教学周期列表
+Route::get('periodList','PeriodController@periodList');
+//教学周期分页
+Route::get('periodPage','PeriodController@periodPage');
+//教学周期添加
+Route::get('periodAdd','PeriodController@periodAdd');
+//教学周期添加入库
+Route::get('periodInfo','PeriodController@periodInfo');
+//考试安排详情页面
+Route::get('periodExam','PeriodController@periodExam');
+
+// 柱状图
+Route::get('zt','YieldController@Index');
+Route::get('pie','YieldController@Pie');
 //创建小组
 Route::get('groupManAdd','GroupController@groupManAdd');
 //创建小组
 Route::get('groupMan','GroupController@groupMan');
 Route::post('studentAdd','GroupController@studentAdd');
-
-
-
-//学生成绩列表
-Route::get('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单（1）
-Route::get('/jwList','GradeController@jwList');                        //附加控制器 --- 成绩列表 --- 教务查看表单（0）
-Route::get('/xiDirectorList','Grade2Controller@xiDirectorList');        //附加控制器 --- 成绩列表 --- 系主任查看表单（0）
-Route::get('/teacherList','Grade2Controller@teacherList');              //附加控制器 --- 成绩列表 --- 讲师查看表单（0）
-Route::post('/ajaxStudent','Grade2Controller@ajaxStudent');            //ajax获取成绩
-
-//教学周期列表
-Route::get('/periodList','PeriodController@periodList');
-//教学周期分页
-Route::get('/periodPage','PeriodController@periodPage');
-//教学周期添加
-Route::get('/periodAdd','PeriodController@periodAdd');
-//教学周期添加入库
-Route::get('/periodInfo','PeriodController@periodInfo');
-//考试安排详情页面
-Route::get('/periodExam','PeriodController@periodExam');
+Route::get('digui','GroupController@digui');
+//班级pk
+Route::get('pkAdd','GroupController@pkAdd');
 //考试安排详情页面
 Route::get('/periodExamInfo','PeriodController@periodExamInfo');

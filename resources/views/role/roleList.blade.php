@@ -313,22 +313,23 @@
     })
 </script>
     <script type="text/javascript">
-        $(document).on('click','.click',function(){
+        $(document).on('click','.click',function() {
             var rid = $("#userid").val();
             var selects = $('.selected');
             var id = '';
-            for( var i = 0 ; i < selects.length ; i++ ){
+            for (var i = 0; i < selects.length; i++) {
                 id += ',' + selects.eq(i).attr('data-value');
             }
             id = id.substr(1);
             $.ajax({
                 type: "GET",
                 url: "rolegives",
-                data: "rel="+rel+"&rid="+id,
-                success: function(msg){
-                    $("#list").html(msg)
+                data: "rel=" + id + "&rid=" + rid,
+                success: function (msg) {
+                    window.history.go(0);
                 }
             })
+        })
     </script>
 </div>
 </body>

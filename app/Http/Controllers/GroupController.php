@@ -22,7 +22,7 @@ class GroupController extends Controller
                 //查询条件
                 $where = 1;
                 //排序
-                $arr = $this -> ajaxPage( $table , $num , $p , 'logPage' , $where );
+               $arr = $this -> ajaxPage( $table , $num , $p , 'logPage' , $where );
                 foreach($arr['arr'] as $k=>$v)
                 {
                     $num=count(
@@ -32,9 +32,7 @@ class GroupController extends Controller
                     );
                     $arr['arr'][$k]->num=$num;
                 }
-                
-                // print_r($arr['arr']);die;
-            	// echo 1;
+                //print_r($arr['arr']);die;
                 return view('group.show',array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
             }
             
@@ -43,6 +41,7 @@ class GroupController extends Controller
            */
             public function groupCollAdd(Request $request)
             {
+                $uid = session::get('uid');
             	$coll_name = $request->coll_name;
                 //避免空格
                 $coll_name  = preg_replace('# #', '', $coll_name);
@@ -55,6 +54,7 @@ class GroupController extends Controller
                         $id=DB::table('res_college')
                             ->insert([
                                 'college_name'=>$coll_name,
+                                'uid' =>$uid
                            ]);
                         $add_date = date('Y-m-d H:i:s',time());
                       DB::table('res_user')->insert([
@@ -63,7 +63,8 @@ class GroupController extends Controller
                           'add_date'=>$add_date,
                           'password'=>'1234',
                           'status'=>'1',
-                          'rid'=>'1'
+                          'rid'=>'1',
+                          'uid' => $uid
                       ]);
 
                         if($id){
@@ -79,13 +80,14 @@ class GroupController extends Controller
         //当前页码
         $p = $request -> p ? $request -> p : 1;
         //查询表名
-        $table = 'res_series';
+        $table = 'res_series inner join res_college on res_series.cid=res_college.cid';
         //每页显示数据条数
         $num = $request -> num ? $request -> num : 10;
         //查询条件
         $where = 1;
         //排序
         $arr = $this -> ajaxPage( $table , $num , $p , 'logPage' , $where );
+        $college = $this -> databasesSelect('res_college');
         foreach($arr['arr'] as $k=>$v)
         {
             $num=count(
@@ -98,13 +100,14 @@ class GroupController extends Controller
         }
         // print_r($arr['arr']);die;
         // echo 1;
-        return view('group.seriesShow',array( 'arr' => $arr['arr'] , 'page' => $arr['page'] ));
+        return view('group.seriesShow',array( 'arr' => $arr['arr'] , 'college' => $college  , 'page' => $arr['page'] ));
     }
 
 
     //创建系
     public function seAdd(Request $request){
         $ser_name = $request->ser_name;
+        $cid = $request->cid;
         //避免空格
         $ser_name  = preg_replace('# #', '', $ser_name);
         //汉字转拼音（生僻字不支持）
@@ -113,19 +116,22 @@ class GroupController extends Controller
         if(preg_match($reg,$ser_name)) {
             echo "系名称必须为汉字且小于10位";
         }else{
-            $id=DB::table('res_series')
-                ->insert([
-                    'ser_name'=>$ser_name,
-                ]);
             $add_date = date('Y-m-d H:i:s',time());
-            DB::table('res_user')->insert([
+            $uid = DB::table('res_user')->insertgetid([
                 'username'=>$ser_name,
                 'accounts'=>$se_accounts,
                 'add_date'=>$add_date,
                 'password'=>'1234',
                 'status'=>'1',
-                'rid'=>'1'
+                'rid'=>'4'
             ]);
+            $id=DB::table('res_series')
+                ->insert([
+                    'ser_name'=>$ser_name,
+                    'cid'=>$cid,
+                    'uid' => $uid
+                ]);
+
 
             if($id){
                 echo 1;
@@ -136,81 +142,122 @@ class GroupController extends Controller
     }
 
 
-    //查看班级页面
-        public function groupClaShow(Request $request)
+    public function groupClaShow(Request $request)
+    {
+
+
+        $uid=Session::get('uid');
+
+
+        $users = DB::table('res_series')
+            ->where('uid',$uid)
+            ->select('cid','ser_id')
+            ->get();
+        foreach($users as $k=>$v)
         {
-            $arr=DB::table('res_college')->select('cid','college_name')->get();
-            $arr2=DB::table("res_series")->select('ser_id','ser_name')->get();
-            //当前页码
-            $p = $request -> p ? $request -> p : 1;
-            //查询表名
-            $table = array(
-            [ 'table1' => 'res_college' , 'table2' => 'res_series' , 'join' => 'cid' ] ,
+            $cid=$v->cid;
+            $ser_id=$v->ser_id;
+        }
+        $where = 'res_college.cid='.$cid;
+
+
+
+        $table = array(
+            [ 'table1' => 'res_series' , 'table2' => 'res_college' , 'join' => 'cid' ] ,
             [ 'table1' => 'res_series' , 'table2' => 'res_class' , 'join' => 'ser_id' ]
         );
-            //每页显示数据条数
-            $num = $request -> num ? $request -> num : 10;
-            //查询条件
-            $where = 1;
-            //排序
-            $page = array('num' => $num , 'p' => $p , 'url' => 'logPage');
-            $arr1= $this -> databasesSelect( $table , $where , 0 , 1 , $page );
-             //print_r($arr1);die;
-            return view('group.classShow',array( 'arr' => $arr,'arr1'=>$arr1['arr'],'arr2' => $arr2));
-        }
+
+        $page = array( 'num' => 10 , 'p' => 1 , 'url' => 'index' );
+        $arr = $this -> databasesSelect($table,$where,0,1,$page);
+        // print_r($arr);die;
+        $clapk=DB::table('res_class')->where('ser_id',$ser_id)->select('class_name','class_id')->get();
+        // print_r($clapk);die;
+        return view('group.classShow',array( 'arr' => $arr['arr'],'page'=>$arr['page'],'ser_id'=>$ser_id,'clapk'=>$clapk));
+    }
 
     /*
      *@班级添加
+     *
      */
-     public function groupClaAdd(Request $request)
-       {
-            $class_name=$request->class_name;
-          // $ser_name=$request->ser_name;
-           // $coll_id=$request->coll_id;
-           //避免空格
-           $class_name  = preg_replace('# #', '', $class_name);
-           //汉字转拼音（生僻字不支持）
-           $coll_accounts = $this->utf8_to("$class_name");
-            // echo $class_name;
-            // echo $coll_id;die;
-            $reg="/^[0-9]+[A-Z]+$/";
-            if(preg_match($reg,$class_name)){
-                echo "班级名称应由数字字母组成";
-            }else {
-              // echo $coll_name;
-              $id=DB::table('res_class')
-                  ->insert([
-                     //'cid'=>$coll_id,
-                      'class_name'=>$class_name,
-                 ]);
-                $add_date = date('Y-m-d H:i:s',time());
-                DB::table('res_user')->insert([
-                    'username'=>$class_name,
-                    'accounts'=>$coll_accounts,
-                    'add_date'=>$add_date,
-                    'password'=>'1234',
-                    'status'=>'1',
-                    'rid'=>'1'
-                ]);
 
-//              $time = time();
-//               DB::table('res_user')
-//                   ->insert([
-//                      'username'=>$class_name,
-//                      'accounts'=>$class_name,
-//                       'add_date'=>$time,
-//                       'password'=>'1234',
-//                       'status'=>'1',
-//                       'rid'=>'2'
-//                   ]);
-                if($id){
-                  echo 1;
-                }else{
-                  echo 0;
-                }
+    public function groupClaAdd(Request $request)
+    {
+
+        $uid=Session::get('uid');
+
+        // echo 1;die;
+        $users = DB::table('res_series')
+
+            ->where('uid',$uid)
+            ->select('cid')
+            ->get();
+        foreach($users as $k=>$v)
+        {
+            $cid=$v->cid;
+        }
+        // echo $cid;
+
+        $uid1 = DB::table('res_college')
+
+            ->where('cid',$cid)
+            ->select('uid')
+            ->get();
+
+        foreach($uid1 as $k=>$v)
+        {
+            $uid2=$v->uid;
+        }
+        // print_r($uid2);die;
+        $account = DB::table('res_user')
+
+            ->where('uid',$uid2)
+            ->select('accounts')
+            ->get();
+        foreach($account as $k=>$v)
+        {
+            $account=$v->accounts;
+        }
+
+        // print_r($account);die;
+
+        $class_name=$request->class_name;
+        $ser_id=$request->ser_id;
+        // echo $class_name;
+        // echo $coll_id;die;
+        $reg="/^[0-9]+[A-Z]+$/";
+        if(preg_match($reg,$class_name))
+        {
+            echo "班级名称应由数字字母组成";
+        }else
+        {
+            $time = time();
+            $insertid=DB::table('res_user')->insertgetid([
+                'username'=>$class_name,
+                'accounts'=>$account.$class_name,
+                'add_date'=>$time,
+                'password'=>'1234',
+                'status'=>'1',
+                'rid'=>'2'
+            ]);
+            // echo $coll_name;
+            $id=DB::table('res_class')->insert([
+                'ser_id'=>$ser_id,
+                'class_name'=>$class_name,
+                'uid'=>$insertid,
+            ]);
+
+            if($id)
+            {
+                echo 1;
+            }else
+            {
+                echo 0;
             }
-       }
+        }
 
+
+
+    }
 
     public function groupAdd(Request $request)
     {
@@ -291,6 +338,40 @@ class GroupController extends Controller
         return view('group.groupMan',['arr' =>$firse]);
     }
 
+    /*
+     * pk班级添加
+     * */
+    function pkAdd(Request $request)
+    {
+        $c_id=$request->c_id;
+        $clapk=$request->clapk;
+        // echo $c_id;
+        // echo $clapk;
+        $arr=DB::table("res_class_pk")->where("cl_id",$c_id)->first();
+        // print_r($arr);die;
+        if(!empty($arr))
+        {
+            echo 1;
+        }elseif($c_id==$clapk)
+        {
+            echo 2;
+        }else
+        {
+            $id=DB::table('res_class_pk')->insert([
+                'cl_id'=>$c_id,
+                'cl_pk_id'=>$clapk,
+
+            ]);
+            if($id)
+            {
+                echo 3;
+            }else
+            {
+                echo 4;
+            }
+        }
+
+    }
 
     public   function  studentAdd(Request $request){
         $name = $request['name'];
@@ -436,8 +517,168 @@ class GroupController extends Controller
         arsort($py_arr);
         return $py_arr;
     }
-
     
+    
+    /**
+     *   创建小组
+     */
+    
+    //创建小组页面 或者 "小组列表"
+    public function bulidIndex()
+    {
+        //根据当前用户的id查出班级的id
+        $uid = Session::get('uid');
+        $class = DB::table('res_class') ->where('uid',$uid)->get();
+        // print_r($class);die;
+        $class_id = $class[0]->class_id;   //取出班级的id；
+        $res = DB::table('res_group')->where('class_id',$class_id)->get();    //查询本班级是否分组
+        //$res_class_id = DB::select("select * from res_students where gr_id = 0 and class_id ='$class_id' ");
+        if ($res)
+        {
+            
+            //查看组长
+            $leader = DB::select("select * from res_students inner join res_group on res_students.gr_id=res_group.gr_id where pid = 0 and res_students.class_id = $class_id");
+            $users = array();
+            // print_r($leader);die;
+            foreach ($leader as $key => $v)
+            {
+                $users[] = $v;
+                $user = DB::select("select * from res_students inner join res_group on res_students.gr_id=res_group.gr_id where pid =".$v->sid);
+                if(!empty($user)){
+                    $users = array_merge($users,$user);
+                }
+            }
+            // print_r($users);die;
+            $arr = array();
+            $group = array();
+            foreach($res as $key => $val)
+            {
+                $group[] = $val -> gr_id;
+            }
+            if (empty($users))
+            {
+                $array = $group;
+            }
+            else
+            {
+                foreach( $group as $key => $val )
+                {
+                    foreach($users as $k => $v)
+                    {
+                        if( $v -> gr_id == $val )
+                        {
+                            $arr[$key][] = $v;
+                        }
+                    }
+                }
+                
+                if( count( $group ) != count( $arr ) )
+                {
+                    foreach( $group as $key => $val )
+                    {
+                        if(isset( $arr[$key][0] -> gr_id ))
+                        {
+                            if( $arr[$key][0] -> gr_id != $val )
+                            {
+                                $array[] = $val;
+                            }else{
+                                $array[] = $arr[$key];
+                            }
+                        }
+                        else
+                        {
+                            $array[] = $val;
+                        }
+                    }
+                }
+                else
+                {
+                    $array = $arr;
+                }
+            }
+            // echo 1;die;
+            // print_r($array);die;
+            return view('build.buildindex',['arr' => $array]);
+        }
+        else
+        {
+            //查询班级的总人数
+            $uid = Session::get('uid');        //取出当前班级用户的id
+            $users = DB::table('res_class')
+                ->join('res_students', 'res_students.class_id', '=', 'res_class.class_id')
+                ->where('uid',$uid)
+                ->get();
+            // print_r($users);die;
+            $count = count($users);      //总人数
+            $classname = $users[0]->class_name;   //班级名称
+            return view('build.buildindex',['count' => $count,'classname' => $classname]);
+        }
+    }
+    
+    //接受数据进行分组
+    public function buildAdd(Request $request)
+    {
+        //根据当前用户的id查出班级的id
+        $uid = Session::get('uid');
+        $class = DB::table('res_class') ->where('uid',$uid)->get();
+        // print_r($class);die;
+        $class_id = $class[0]->class_id;   //取出班级的id；
+        $arr = $request->all();
+        // print_r($arr);
+        $build_num = $arr['bulid'];   //分组的组数
+        for ($i=1; $i <= $build_num ; $i++)
+        {
+            DB::table('res_group')->insert( ['class_id' =>$class_id , 'group_name' =>'第'.$i.'组']);
+        }
+    }
+    
+    
+    //添加成员页面
+    public function index(Request $request)
+    {
+        $arr = $request->all();     //接受所有的数据
+        // print_r($arr);die;
+        $gr_id = $arr['gr_id'];      //小组的id
+        //取出当前班级用户的id
+        $uid = Session::get('uid');
+        //查出本班级为分组的成员
+        $users = DB::table('res_class')
+            ->join('res_students', 'res_students.class_id', '=', 'res_class.class_id')
+            ->where('uid',$uid)
+            ->where('gr_id',0)
+            ->get();
+        // print_r($users);die;
+        //获取名字和id
+        foreach ($users as $key => $v)
+        {
+            $name[$key]['name'] = $v->student_name;
+            $name[$key]['sid'] = $v->sid;
+        }
+        
+        return view('build.index',['name' => $name,'gr_id' => $gr_id]);
+    }
+    
+    //接受数据，进行创建
+    public function add_build(Request $request)
+    {
+        //接受数据
+        $arr = $request->all();
+        // print_r($arr);die;
+        $gr_id = $arr['gr_id'];  //小组id
+        $str = $arr['str'];    //接受的组员id，'字符串'
+        $id=explode(',',$str);
+        $pid=$id[0];     //默认小组第一个人为组长
+        $re=DB::update("update res_students set gr_id = $gr_id , pid=0 where sid = $pid");
+        // var_dump($re);die;
+        $str=substr($str,strpos($str,',')+1);
+        // var_dump($str);die;
+        $res=DB::update("update res_students set gr_id = $gr_id , pid=$pid where sid in ($str)");
+        if($res&&$res)
+        {
+            echo 1;
+        }
+        
+    }
     
 }
 
