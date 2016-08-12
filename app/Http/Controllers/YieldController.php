@@ -119,11 +119,12 @@ class YieldController extends Controller
 			if($time!=""){
 				$lec_name=isset($value['lec_name'])?$value['lec_name']:"";
 				$syl_name=isset($value['syl_name'])?$value['syl_name']:"";
+				$new_name=$class.'-'.$syl_name.'-'.$lec_name;
 				//计算班级总人数
-				if(isset($class_array[$class.$syl_name.$lec_name][$time]['num'])){
-					(int)$class_array[$class.$syl_name.$lec_name][$time]['num']+=1;
+				if(isset($class_array[$new_name][$time]['num'])){
+					(int)$class_array[$new_name][$time]['num']+=1;
 				}else{
-					(int)$class_array[$class.$syl_name.$lec_name][$time]['num']=1;
+					(int)$class_array[$new_name][$time]['num']=1;
 				}
 				if(isset($value['ser_name'])){
 					$series=$value['ser_name'];
@@ -145,10 +146,10 @@ class YieldController extends Controller
 				}
 				if($value['theory']>=90&&$value['exam']>=90){
 					//计算班级成才人数
-					if(isset($class_array[$class.$syl_name.$lec_name][$time]['pass'])){
-						(int)$class_array[$class.$syl_name.$lec_name][$time]['pass']+=1;
+					if(isset($class_array[$new_name][$time]['pass'])){
+						(int)$class_array[$new_name][$time]['pass']+=1;
 					}else{
-						(int)$class_array[$class.$syl_name.$lec_name][$time]['pass']=1;
+						(int)$class_array[$new_name][$time]['pass']=1;
 					}
 					if(isset($value['college_name'])){
 						//计算学院成才人数
