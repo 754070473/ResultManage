@@ -40,6 +40,8 @@ class YieldController extends Controller
 			// 查询系下的班级
 			$sql='SELECT * FROM	res_series
 			LEFT JOIN res_class ON res_series.ser_id = res_class.ser_id
+			LEFT JOIN res_lecturer ON res_class.lec_id = res_lecturer.lec_id
+			LEFT JOIN res_syllabus ON res_class.syl_id = res_syllabus.syl_id
 			LEFT JOIN res_grade ON res_class.class_id = res_grade.class_id
 			WHERE res_series.uid = '.$uid.' ORDER BY g_add_date';
 			$arr=DB::select($sql);
@@ -62,6 +64,8 @@ class YieldController extends Controller
 			$uid.=",".$arr[0]->uid;
 			$sql='SELECT * FROM	 res_class
 			LEFT JOIN res_grade ON res_class.class_id = res_grade.class_id
+			LEFT JOIN res_lecturer ON res_class.lec_id = res_lecturer.lec_id
+			LEFT JOIN res_syllabus ON res_class.syl_id = res_syllabus.syl_id
 			WHERE res_class.uid in ('.$uid.')  ORDER BY g_add_date';
 			$arr=DB::select($sql);
 			// 对象转数组
@@ -113,11 +117,13 @@ class YieldController extends Controller
 			$class=$value['class_name'];
 			$time=$value['g_add_date'];
 			if($time!=""){
+				$lec_name=isset($value['lec_name'])?$value['lec_name']:"";
+				$syl_name=isset($value['syl_name'])?$value['syl_name']:"";
 				//计算班级总人数
-				if(isset($class_array[$class][$time]['num'])){
-					(int)$class_array[$class][$time]['num']+=1;
+				if(isset($class_array[$class.$syl_name.$lec_name][$time]['num'])){
+					(int)$class_array[$class.$syl_name.$lec_name][$time]['num']+=1;
 				}else{
-					(int)$class_array[$class][$time]['num']=1;
+					(int)$class_array[$class.$syl_name.$lec_name][$time]['num']=1;
 				}
 				if(isset($value['ser_name'])){
 					$series=$value['ser_name'];
@@ -139,10 +145,10 @@ class YieldController extends Controller
 				}
 				if($value['theory']>=90&&$value['exam']>=90){
 					//计算班级成才人数
-					if(isset($class_array[$class][$time]['pass'])){
-						(int)$class_array[$class][$time]['pass']+=1;
+					if(isset($class_array[$class.$syl_name.$lec_name][$time]['pass'])){
+						(int)$class_array[$class.$syl_name.$lec_name][$time]['pass']+=1;
 					}else{
-						(int)$class_array[$class][$time]['pass']=1;
+						(int)$class_array[$class.$syl_name.$lec_name][$time]['pass']=1;
 					}
 					if(isset($value['college_name'])){
 						//计算学院成才人数

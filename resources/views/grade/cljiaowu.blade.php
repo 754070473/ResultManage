@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" id="html">
  <head> 
   <meta charset="utf-8" /> 
   <title>各院成材率</title>
@@ -75,18 +75,24 @@
          <div class="col-xs-12"> 
           <div class="table-responsive">
               <div class="form-group">
-                  <label class="col-sm-3 control-label">角色：</label>
                   <div class="col-sm-4">
-                      <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false"  style="display: none;">
+                      <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false"  style="display: block;">
                           @foreach($date as $dk=>$dv)
-                              @if($datecheck->per_id==$dv->per_id)
-                                  <option value="{{$dv->per_id}}" selected = "selected">开始时间{{$dv->start_date}}--结束时间{{$dv->end_date}} </option>
-                            @else
-                              <option value="{{$dv->per_id}}">开始时间{{$dv->start_date}}--结束时间{{$dv->end_date}}</option>
+                              @if($datecheck==$dv->per_id)
+                                  <option value="{{$dv->per_id}}" selected = "selected" style="color: #0000ff">教学周期  {{$dv->start_date}}--{{$dv->end_date}} </option>
+                              @else
+                                  <option value="{{$dv->per_id}}">教学周期   {{$dv->start_date}}--{{$dv->end_date}}</option>
                               @endif
                           @endforeach
                           </select>
                   </div>
+                  <script>
+                      function Excel(){
+                       var   gdList =jQuery('#usertype').val();
+                          location.href='ExcelDown?zq='+gdList
+                      }
+                  </script>
+                  <button id="loading-btn" class="btn btn-success" data-loading-text="Loading..." type="button" onclick="Excel()">成才率保存为Excel</button>
               </div>
            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
                <tr  class="tree-folder-header">
@@ -251,24 +257,19 @@ function  clk2(a){
 }
 
 $('#usertype').change(function () {
-            var gdList= $('#gdList').val()
-            alert(gdList)
-//            $.ajax({
-//                type: 'post',
-//                url: 'gdList',
-//                data: 'gdList=' + gdList,
-//                success: function (msg) {
-//                    if(msg!=0){
-//                        $("#student2_"+a).html(msg);
-//                        $("#"+aa).show(); //显示
-//                    }
-//                }
-//            })
+            var gdList= $('#usertype').val()
+            location.href='gdList?upDnDate='+gdList;
         }
 )
 
 
+$('#loading-btn').click(function () {
+            var gdList= $('#usertype').val()
+
+})
+
 function  chdate(a) {
+
     var aa = 'student1_' + a;
     if ($("#" + aa).css('display') == 'none') {
         $.ajax({
@@ -285,12 +286,13 @@ function  chdate(a) {
     }
 }
 function  student(a){
+    var gdList= $('#usertype').val()
     var  aa='student1_'+a;
     if($("#"+aa).css('display')=='none'){
         $.ajax({
             type: 'post',
             url: 'ajaxStudent',
-            data: 'class_id=' + a,
+            data: 'class_id=' + a+"&per_id="+gdList,
             success: function (msg) {
                 if(msg!=0){
                     $("#student2_"+a).html(msg);
