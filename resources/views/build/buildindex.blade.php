@@ -164,6 +164,9 @@
                         <div class="row">
                             <div class="col-xs-12">
                                 <div class="table-responsive">
+                                	<a href="{{url('againMember')}}" class="btn btn-info">重新分配小组成员</a>
+                                	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                	<a href="{{url('againBuild')}}" class="btn btn-info">重新分配小组</a>
                                     <table id="sample-table-1" class="table table-striped table-bordered table-hover">
                                         <thead>
                                         <tr>                
@@ -181,7 +184,7 @@
                                         		@if(isset($var[0]->group_name))
                                                 {{$var[0]->group_name}}
                                                 @else
-                                                第{{$var}}组
+                                                {{$var['group_name']}}
                                                 @endif
                                             </td> 
                                             <td>
@@ -204,7 +207,7 @@
                                             </td>
                                             <td>
                                             	@if(!isset( $var[1]->student_name ))
-                                            	<a href="{{url('buildIndex')}}?gr_id={{$var}}">添加成员</a>
+                                            	<a href="{{url('buildIndex')}}?gr_id={{$var['gr_id']}}">添加成员</a>
                                             	@endif
                                             </td>
                                         </tr>
