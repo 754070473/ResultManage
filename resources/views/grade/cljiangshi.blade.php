@@ -78,6 +78,9 @@
                   <input type="hidden" class="class" value="{{$v->class_id}}"/>
               @endforeach
               <span style="background-color: #ffff00;width: 50px;height: 50px;">技能</span>
+                  <div class="form-group">
+
+                  </div>
           <div id="student">
             {{--这里是学生成绩表单--}}
           </div>
@@ -176,6 +179,11 @@
       });
   </script>
   <script type="text/javascript">
+      jQuery('#usertype').change(function ($) {
+                  var gdList= $('#usertype').val()
+                  location.href='gdList?upDnDate='+gdList;
+              }
+      )
   jQuery(function($){
       var ace2 = $('.class');
       var len = ace2.length;

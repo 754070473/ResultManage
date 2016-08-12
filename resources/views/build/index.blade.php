@@ -528,7 +528,7 @@ $(function(){
             str+=','+select2.eq(i).val();
           }
           var str = str.substr(1);
-          // alert(str);
+          // alert(gr_id);
           $.ajax({
              type: "get",
              url: "{{url('addBuild')}}",
