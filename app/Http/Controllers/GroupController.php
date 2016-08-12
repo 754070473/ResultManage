@@ -531,7 +531,8 @@ class GroupController extends Controller
         $class = DB::table('res_class') ->where('uid',$uid)->get();
         // print_r($class);die;
         $class_id = $class[0]->class_id;   //取出班级的id；
-        $res = DB::table('res_group')->where('class_id',$class_id)->get();    //查询本班级是否分组
+         // 查询本班级是否分组
+        $res = DB::table('res_group')->where('class_id',$class_id)->orderBy('gr_id')->get();   
         //$res_class_id = DB::select("select * from res_students where gr_id = 0 and class_id ='$class_id' ");
         if ($res)
         {
@@ -553,7 +554,8 @@ class GroupController extends Controller
             $group = array();
             foreach($res as $key => $val)
             {
-                $group[] = $val -> gr_id;
+                $group[$key]['group_name'] = $val -> group_name;
+                $group[$key]['gr_id'] = $val -> gr_id;
             }
             if (empty($users))
             {
@@ -565,7 +567,7 @@ class GroupController extends Controller
                 {
                     foreach($users as $k => $v)
                     {
-                        if( $v -> gr_id == $val )
+                        if( $v -> gr_id == $val['gr_id'] )
                         {
                             $arr[$key][] = $v;
                         }
@@ -578,7 +580,7 @@ class GroupController extends Controller
                     {
                         if(isset( $arr[$key][0] -> gr_id ))
                         {
-                            if( $arr[$key][0] -> gr_id != $val )
+                            if( $arr[$key][0] -> gr_id != $val['gr_id'] )
                             {
                                 $array[] = $val;
                             }else{
@@ -678,6 +680,35 @@ class GroupController extends Controller
             echo 1;
         }
         
+    }
+
+
+    //重新分配小组成员
+    public function again_member()
+    {
+        //根据当前用户的id查出班级的id
+        $uid = Session::get('uid');
+        $class = DB::table('res_class') ->where('uid',$uid)->get();
+        // print_r($class);die;
+        $class_id = $class[0]->class_id;   //取出班级的id；
+        DB::update("update res_students set gr_id = 0 , pid = 'Null' where class_id = $class_id");
+        return redirect('build');
+    }
+
+
+    //重新分配小组
+    public function again_build()
+    {
+        //根据当前用户的id查出班级的id
+        $uid = Session::get('uid');
+        $class = DB::table('res_class') ->where('uid',$uid)->get();
+        // print_r($class);die;
+        $class_id = $class[0]->class_id;   //取出班级的id；
+        //清空这个班级学生的组，以及组长
+        DB::update("update res_students set gr_id = 0 , pid = 'Null' where class_id = $class_id");
+        //清空
+        DB::delete("delete from res_group where class_id = $class_id");
+        return redirect('build');
     }
     
 }

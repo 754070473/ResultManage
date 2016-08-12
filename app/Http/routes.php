@@ -153,6 +153,10 @@ Route::get('buildAdd','GroupController@buildAdd');
 Route::get('buildIndex','GroupController@index');
 // //添加小组成员
 Route::get('addBuild','GroupController@add_build');
+//重新分配小组成员
+Route::get('againMember','GroupController@again_member');
+//重新分配小组
+Route::get('againBuild','GroupController@again_build');
 
 
 
