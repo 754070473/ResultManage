@@ -67,8 +67,20 @@
                         </small>
                     </h1>
                 </div><!-- /.page-header -->
-                <input type="button" value="折线图" class="change_tu" tu_type="line">
-                <input type="button" value="柱形图" class="change_tu" tu_type="column">
+                <div class="form-group">
+                    <div class="col-sm-4">
+                        <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false">
+                            @foreach($nav as $key=>$v)
+                                <option value="{{$v['uid']}}_{{$v['level']}}">{{$v['college_name']}}</option>
+                                @foreach($v['son'] as $k=>$vv)
+                                    <option value="{{$vv['uid']}}_{{$vv['level']}}">|--{{$vv['ser_name']}}</option>
+                                @endforeach
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+                <button id="loading-btn" class="btn btn-success"  type="button" data-loading-text="Loading...">查询</button>
+
                 <div id="container"></div>
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
@@ -139,57 +151,51 @@
     });
 </script>
 <script>
-var type='line';
+    $("#loading-btn").click(function(){
+        var val=$("#usertype").val();
+        arr=val.split('_');
+        location.href="zt?rid="+arr[1]+"&uid="+arr[0];
+//        console.log(arr);
+    })
 showimg();
 function showimg() {
-    $('#container').highcharts({
-         chart: {
-            type: ''+type
+        $('#container').highcharts({
+        chart: {
+            type: 'column'
         },
         title: {
-            text: '{{$name}}',//主标题
-            x: -20 //center
+            text: '{{$name}}'
         },
         subtitle: {
-            text: '本月度成材率统计图',//副标题
-            x: -20
+            text: '{{$title}}'
         },
         xAxis: {
-            categories: [{!! $arr['date'] !!}]
+            categories: [{!! $arr['date'] !!}],
+            crosshair: true
         },
         yAxis: {
+            min: 0,
             title: {
-                text: '成材率%'
-            },
-            plotLines: [{
-                value: 0,
-                width: 1,
-                color: '#808080'
-            }]
+                text: '成才率(%)'
+            }
         },
         tooltip: {
-            valueSuffix: '%'
+            headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+            pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                '<td style="padding:0"><b>{point.y:.2f}%</b></td></tr>',
+            footerFormat: '</table>',
+            shared: true,
+            useHTML: true
         },
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-            borderWidth: 0
+        plotOptions: {
+            column: {
+                pointPadding: 0.2,
+                borderWidth: 0
+            }
         },
         series: {!! $arr['data'] !!}
     });
 }
-$(".change_tu").click(function () {
-    type=$(this).attr('tu_type');
-    showimg();
-})
-$(document).on('click','tspan',function(){
-    var time=$(this).html();
-    var reg=/^[0-9]{1,4}\-[0-9]{1,2}\-[0-9]{1,2}$/;
-    if(reg.test(time)){
-        location.href="pie?time="+time;
-    }
-})
 </script>
 </body>
 </html>

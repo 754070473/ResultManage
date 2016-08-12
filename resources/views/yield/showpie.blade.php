@@ -67,8 +67,8 @@
                         </small>
                     </h1>
                 </div><!-- /.page-header -->
-                <input type="button" value="返回" onclick='window.history.go(-1)'>
-                <div id="container" style="min-width: 310px; max-width: 600px; height: 400px; margin: 0 auto"></div>
+
+                <div id="container"></div>
             </div><!-- /.page-content -->
         </div><!-- /.main-content -->
 
@@ -118,12 +118,13 @@
 
 
 <script src="http://cdn.hcharts.cn/highcharts/highcharts.js"></script>
-<script src="http://cdn.hcharts.cn/highcharts/modules/data.js"></script>
-<script src="http://cdn.hcharts.cn/highcharts/modules/drilldown.js"></script>
+<script src="http://cdn.hcharts.cn/highcharts/modules/exporting.js"></script>
+
 <!-- ace scripts -->
 <s ></s>
 
 <!-- inline scripts related to this page -->
+
 <script type="text/javascript">
     jQuery(function($){
         $.get("{{url('top')}}",function(m){
@@ -136,42 +137,46 @@
         })
     });
 </script>
-<script type="text/javascript">
-$(function () {
-    // Create the chart
-    $('#container').highcharts({
-        chart: {
-            type: 'pie'
-        },
-        title: {
-            text: '{{$title}}'//主标题
-        },
-        subtitle: {
-            text: '{{$subtitle}}'//副标题
-        },
-        plotOptions: {
-            series: {
-                dataLabels: {
-                    enabled: true,
-                    format: '{point.name}: {point.y:.1f}%'
-                }
-            }
-        },
-
-        tooltip: {
-            headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-            pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b><br/>'
-        },
-        series: [{
-            name: '软工学院',
-            colorByPoint: true,
-            data: {!! $arr['data'] !!}
-        }],
-        drilldown: {
-            series: {!! $arr['arr'] !!}
+<script>
+    showimg();
+    function showimg() {
+        $('#container').highcharts({
+            chart: {
+                type: 'column'
+            },
+            title: {
+                text: '{{$name}}'
+            },
+            subtitle: {
+                text: '{{$title}}'
+            },
+            xAxis: {
+                categories: [{!! $arr['date'] !!}],
+        crosshair: true
+    },
+    yAxis: {
+        min: 0,
+                title: {
+            text: '成才率(%)'
         }
+    },
+    tooltip: {
+        headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+        '<td style="padding:0"><b>{point.y:.2f}%</b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+    },
+    plotOptions: {
+        column: {
+            pointPadding: 0.2,
+                    borderWidth: 0
+        }
+    },
+    series: {!! $arr['data'] !!}
     });
-});
+    }
 </script>
 </body>
 </html>

@@ -73,7 +73,20 @@
         <!-- PAGE CONTENT BEGINS --> 
         <div class="row"> 
          <div class="col-xs-12"> 
-          <div class="table-responsive"> 
+          <div class="table-responsive">
+              <div class="form-group">
+                  <div class="col-sm-4">
+                      <select id="usertype" name="usertype" class="selectpicker show-tick form-control"  data-live-search="false"  style="display: block;">
+                          @foreach($date as $dk=>$dv)
+                              @if($datecheck==$dv->per_id)
+                                  <option value="{{$dv->per_id}}" selected = "selected" style="color: #0000ff">教学周期  {{$dv->start_date}}--{{$dv->end_date}} </option>
+                              @else
+                                  <option value="{{$dv->per_id}}">教学周期   {{$dv->start_date}}--{{$dv->end_date}}</option>
+                              @endif
+                          @endforeach
+                          </select>
+                  </div>
+              </div>
            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
                @foreach($college as $k=>$val)
                        @foreach($val['xi'] as $k2=>$val2)
@@ -226,7 +239,11 @@ function  clk2(a){
         $("."+aa).hide(); //隐藏
     }
 }
-
+jQuery('#usertype').change(function ($) {
+            var gdList= $('#usertype').val()
+            location.href='gdList?upDnDate='+gdList;
+        }
+)
 function  student(a){
     var  aa='student1_'+a;
     if($("#"+aa).css('display')=='none'){
