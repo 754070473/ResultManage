@@ -79,6 +79,7 @@
                         </select>
                     </div>
                 </div>
+                <button id="loading-btn" class="btn btn-success"  type="button" data-loading-text="Loading...">查询</button>
 
                 <div id="container"></div>
             </div><!-- /.page-content -->
@@ -150,8 +151,8 @@
     });
 </script>
 <script>
-    $("#usertype").change(function(){
-        var val=$(this).val();
+    $("#loading-btn").click(function(){
+        var val=$("#usertype").val();
         arr=val.split('_');
         location.href="zt?rid="+arr[1]+"&uid="+arr[0];
 //        console.log(arr);
