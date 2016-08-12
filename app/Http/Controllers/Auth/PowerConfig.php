@@ -31,6 +31,8 @@ return array(
         '考试安排详情' => [
             'periodExam','periodExamInfo'
         ],
-        '添加成员'=>['index','add_build']
+        '添加成员'=>['index','add_build'],
+        'excel导入'=>['groupClaShow','excel_add'],
+        '班级删除'=>['groupClaShow','groupDelete']
     ]
 );
