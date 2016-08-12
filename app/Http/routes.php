@@ -161,7 +161,8 @@ Route::get('addBuild','GroupController@add_build');
 //学生成绩列表
 Route::any('/gdList','GradeController@gdList');                        //附加控制器 --- 成绩列表 --- 查看表单
 Route::post('/ajaxStudent','GradeController@ajaxStudent');            //ajax获取成绩
-
+Route::get('/ExcelDown','GradeController@ExcelDown');               //ajax获取成绩
+Route::get('/examUpdate','GradeController@examUpdate');
 //教学周期列表
 Route::get('periodList','PeriodController@periodList');
 //教学周期分页
@@ -186,3 +187,6 @@ Route::get('digui','GroupController@digui');
 Route::get('pkAdd','GroupController@pkAdd');
 //考试安排详情页面
 Route::get('/periodExamInfo','PeriodController@periodExamInfo');
+
+
+
