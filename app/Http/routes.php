@@ -119,10 +119,12 @@ Route::get('collAdd','GroupController@groupCollAdd');
 //创建系页面
 Route::get('series','GroupController@series');
 Route::get('seAdd','GroupController@seAdd');
-//创建班级
-Route::get('claAdd','GroupController@groupClaAdd');
 //班级表单
 Route::get('groupClaShow','GroupController@groupClaShow');
+//班级删除
+Route::get('groupdelete','GroupController@groupDelete');
+//excal文件上传
+Route::post('group_excel','GroupController@excel_add');
 
 //管理员日志
 Route::get('/userlog', 'IndexController@userLog');

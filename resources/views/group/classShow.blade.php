@@ -119,31 +119,26 @@
 										<i class="icon-remove"></i>
 									</button>
 								</div>
-							   <center>	
-							   
-							   	
-							   
+							   <center>
 									<table >
 				                          <tr>
 						                        	<td>
 						                          		<h3>创建班级 ： &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</h3></td>
 						                          		<input type="hidden" id="hidden" value="{{$ser_id}}">
 						                          	<td>
-						                          		<input type="text" placeholder="请输入班级..." id="class_name">
+						                          		<input type="text" placeholder="请输入班级..." id="class_name"><span id="tishi"></span>
 						                          	</td>
 													<br>
 				                          		</tr>           
 				                              <tr>
 				                              	<td colspan="2"><br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				                             	 <button type="button" class="btn btn-primary" data-toggle="button"> 创建
+				                             	 <button type="button" class="btn btn-primary" id="new_class" data-toggle="button"> 创建
 				                                 </button>
 													</td>
 				                              </tr>         
 			                        </table>
                       	 		</center>
-								
 		</div>
-	
 					<table id="sample-table-1" class="table table-striped table-bordered table-hover">
                             <thead>
                             <tr>
@@ -160,10 +155,9 @@
                                 <th>操作</th>
                             </tr>
                             </thead>
-
                             <tbody>
                             @foreach( $arr as $key => $val )
-                                <tr>
+                                <tr id="remove_{{$val->class_id}}">
                                     <td class="center">
                                         <label>
                                             <input type="checkbox" class="ace" />
@@ -179,30 +173,30 @@
                                      <td>
 									    <div class="visible-md visible-lg hidden-sm hidden-xs btn-group">
 
-									        <button class="btn btn-xs btn-danger">
+									        <button class="btn btn-xs btn-danger delete" attr="{{$val->class_id}}">
 									            <i class="icon-trash bigger-120"></i>
 									        </button>
-									        
 									        <div style="display: none" id="tian">
 									        	<h2>1</h2>
 									        </div>
 									         <a cc="{{$val->class_id}}" class="change btn btn-primary btn-large theme-login" href="javascript:;">选择PK班级</a>
-									         <form>
+									         <form action="group_excel" method="post" enctype="multipart/form-data">
 									         	  <input type="hidden" name="_token" id="_token" value="{{ csrf_token()}}">
-                                <button type="submit" class="btn btn-xs btn-danger" >
+                                                 <button type="button" class="btn btn-xs btn-danger" id="excel_add">导入学生</button>
+                                                 <input type="file" name="myfile" id="myfile" style="display:none;"/>
+                                                 <input type="hidden" name="classid" value="{{$val->class_id}}"/>
+                                                 <button type="submit" class="btn btn-xs btn-danger" id="excel_submit" style="display: none;">
                                     导入
                                 </button>
-                              
+
+
 								</form>
 									    </div>
 								 </td>
                                </tr>
-
                             @endforeach
                             </tbody>
-                        </table>	
-				
-						
+                        </table>
 		<div class="theme-popover">
 		     <div class="theme-poptit">
 		          <a href="javascript:;" title="关闭" class="close">×</a>
@@ -221,17 +215,14 @@
 							</select>
 							<span id="clati"></span>
 	                     </li>
-	                  
 	                     <li><input class="btn btn-primary" id="confirm" type="button"  value=" 确认 " /></li>
 	                </ol>
 	           </form>
 	     	 </div>
 					<div id="grid-pager"></div>
-
 								<script type="text/javascript">
 									var $path_base = "/";//this will be used in gritter alerts containing images
 								</script>
-
 								<!-- PAGE CONTENT ENDS -->
 							</div><!-- /.col -->
 						</div><!-- /.row -->
@@ -368,6 +359,26 @@
 <![endif]-->
 
 		<script type="text/javascript">
+            jQuery(".delete").click(function(){
+                var id = jQuery(this).attr("attr");
+                $.ajax({
+                    url: "{{URL('groupdelete')}}",
+                    type: "get",
+                    data: "class_id="+id,
+                    success: function (msg) {
+                        if(msg.error==0){
+                           jQuery("#remove_"+id).remove();
+                        }else{
+                            alert(msg.msg)
+                        }
+                    }
+                })
+            })
+            jQuery("#excel_add").click(function(){
+                jQuery(this).hide();
+                jQuery("#excel_submit").show();
+                jQuery("#myfile").show();
+            })
 		 jQuery(function($){
 		        $.get("{{url('top')}}",function(m){
 		            $('.main-container').first().before(m);
@@ -414,101 +425,72 @@
 </html>
 <script>
 	function  creatGroup(id){
-    $('#div_' + id).show()
-    $('#cr_group_' + id).hide()
-
-}
-
-function  creatGroupPro(id) {
-    var gid = $('#group_' + id).val()
-
-    if (gid != null) {
-        $.ajax({
-        url:"{{URL('groupManAdd')}}",
-        type:"get",
-        data:"class_id="+id+"&num="+gid,
-        success:function(msg)
-        {
-        // alert(msg)
-            location.href="{{URL('collShow')}}";
-
-        }
-        })
-    } else
-    {
-        alert('请选择创建个数')
+        $('#div_' + id).show()
+        $('#cr_group_' + id).hide()
     }
-
-}
-
-
-   $(":button").click(function(){
-   		// alert(1)
+    function  creatGroupPro(id) {
+        var gid = $('#group_' + id).val()
+        if (gid != null) {
+            $.ajax({
+                url: "{{URL('groupManAdd')}}",
+                type: "get",
+                data: "class_id=" + id + "&num=" + gid,
+                success: function (msg) {
+                    // alert(msg)
+                    location.href = "{{URL('collShow')}}";
+                }
+            })
+        } else {
+            alert('请选择创建个数')
+        }
+    }
+   $("#new_class").click(function(){
    		var ser_id=$("#hidden").val();
-   		// alert(ser_id)
    		var class_name=$("#class_name").val();
-   		// alert(coll_id)
-   		// alert(class_name)
-   		// alert(coll_name)
-   		var reg=/^[\u4e00-\u9fa5]{1,10}$/;	
+   		var reg=/^[0-9]\w{5,20}$/i;
+        if(!reg.test(class_name)){
+             jQuery("#tishi").html("<font color='red'>格式不正确</font>");
+        }else{
+            $.ajax({
+                url: "{{URL('groupClaShow')}}",
+                type: "get",
+                data: "class_name=" + class_name + "&ser_id=" + ser_id,
+                success: function (msg) {
+                    if(msg==1){
+                        location.href = "{{URL('groupClaShow')}}";
+                    }
 
-   		// console.log(reg.test(coll_name))
-   		if(class_name=="")
-   		{
-   			$("#ti").html("    *    <font color='red'>你必须输入创建的班级名称</font>")
-   		}else
-
-   		{
-
-   			// alert(2)
-   			$.ajax({
-   				url:"{{URL('claAdd')}}",
-   				type:"get",
-   				data:"class_name="+class_name+"&ser_id="+ser_id,
-   				success:function(msg)
-   				{
-   					
-   						location.href="{{URL('groupClaShow')}}";
-   					
-   				}
-   			})
-   		}
-
+                }
+            })
+        }
    })
-
-
-$(".change").click(function(){  
-	c_id=$(this).attr('cc');   
-})
-   /*
-   
+    $(".change").click(function(){
+        c_id=$(this).attr('cc');
+    })
+    /*
    	添加pk班级
     */
-   
    $("#confirm").click(function(){
-   		// alert(id)
    	var clapk=$("#clapk").val()
-   	// alert(c_id)
-   	// alert(clapk)
    	$.ajax({
-   				url:"{{URL('pkAdd')}}",
-   				type:"get",
-   				data:"c_id="+c_id+"&clapk="+clapk,
-   				success:function(msg)
-   				{
-   					// alert(msg)
-   						// location.href="{{URL('groupClaShow')}}";
-   					if(msg==1)
-   					{
-   						$("#clati").html("<font color='red'>你已经有PK班级</font>")
-   					}else if(msg==2)
-   					{
-   						$("#clati").html("<font color='red'>你不能和自己PK</font>")
-   					}else
-   					{
-   						location.href="{{URL('groupClaShow')}}"
-   					}
-   				}
-   			})
+            url:"{{URL('pkAdd')}}",
+            type:"get",
+            data:"c_id="+c_id+"&clapk="+clapk,
+            success:function(msg)
+            {
+                // alert(msg)
+                    // location.href="{{URL('groupClaShow')}}";
+                if(msg==1)
+                {
+                    $("#clati").html("<font color='red'>你已经有PK班级</font>")
+                }else if(msg==2)
+                {
+                    $("#clati").html("<font color='red'>你不能和自己PK</font>")
+                }else
+                {
+                    location.href="{{URL('groupClaShow')}}"
+                }
+            }
+        })
    })
 </script>

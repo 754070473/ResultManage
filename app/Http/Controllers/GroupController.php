@@ -6,8 +6,9 @@ use DB,Input,Redirect,Session,url;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
+require_once (__DIR__."/../../../vendor/PHPExcel.php");
+header("Content-type: text/html; charset=utf-8");
 
-header("Content-type: text/html; charset=utf-8"); 
 class GroupController extends Controller
 {
     //查看学院页面
@@ -95,7 +96,6 @@ class GroupController extends Controller
                     ->where('ser_id',$v->cid )
                     ->lists('ser_name')
             );
-
             $arr['arr'][$k]->num=$num;
         }
         // print_r($arr['arr']);die;
@@ -131,8 +131,6 @@ class GroupController extends Controller
                     'cid'=>$cid,
                     'uid' => $uid
                 ]);
-
-
             if($id){
                 echo 1;
             }else{
@@ -140,125 +138,41 @@ class GroupController extends Controller
             }
         }
     }
-
-
     public function groupClaShow(Request $request)
     {
+        if($request->input()){
+            $arr['uid']=Session::get('uid');
 
-
-        $uid=Session::get('uid');
-
-
-        $users = DB::table('res_series')
-            ->where('uid',$uid)
-            ->select('cid','ser_id')
-            ->get();
-        foreach($users as $k=>$v)
-        {
-            $cid=$v->cid;
-            $ser_id=$v->ser_id;
-        }
-        $where = 'res_college.cid='.$cid;
-
-
-
-        $table = array(
-            [ 'table1' => 'res_series' , 'table2' => 'res_college' , 'join' => 'cid' ] ,
-            [ 'table1' => 'res_series' , 'table2' => 'res_class' , 'join' => 'ser_id' ]
-        );
-
-        $page = array( 'num' => 10 , 'p' => 1 , 'url' => 'index' );
-        $arr = $this -> databasesSelect($table,$where,0,1,$page);
-        // print_r($arr);die;
-        $clapk=DB::table('res_class')->where('ser_id',$ser_id)->select('class_name','class_id')->get();
-        // print_r($clapk);die;
-        return view('group.classShow',array( 'arr' => $arr['arr'],'page'=>$arr['page'],'ser_id'=>$ser_id,'clapk'=>$clapk));
-    }
-
-    /*
-     *@班级添加
-     *
-     */
-
-    public function groupClaAdd(Request $request)
-    {
-
-        $uid=Session::get('uid');
-
-        // echo 1;die;
-        $users = DB::table('res_series')
-
-            ->where('uid',$uid)
-            ->select('cid')
-            ->get();
-        foreach($users as $k=>$v)
-        {
-            $cid=$v->cid;
-        }
-        // echo $cid;
-
-        $uid1 = DB::table('res_college')
-
-            ->where('cid',$cid)
-            ->select('uid')
-            ->get();
-
-        foreach($uid1 as $k=>$v)
-        {
-            $uid2=$v->uid;
-        }
-        // print_r($uid2);die;
-        $account = DB::table('res_user')
-
-            ->where('uid',$uid2)
-            ->select('accounts')
-            ->get();
-        foreach($account as $k=>$v)
-        {
-            $account=$v->accounts;
-        }
-
-        // print_r($account);die;
-
-        $class_name=$request->class_name;
-        $ser_id=$request->ser_id;
-        // echo $class_name;
-        // echo $coll_id;die;
-        $reg="/^[0-9]+[A-Z]+$/";
-        if(preg_match($reg,$class_name))
-        {
-            echo "班级名称应由数字字母组成";
-        }else
-        {
-            $time = time();
-            $insertid=DB::table('res_user')->insertgetid([
-                'username'=>$class_name,
-                'accounts'=>$account.$class_name,
-                'add_date'=>$time,
-                'password'=>'1234',
-                'status'=>'1',
-                'rid'=>'2'
-            ]);
-            // echo $coll_name;
-            $id=DB::table('res_class')->insert([
-                'ser_id'=>$ser_id,
-                'class_name'=>$class_name,
-                'uid'=>$insertid,
-            ]);
-
-            if($id)
-            {
-                echo 1;
-            }else
-            {
-                echo 0;
+            $arr['class_name'] = $request->class_name;
+            $arr['ser_id'] = $request->ser_id;
+            $users = DB::table('res_class')
+                ->insert($arr);
+            if($users){
+                echo 1;die;
             }
+        }else {
+            $uid = Session::get('uid');
+            $users = DB::table('res_series')
+                ->where('uid', $uid)
+                ->select('cid', 'ser_id')
+                ->get();
+            foreach ($users as $k => $v) {
+                $cid = $v->cid;
+                $ser_id = $v->ser_id;
+            }
+            $where = 'res_college.cid=' . $cid . ' and res_series.uid=' . $uid;
+            $table = array(
+                ['table1' => 'res_series', 'table2' => 'res_college', 'join' => 'cid'],
+                ['table1' => 'res_series', 'table2' => 'res_class', 'join' => 'ser_id']
+            );
+            $page = array('num' => 10, 'p' => 1, 'url' => 'index');
+            $arr = $this->databasesSelect($table, $where, 0, 1, $page);
+            // print_r($arr);die;
+            $clapk = DB::table('res_class')->where('ser_id', $ser_id)->select('class_name', 'class_id')->get();
+            //print_r($clapk);die;
+            return view('group.classShow', array('arr' => $arr['arr'], 'page' => $arr['page'], 'ser_id' => $ser_id, 'clapk' => $clapk));
         }
-
-
-
-    }
-
+        }
     public function groupAdd(Request $request)
     {
         $cla_name=$request->cla_name;
@@ -325,17 +239,40 @@ class GroupController extends Controller
 
     }
     /**
-     * 组员添加
+     * 删除班级
+     */
+    public function groupDelete(Request $request){
+        $id = $request->class_id;
+        $refault = [
+            'error' => 0,  //0:成功 1:失败
+            'msg'   => '',
+            'date'  => '',
+        ];
+        $info = DB::table('res_students')
+            ->where('class_id',$id)
+            ->get();
+        if($info){
+            $refault['error'] = 1;
+            $refault['msg'] = "班级还有人呢！";
+        }else{
+            DB::table('res_class')
+                ->where('class_id',$id)
+                ->delete();
+        }
+        return $refault;
+    }
+    /**
+     * 组员添加或班级的删除
      */
     public function groupMan(){
-        $name = '1408phpG';//当前登录用户名
-        $firse =  DB::table('res_class')
-            ->join('res_group', 'res_class.class_id', '=', 'res_group.class_id')
-            ->where('res_class.class_name','=',"$name")
-            ->get();
+            $name = '1408phpG';//当前登录用户名
+            $firse =  DB::table('res_class')
+                ->join('res_group', 'res_class.class_id', '=', 'res_group.class_id')
+                ->where('res_class.class_name','=',"$name")
+                ->get();
 
-        $_SESSION['class']=$firse;
-        return view('group.groupMan',['arr' =>$firse]);
+            $_SESSION['class']=$firse;
+            return view('group.groupMan',['arr' =>$firse]);
     }
 
     /*
@@ -681,9 +618,58 @@ class GroupController extends Controller
         }
         
     }
+    public function excel_add(){
+        //班级ID
+        $class_id = $_POST['classid'];
+        if(empty($_FILES['myfile']['tmp_name'])){
+            echo "<script>alert('你还没有选择文件');window.history.go(-1)</script>";die;
+        }
+        $PHPExcel = new \PHPExcel();
+        //这里是导入excel2007 的xlsx格式，如果是2003格式可以把“excel2007”换成“Excel5"
+        //怎么样区分用户上传的格式是2003还是2007呢？可以获取后缀  例如：xls的都是2003格式的
+        //xlsx 的是2007格式的  一般情况下是这样的
+        $objReader = \PHPExcel_IOFactory::createReader('excel2007');
+        //导入的excel路径
+        $excelpath=$_FILES['myfile']['tmp_name'];
+//        echo $excelpath;die;
+        @$objPHPExcel=$objReader->load($excelpath);
+        if($objPHPExcel){
+            $objReader = \PHPExcel_IOFactory::createReader('Excel2007');
+            //导入的excel路径
+            $excelpath=$_FILES['myfile']['tmp_name'];
+            $objPHPExcel=$objReader->load($excelpath);
+        }
+        $sheet=$objPHPExcel->getSheet(0);
+        //取得总行数
+        $highestRow=$sheet->getHighestRow();
+        //取得总列数
+        $highestColumn=$sheet->getHighestColumn();
+        //从第二行开始读取数据  因为第一行是表格的表头信息
 
-
-    //重新分配小组成员
+        $sql = "";
+        for($j=2;$j<=$highestRow;$j++) {
+            $str = "";
+            //从A列读取数据
+            for ($k='B'; $k <= $highestColumn; $k++) {
+                $str .= $objPHPExcel->getActiveSheet()->getCell("$k$j")->getValue() . '|*|';//读取单元格
+            }
+            $str = mb_convert_encoding($str, 'utf8', 'auto');//根据自己编码修改
+            $strs = explode("|*|", $str);
+            //拼写sql语句
+            $sql[] = [
+                'student_name' => "{$strs[0]}",
+                'student_number'=>"{$strs[1]}",
+                'class_id'=>$class_id,
+            ];
+        }
+        $res=DB::table('res_students')->insert($sql);
+        if($res){
+            echo "<script>alert('导入成功！');location.href='groupClaShow'</script>";
+        }else{
+            echo "<script>alert('导入失败！');location.href='groupClaShow'</script>";
+        }
+    }
+ //重新分配小组成员
     public function again_member()
     {
         //根据当前用户的id查出班级的id
@@ -710,7 +696,7 @@ class GroupController extends Controller
         DB::delete("delete from res_group where class_id = $class_id");
         return redirect('build');
     }
-    
+
 }
 
 
